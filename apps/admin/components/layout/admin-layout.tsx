@@ -51,7 +51,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
       </div>
     );
   }
@@ -61,7 +61,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           type="button"
           onClick={() => setMobileMenuOpen(true)}
           aria-label="Open menu"
-          className="fixed top-3 left-3 z-30 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-elevated text-text-secondary shadow-sm md:hidden"
+          className="fixed top-3 left-3 z-30 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-raised text-foreground-muted shadow-sm md:hidden"
         >
           <Menu className="h-4 w-4" />
         </button>

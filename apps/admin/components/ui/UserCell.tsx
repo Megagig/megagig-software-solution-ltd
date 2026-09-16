@@ -24,14 +24,14 @@ interface UserCellProps {
  */
 export function UserCell({ user, name, fallback, compact }: UserCellProps) {
   if (!user) {
-    return <span className="text-sm text-text-muted">{fallback || "—"}</span>;
+    return <span className="text-sm text-foreground-subtle">{fallback || "—"}</span>;
   }
   const fullName = name || [user.first_name, user.last_name].filter(Boolean).join(" ") || "User";
   const initials = ((user.first_name?.[0] || "") + (user.last_name?.[0] || "")).toUpperCase() || "U";
 
   return (
     <div className="flex items-center gap-2.5 min-w-0">
-      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-border bg-bg-elevated text-xs font-semibold text-foreground overflow-hidden">
+      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-border bg-surface-raised text-xs font-semibold text-foreground overflow-hidden">
         {user.avatar ? (
           <img src={user.avatar} alt={fullName} className="h-full w-full object-cover" />
         ) : initials}
@@ -40,7 +40,7 @@ export function UserCell({ user, name, fallback, compact }: UserCellProps) {
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-foreground">{fullName}</p>
           {user.email && (
-            <p className="truncate text-xs text-text-muted">{user.email}</p>
+            <p className="truncate text-xs text-foreground-subtle">{user.email}</p>
           )}
         </div>
       )}

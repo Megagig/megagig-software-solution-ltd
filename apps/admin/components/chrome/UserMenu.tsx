@@ -36,7 +36,7 @@ export function UserMenu() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Open user menu"
-        className="h-9 w-9 overflow-hidden rounded-full ring-2 ring-accent/40 hover:ring-accent transition-colors bg-bg-elevated"
+        className="h-9 w-9 overflow-hidden rounded-full ring-2 ring-brand/40 hover:ring-brand transition-colors bg-surface-raised"
       >
         {user.avatar ? (
           <img src={user.avatar} alt={fullName} className="h-full w-full object-cover" />
@@ -48,16 +48,16 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-xl">
+        <div className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-surface-raised shadow-xl">
           <div className="border-b border-border px-4 py-3">
             <p className="text-sm font-semibold text-foreground truncate">{fullName}</p>
-            <p className="text-xs text-text-muted truncate">{user.email}</p>
+            <p className="text-xs text-foreground-subtle truncate">{user.email}</p>
           </div>
           <nav className="py-1 text-sm">
             <Link
               href="/system/activity"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex items-center gap-3 px-4 py-2.5 text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <Activity className="h-4 w-4" />
               User Activity
@@ -65,7 +65,7 @@ export function UserMenu() {
             <Link
               href="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex items-center gap-3 px-4 py-2.5 text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <UserIcon className="h-4 w-4" />
               Profile
@@ -73,7 +73,7 @@ export function UserMenu() {
             <button
               type="button"
               onClick={() => { setOpen(false); logout(); }}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
               Log out

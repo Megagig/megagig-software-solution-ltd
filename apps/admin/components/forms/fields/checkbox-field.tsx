@@ -20,13 +20,13 @@ export function CheckboxField({ field, value, onChange, error }: CheckboxFieldPr
         onClick={() => onChange(!value)}
         className={
           "flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors " +
-          (value ? "border-accent bg-accent/5" : "border-border hover:border-accent/40")
+          (value ? "border-brand bg-brand/5" : "border-border hover:border-brand/40")
         }
       >
         <span
           className={
             "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border " +
-            (value ? "border-accent bg-accent text-white" : "border-border")
+            (value ? "border-brand bg-brand text-white" : "border-border")
           }
         >
           {value && <Check className="h-3.5 w-3.5" />}
@@ -34,7 +34,7 @@ export function CheckboxField({ field, value, onChange, error }: CheckboxFieldPr
         <span className="min-w-0">
           <span className="block text-sm font-medium text-foreground">{field.label}</span>
           {field.description && (
-            <span className="mt-0.5 block text-xs text-text-muted">{field.description}</span>
+            <span className="mt-0.5 block text-xs text-foreground-subtle">{field.description}</span>
           )}
         </span>
       </button>

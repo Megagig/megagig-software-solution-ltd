@@ -30,8 +30,8 @@ const severityClass: Record<Notification["severity"], string> = {
   critical: "bg-danger/10 text-danger",
   high:     "bg-warning/10 text-warning",
   medium:   "bg-info/10 text-info",
-  low:      "bg-bg-hover text-text-secondary",
-  info:     "bg-bg-hover text-text-secondary",
+  low:      "bg-foreground/5 text-foreground-muted",
+  info:     "bg-foreground/5 text-foreground-muted",
 };
 
 const sourceIcon: Record<Notification["source"], React.ReactNode> = {
@@ -87,10 +87,10 @@ export default function NotificationsPage() {
       {isLoading ? (
         <SkeletonTable rows={6} columns={3} />
       ) : items.length === 0 ? (
-        <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center">
-          <Bell className="mx-auto h-10 w-10 text-text-muted" />
+        <div className="rounded-xl border border-border bg-surface-raised p-12 text-center">
+          <Bell className="mx-auto h-10 w-10 text-foreground-subtle" />
           <p className="mt-3 text-base font-medium text-foreground">You're all caught up</p>
-          <p className="mt-1 text-sm text-text-muted">Nothing needs your attention right now.</p>
+          <p className="mt-1 text-sm text-foreground-subtle">Nothing needs your attention right now.</p>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -101,7 +101,7 @@ export default function NotificationsPage() {
                 key={n.id}
                 className={
                   "rounded-xl border p-4 transition-colors " +
-                  (unreadRow ? "border-accent/30 bg-accent/5" : "border-border bg-bg-elevated")
+                  (unreadRow ? "border-brand/30 bg-brand/5" : "border-border bg-surface-raised")
                 }
               >
                 <div className="flex items-start gap-3">
@@ -117,14 +117,14 @@ export default function NotificationsPage() {
                       <div className="flex items-center gap-2">
                         <p className="truncate text-sm font-semibold text-foreground">{n.title}</p>
                         {n.count > 1 && (
-                          <span className="rounded bg-bg-hover px-1.5 text-xs font-medium text-text-muted">×{n.count}</span>
+                          <span className="rounded bg-foreground/5 px-1.5 text-xs font-medium text-foreground-subtle">×{n.count}</span>
                         )}
                         <span className={"rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase " + severityClass[n.severity]}>
                           {n.severity}
                         </span>
                       </div>
-                      {n.body && <p className="mt-0.5 text-sm text-text-secondary">{n.body}</p>}
-                      <p className="mt-1 text-xs text-text-muted">
+                      {n.body && <p className="mt-0.5 text-sm text-foreground-muted">{n.body}</p>}
+                      <p className="mt-1 text-xs text-foreground-subtle">
                         {n.source} · {new Date(n.created_at).toLocaleString()}
                       </p>
                     </Link>
@@ -134,7 +134,7 @@ export default function NotificationsPage() {
                       type="button"
                       onClick={() => markRead.mutate(n.id)}
                       aria-label="Mark read"
-                      className="shrink-0 rounded p-1.5 text-text-muted hover:bg-bg-hover hover:text-foreground"
+                      className="shrink-0 rounded p-1.5 text-foreground-subtle hover:bg-foreground/5 hover:text-foreground"
                     >
                       <Check className="h-4 w-4" />
                     </button>

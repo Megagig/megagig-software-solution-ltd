@@ -46,7 +46,7 @@ export default function SecurityPage() {
             href={`${API_URL}/sentinel/ui`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm font-medium text-foreground hover:bg-bg-hover"
+            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm font-medium text-foreground hover:bg-foreground/5"
           >
             <ExternalLink className="h-4 w-4" />
             Open Sentinel
@@ -83,30 +83,30 @@ export default function SecurityPage() {
       {/* Auto-ban escalation policy — explainer card. The schedule is
           surfaced here so operators don't have to grep Sentinel config to
           understand what's about to happen to a re-offender. */}
-      <section className="mt-6 rounded-xl border border-accent/20 bg-accent/5 p-5">
+      <section className="mt-6 rounded-xl border border-brand/20 bg-brand/5 p-5">
         <div className="flex items-start gap-3">
-          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+          <Clock className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
           <div className="min-w-0">
             <p className="text-sm font-semibold text-foreground">Escalating auto-ban policy</p>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-foreground-muted">
               When an IP trips the brute-force rate limit, Sentinel auto-bans it.
               Re-offenders escalate quickly so a bot can't simply wait out the cooldown.
             </p>
-            <ul className="mt-3 grid grid-cols-1 gap-2 text-xs text-text-secondary sm:grid-cols-4">
-              <li className="rounded-lg border border-border bg-bg-elevated px-3 py-2">
-                <span className="block text-[10px] font-semibold uppercase tracking-wide text-text-muted">1st offence</span>
+            <ul className="mt-3 grid grid-cols-1 gap-2 text-xs text-foreground-muted sm:grid-cols-4">
+              <li className="rounded-lg border border-border bg-surface-raised px-3 py-2">
+                <span className="block text-[10px] font-semibold uppercase tracking-wide text-foreground-subtle">1st offence</span>
                 <span className="text-foreground font-mono">5 hours</span>
               </li>
-              <li className="rounded-lg border border-border bg-bg-elevated px-3 py-2">
-                <span className="block text-[10px] font-semibold uppercase tracking-wide text-text-muted">2nd offence</span>
+              <li className="rounded-lg border border-border bg-surface-raised px-3 py-2">
+                <span className="block text-[10px] font-semibold uppercase tracking-wide text-foreground-subtle">2nd offence</span>
                 <span className="text-foreground font-mono">8 hours</span>
               </li>
-              <li className="rounded-lg border border-border bg-bg-elevated px-3 py-2">
-                <span className="block text-[10px] font-semibold uppercase tracking-wide text-text-muted">3rd offence</span>
+              <li className="rounded-lg border border-border bg-surface-raised px-3 py-2">
+                <span className="block text-[10px] font-semibold uppercase tracking-wide text-foreground-subtle">3rd offence</span>
                 <span className="text-foreground font-mono">24 hours</span>
               </li>
-              <li className="rounded-lg border border-border bg-bg-elevated px-3 py-2">
-                <span className="block text-[10px] font-semibold uppercase tracking-wide text-text-muted">4th+ offence</span>
+              <li className="rounded-lg border border-border bg-surface-raised px-3 py-2">
+                <span className="block text-[10px] font-semibold uppercase tracking-wide text-foreground-subtle">4th+ offence</span>
                 <span className="text-foreground font-mono">7 days</span>
               </li>
             </ul>
@@ -117,20 +117,20 @@ export default function SecurityPage() {
       {/* Active bans */}
       <Section title="Active IP bans" icon={<Shield className="h-4 w-4" />}>
         {(data?.active_bans?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No IPs are currently banned.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No IPs are currently banned.</p>
         ) : (
           <ul className="divide-y divide-border">
             {data!.active_bans!.map((b) => (
               <li key={b.ip} className="flex items-center justify-between gap-3 px-5 py-3">
                 <div className="min-w-0">
                   <p className="font-mono text-sm text-foreground">{b.ip}</p>
-                  <p className="text-xs text-text-muted">{b.reason}</p>
+                  <p className="text-xs text-foreground-subtle">{b.reason}</p>
                 </div>
                 <div className="text-right text-xs">
                   <span className="rounded bg-danger/10 px-1.5 py-0.5 font-semibold uppercase text-danger">
                     Level {b.level}
                   </span>
-                  <p className="mt-1 text-text-muted">expires {new Date(b.expires_at).toLocaleString()}</p>
+                  <p className="mt-1 text-foreground-subtle">expires {new Date(b.expires_at).toLocaleString()}</p>
                 </div>
               </li>
             ))}
@@ -141,13 +141,13 @@ export default function SecurityPage() {
       {/* Rate-limit pressure */}
       <Section title="IPs hitting rate limits (last 5 min)" icon={<AlertTriangle className="h-4 w-4" />}>
         {(data?.rate_limit_hits_5min?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No rate-limit caps in the last 5 minutes.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No rate-limit caps in the last 5 minutes.</p>
         ) : (
           <ul className="divide-y divide-border">
             {data!.rate_limit_hits_5min!.map((r) => (
               <li key={r.ip} className="flex items-center justify-between gap-3 px-5 py-3">
                 <p className="font-mono text-sm text-foreground">{r.ip}</p>
-                <span className="text-xs text-text-muted">
+                <span className="text-xs text-foreground-subtle">
                   {r.hits} hits · last {new Date(r.last_hit).toLocaleTimeString()}
                 </span>
               </li>
@@ -159,17 +159,17 @@ export default function SecurityPage() {
       {/* Recent threats */}
       <Section title="Recent threats" icon={<ActivityIcon className="h-4 w-4" />}>
         {(data?.recent_threats?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No threats detected recently.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No threats detected recently.</p>
         ) : (
           <ul className="divide-y divide-border">
             {data!.recent_threats!.map((t) => (
               <li key={t.id} className="px-5 py-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-foreground">{t.type}</p>
-                  <p className="text-xs text-text-muted">{new Date(t.created_at).toLocaleString()}</p>
+                  <p className="text-xs text-foreground-subtle">{new Date(t.created_at).toLocaleString()}</p>
                 </div>
-                <p className="mt-1 text-xs text-text-secondary">{t.description}</p>
-                <p className="mt-1 font-mono text-xs text-text-muted">{t.ip}</p>
+                <p className="mt-1 text-xs text-foreground-muted">{t.description}</p>
+                <p className="mt-1 font-mono text-xs text-foreground-subtle">{t.ip}</p>
               </li>
             ))}
           </ul>
@@ -181,15 +181,15 @@ export default function SecurityPage() {
 
 function KPI({ label, value, icon, tone }: { label: string; value: number; icon: React.ReactNode; tone: "default" | "warning" | "danger" }) {
   const toneClass = {
-    default: "border-border bg-bg-elevated",
+    default: "border-border bg-surface-raised",
     warning: "border-warning/30 bg-warning/5",
     danger:  "border-danger/30 bg-danger/5",
   }[tone];
-  const iconClass = { default: "text-text-secondary", warning: "text-warning", danger: "text-danger" }[tone];
+  const iconClass = { default: "text-foreground-muted", warning: "text-warning", danger: "text-danger" }[tone];
   return (
     <div className={"rounded-xl border p-4 " + toneClass}>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</p>
         <span className={iconClass}>{icon}</span>
       </div>
       <p className="mt-2 text-3xl font-bold text-foreground">{value}</p>
@@ -199,10 +199,10 @@ function KPI({ label, value, icon, tone }: { label: string; value: number; icon:
 
 function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="mt-6 overflow-hidden rounded-xl border border-border bg-bg-elevated">
+    <section className="mt-6 overflow-hidden rounded-xl border border-border bg-surface-raised">
       <header className="flex items-center gap-2 border-b border-border px-5 py-3">
-        <span className="text-text-secondary">{icon}</span>
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">{title}</p>
+        <span className="text-foreground-muted">{icon}</span>
+        <p className="text-xs font-semibold uppercase tracking-wider text-foreground-subtle">{title}</p>
       </header>
       {children}
     </section>

@@ -73,13 +73,13 @@ function Tile({ href, icon, title, description }: { href: string; icon: React.Re
   return (
     <Link
       href={href}
-      className="group rounded-xl border border-border bg-bg-elevated p-5 transition-colors hover:bg-bg-hover hover:border-accent/30"
+      className="group rounded-xl border border-border bg-surface-raised p-5 transition-colors hover:bg-foreground/5 hover:border-brand/30"
     >
-      <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+      <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
         {icon}
       </div>
-      <p className="text-base font-semibold text-foreground group-hover:text-accent">{title}</p>
-      <p className="mt-1 text-sm text-text-secondary">{description}</p>
+      <p className="text-base font-semibold text-foreground group-hover:text-brand">{title}</p>
+      <p className="mt-1 text-sm text-foreground-muted">{description}</p>
     </Link>
   );
 }
@@ -117,12 +117,12 @@ export default function SystemHubPage() {
             onClick={() => setActive(t)}
             className={
               "relative px-4 py-2.5 text-sm font-medium transition-colors " +
-              (current === t ? "text-accent" : "text-text-secondary hover:text-foreground")
+              (current === t ? "text-brand" : "text-foreground-muted hover:text-foreground")
             }
           >
             {t}
             {current === t && (
-              <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-accent" />
+              <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand" />
             )}
           </button>
         ))}

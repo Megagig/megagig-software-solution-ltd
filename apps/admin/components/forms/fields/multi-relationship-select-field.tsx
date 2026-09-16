@@ -136,8 +136,8 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
   const dropdown = open ? createPortal(
     <div
       ref={dropdownRef}
-      className="fixed z-[9999] rounded-md border border-border bg-bg-elevated shadow-lg"
-      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--bg-elevated, #22222e)" }}
+      className="fixed z-[9999] rounded-md border border-border bg-surface-raised shadow-lg"
+      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--color-surface-raised, #22222e)" }}
     >
       <div className="p-2">
         <input
@@ -145,23 +145,23 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex h-9 w-full rounded-md border border-border bg-bg-secondary px-3 py-1 text-sm text-foreground outline-none placeholder:text-text-secondary"
-          style={{ backgroundColor: "var(--bg-secondary, #111118)" }}
+          className="flex h-9 w-full rounded-md border border-border bg-surface px-3 py-1 text-sm text-foreground outline-none placeholder:text-foreground-muted"
+          style={{ backgroundColor: "var(--color-surface, #111118)" }}
           autoFocus
         />
       </div>
       <div className="max-h-60 overflow-y-auto p-1">
         {isLoading ? (
-          <div className="px-3 py-2 text-sm text-text-secondary">Loading...</div>
+          <div className="px-3 py-2 text-sm text-foreground-muted">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="px-3 py-2 text-sm text-text-secondary">No results found</div>
+          <div className="px-3 py-2 text-sm text-foreground-muted">No results found</div>
         ) : (
           <>
             {value.length > 0 && (
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="flex w-full items-center rounded-sm px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
+                className="flex w-full items-center rounded-sm px-3 py-2 text-sm text-foreground-muted hover:bg-foreground/5"
               >
                 Clear all
               </button>
@@ -175,11 +175,11 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
                   key={id}
                   type="button"
                   onClick={() => toggleItem(id)}
-                  className={`flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-foreground hover:bg-bg-hover
-                    ${isSelected ? "bg-bg-hover" : ""}`}
+                  className={`flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-foreground hover:bg-foreground/5
+                    ${isSelected ? "bg-foreground/5" : ""}`}
                 >
                   <div className={`flex h-4 w-4 items-center justify-center rounded border
-                    ${isSelected ? "border-accent bg-accent text-white" : "border-border"}`}>
+                    ${isSelected ? "border-brand bg-brand text-white" : "border-border"}`}>
                     {isSelected && (
                       <svg className="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
@@ -201,7 +201,7 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
           <button
             type="button"
             onClick={() => { setOpen(false); setCreating(true); }}
-            className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-accent hover:bg-bg-hover"
+            className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-brand hover:bg-foreground/5"
           >
             <Plus className="h-4 w-4 shrink-0" />
             <span className="truncate">
@@ -220,15 +220,15 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
       <div
         ref={triggerRef}
         onClick={() => { if (!open) updatePosition(); setOpen(!open); }}
-        className={`flex min-h-10 w-full cursor-pointer flex-wrap items-center gap-1 rounded-md border bg-bg-secondary px-3 py-2 text-sm text-foreground transition-colors
+        className={`flex min-h-10 w-full cursor-pointer flex-wrap items-center gap-1 rounded-md border bg-surface px-3 py-2 text-sm text-foreground transition-colors
           ${error ? "border-red-500" : "border-border"}
-          ${open ? "ring-2 ring-accent" : ""}`}
+          ${open ? "ring-2 ring-brand" : ""}`}
       >
         {selectedLabels.length > 0 ? (
           selectedLabels.map(({ id, label }) => (
             <span
               key={id}
-              className="inline-flex items-center gap-1 rounded-md bg-accent/20 text-accent px-2 py-0.5 text-xs font-medium"
+              className="inline-flex items-center gap-1 rounded-md bg-brand/20 text-brand px-2 py-0.5 text-xs font-medium"
             >
               {label}
               <button
@@ -243,7 +243,7 @@ export function MultiRelationshipSelectField({ field, value = [], onChange, erro
             </span>
           ))
         ) : (
-          <span className="text-text-secondary">
+          <span className="text-foreground-muted">
             {`Select ${field.label}...`}
           </span>
         )}

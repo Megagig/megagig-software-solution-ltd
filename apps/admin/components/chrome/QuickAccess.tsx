@@ -96,7 +96,7 @@ export function QuickAccess() {
       <button
         onClick={() => setOpen(true)}
         title="Quick access"
-        className={cx("fixed z-40 flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-white shadow-lg transition-transform hover:bg-accent-hover hover:scale-105", corner.cls)}
+        className={cx("fixed z-40 flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-lg transition-transform hover:brightness-90 hover:scale-105", corner.cls)}
       >
         <LayoutGrid className="h-6 w-6" />
       </button>
@@ -104,24 +104,24 @@ export function QuickAccess() {
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setOpen(false)}>
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-          <div onClick={(e) => e.stopPropagation()} className="relative z-10 w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-bg-secondary shadow-2xl">
+          <div onClick={(e) => e.stopPropagation()} className="relative z-10 w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl">
             <header className="flex items-center justify-between border-b border-border px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Quick access</h2>
-                <p className="text-[13px] text-text-secondary">Jump to a page or start a new record, one click away.</p>
+                <p className="text-[13px] text-foreground-muted">Jump to a page or start a new record, one click away.</p>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => setConfiguring(true)} title="Configure" className="rounded-lg p-2 text-text-muted hover:bg-bg-hover hover:text-foreground">
+                <button onClick={() => setConfiguring(true)} title="Configure" className="rounded-lg p-2 text-foreground-subtle hover:bg-foreground/5 hover:text-foreground">
                   <Settings2 className="h-4 w-4" />
                 </button>
-                <button onClick={() => setOpen(false)} title="Close" className="rounded-lg p-2 text-text-muted hover:bg-bg-hover hover:text-foreground">
+                <button onClick={() => setOpen(false)} title="Close" className="rounded-lg p-2 text-foreground-subtle hover:bg-foreground/5 hover:text-foreground">
                   <X className="h-4 w-4" />
                 </button>
               </div>
             </header>
             <div className="max-h-[70vh] overflow-y-auto p-6">
               {visible.length === 0 ? (
-                <p className="py-8 text-center text-[13px] text-text-muted">No actions. Add one in settings.</p>
+                <p className="py-8 text-center text-[13px] text-foreground-subtle">No actions. Add one in settings.</p>
               ) : (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   {visible.map((a) => {
@@ -130,13 +130,13 @@ export function QuickAccess() {
                       <button
                         key={a.key}
                         onClick={() => run(a.to)}
-                        className="group flex flex-col rounded-xl border border-border bg-bg-tertiary p-4 text-left transition-colors hover:border-accent/40 hover:bg-bg-hover"
+                        className="group flex flex-col rounded-xl border border-border bg-foreground/5 p-4 text-left transition-colors hover:border-brand/40 hover:bg-foreground/5"
                       >
-                        <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                        <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                           <Icon className="h-5 w-5" />
                         </span>
-                        <span className="text-[14px] font-semibold text-foreground group-hover:text-accent">{a.label}</span>
-                        <span className="mt-0.5 line-clamp-2 text-[12px] text-text-muted">{a.description}</span>
+                        <span className="text-[14px] font-semibold text-foreground group-hover:text-brand">{a.label}</span>
+                        <span className="mt-0.5 line-clamp-2 text-[12px] text-foreground-subtle">{a.description}</span>
                       </button>
                     );
                   })}
@@ -178,58 +178,58 @@ function QuickAccessConfig({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <div onClick={(e) => e.stopPropagation()} className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-bg-secondary shadow-2xl">
+      <div onClick={(e) => e.stopPropagation()} className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface shadow-2xl">
         <header className="flex items-center justify-between border-b border-border px-5 py-3.5">
           <h2 className="text-[15px] font-semibold text-foreground">Configure quick access</h2>
-          <button onClick={onClose} className="rounded-md p-1.5 text-text-muted hover:bg-bg-hover hover:text-foreground">
+          <button onClick={onClose} className="rounded-md p-1.5 text-foreground-subtle hover:bg-foreground/5 hover:text-foreground">
             <X className="h-4 w-4" />
           </button>
         </header>
         <div className="max-h-[70vh] overflow-y-auto p-5">
-          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-text-muted">Button position</p>
+          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-foreground-subtle">Button position</p>
           <div className="mb-5 grid grid-cols-3 gap-2">
             {CORNERS.map((c) => (
               <button
                 key={c.key}
                 onClick={() => onChange({ ...config, position: c.key })}
-                className={cx("rounded-lg border px-3 py-2 text-[13px]", config.position === c.key ? "border-accent bg-accent/10 text-accent" : "border-border text-text-secondary hover:bg-bg-hover")}
+                className={cx("rounded-lg border px-3 py-2 text-[13px]", config.position === c.key ? "border-brand bg-brand/10 text-brand" : "border-border text-foreground-muted hover:bg-foreground/5")}
               >
                 {c.label}
               </button>
             ))}
           </div>
 
-          <p className="mb-2 flex items-center justify-between text-[12px] font-semibold uppercase tracking-wider text-text-muted">
+          <p className="mb-2 flex items-center justify-between text-[12px] font-semibold uppercase tracking-wider text-foreground-subtle">
             <span>Cards</span>
-            <span className={cx("normal-case", canAdd ? "text-text-muted" : "text-warning")}>{visibleCount}/{MAX_TILES}</span>
+            <span className={cx("normal-case", canAdd ? "text-foreground-subtle" : "text-warning")}>{visibleCount}/{MAX_TILES}</span>
           </p>
           <div className="mb-5 space-y-1">
             {defaults.map((a) => {
               const on = !config.hidden.includes(a.key);
               return (
-                <label key={a.key} className={cx("flex items-center justify-between rounded-lg px-3 py-2 text-[13px] text-foreground hover:bg-bg-hover", !on && !canAdd ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
+                <label key={a.key} className={cx("flex items-center justify-between rounded-lg px-3 py-2 text-[13px] text-foreground hover:bg-foreground/5", !on && !canAdd ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
                   {a.label}
-                  <input type="checkbox" checked={on} disabled={!on && !canAdd} onChange={() => toggle(a.key)} className="h-4 w-4 accent-accent" />
+                  <input type="checkbox" checked={on} disabled={!on && !canAdd} onChange={() => toggle(a.key)} className="h-4 w-4 accent-brand" />
                 </label>
               );
             })}
           </div>
 
-          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-text-muted">Custom links</p>
+          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-foreground-subtle">Custom links</p>
           <div className="space-y-1.5">
             {config.custom.map((c, i) => (
-              <div key={i} className="flex items-center justify-between rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-[13px]">
-                <span className="min-w-0 truncate text-foreground">{c.label} <span className="text-text-muted">-&gt; {c.to}</span></span>
-                <button onClick={() => onChange({ ...config, custom: config.custom.filter((_, j) => j !== i) })} className="rounded p-1 text-text-muted hover:bg-danger/10 hover:text-danger">
+              <div key={i} className="flex items-center justify-between rounded-lg border border-border bg-foreground/5 px-3 py-2 text-[13px]">
+                <span className="min-w-0 truncate text-foreground">{c.label} <span className="text-foreground-subtle">-&gt; {c.to}</span></span>
+                <button onClick={() => onChange({ ...config, custom: config.custom.filter((_, j) => j !== i) })} className="rounded p-1 text-foreground-subtle hover:bg-danger/10 hover:text-danger">
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </div>
             ))}
           </div>
           <div className="mt-2 flex items-center gap-2">
-            <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label" className="w-1/2 rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-[13px] text-foreground outline-none focus:border-accent" />
-            <input value={to} onChange={(e) => setTo(e.target.value)} placeholder="/resources/…" className="w-1/2 rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-[13px] text-foreground outline-none focus:border-accent" />
-            <button onClick={addCustom} disabled={!canAdd} className="shrink-0 rounded-lg bg-accent px-3 py-2 text-[13px] font-semibold text-white hover:bg-accent-hover disabled:opacity-50">Add</button>
+            <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label" className="w-1/2 rounded-lg border border-border bg-foreground/5 px-3 py-2 text-[13px] text-foreground outline-none focus:border-brand" />
+            <input value={to} onChange={(e) => setTo(e.target.value)} placeholder="/resources/…" className="w-1/2 rounded-lg border border-border bg-foreground/5 px-3 py-2 text-[13px] text-foreground outline-none focus:border-brand" />
+            <button onClick={addCustom} disabled={!canAdd} className="shrink-0 rounded-lg bg-brand px-3 py-2 text-[13px] font-semibold text-white hover:brightness-90 disabled:opacity-50">Add</button>
           </div>
           {!canAdd && <p className="mt-2 text-[12px] text-warning">Tile limit reached ({MAX_TILES}).</p>}
         </div>

@@ -62,11 +62,11 @@ export function InlineCreateDialog({ resource, defaults, onCreated, onClose }: I
     // that opened it is the whole feature failing in the most confusing way.
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative z-10 w-full ${width} max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-bg-secondary shadow-2xl`}>
+      <div className={`relative z-10 w-full ${width} max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl`}>
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
             <h2 className="text-lg font-semibold text-foreground">New {label}</h2>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <p className="text-xs text-foreground-muted mt-0.5">
               It will be selected when you save.
             </p>
           </div>
@@ -74,7 +74,7 @@ export function InlineCreateDialog({ resource, defaults, onCreated, onClose }: I
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
+            className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

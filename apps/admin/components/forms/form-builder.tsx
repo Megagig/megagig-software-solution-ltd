@@ -75,14 +75,14 @@ export function FormBuilder({
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors"
+          className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:brightness-90 disabled:opacity-50 transition-colors"
         >
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {submitLabel}

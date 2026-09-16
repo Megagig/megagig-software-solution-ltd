@@ -134,25 +134,25 @@ function HealthCard({ card }: { card: Card }) {
     ? "border-success/30 bg-success/5"
     : card.status === "down"
       ? "border-danger/30 bg-danger/5"
-      : "border-border bg-bg-elevated";
-  const iconColor = card.status === "ok" ? "text-success" : card.status === "down" ? "text-danger" : "text-text-muted";
+      : "border-border bg-surface-raised";
+  const iconColor = card.status === "ok" ? "text-success" : card.status === "down" ? "text-danger" : "text-foreground-subtle";
 
   return (
     <div className={"rounded-xl border p-4 " + toneClass}>
       <div className="mb-3 flex items-center justify-between">
-        <span className={"inline-flex h-9 w-9 items-center justify-center rounded-lg bg-bg-elevated " + iconColor}>
+        <span className={"inline-flex h-9 w-9 items-center justify-center rounded-lg bg-surface-raised " + iconColor}>
           {card.icon}
         </span>
         {card.status === "ok"
           ? <CheckCircle className="h-4 w-4 text-success" />
           : card.status === "down"
             ? <AlertCircle className="h-4 w-4 text-danger" />
-            : <span className="text-[10px] font-semibold uppercase text-text-muted">N/A</span>}
+            : <span className="text-[10px] font-semibold uppercase text-foreground-subtle">N/A</span>}
       </div>
       <p className="text-sm font-semibold text-foreground">{card.label}</p>
-      <p className="mt-1 text-xs text-text-secondary">{card.detail}</p>
+      <p className="mt-1 text-xs text-foreground-muted">{card.detail}</p>
       {card.meta && (
-        <p className="mt-2 inline-flex items-center gap-1 rounded bg-bg-elevated px-1.5 py-0.5 text-[10px] font-mono text-text-muted">
+        <p className="mt-2 inline-flex items-center gap-1 rounded bg-surface-raised px-1.5 py-0.5 text-[10px] font-mono text-foreground-subtle">
           {card.meta}
         </p>
       )}

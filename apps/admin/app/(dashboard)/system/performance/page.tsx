@@ -48,7 +48,7 @@ export default function PerformancePage() {
             href={`${API_URL}/pulse/ui`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm font-medium text-foreground hover:bg-bg-hover"
+            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm font-medium text-foreground hover:bg-foreground/5"
           >
             <ExternalLink className="h-4 w-4" />
             Open Pulse
@@ -101,23 +101,23 @@ export default function PerformancePage() {
       )}
 
       {/* Slowest routes */}
-      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-bg-elevated">
+      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-surface-raised">
         <header className="border-b border-border px-5 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">Slowest routes</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-foreground-subtle">Slowest routes</p>
         </header>
         {(data?.slowest_routes?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No route latency data yet.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No route latency data yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full table-fixed">
               <thead>
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-text-muted">Route</th>
-                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-text-muted">Reqs</th>
-                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-text-muted">Avg</th>
-                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-text-muted">P95</th>
-                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-text-muted">P99</th>
-                  <th className="w-24 px-2 py-3 text-right text-xs font-semibold uppercase text-text-muted">Err rate</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-foreground-subtle">Route</th>
+                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-foreground-subtle">Reqs</th>
+                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-foreground-subtle">Avg</th>
+                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-foreground-subtle">P95</th>
+                  <th className="w-20 px-2 py-3 text-right text-xs font-semibold uppercase text-foreground-subtle">P99</th>
+                  <th className="w-24 px-2 py-3 text-right text-xs font-semibold uppercase text-foreground-subtle">Err rate</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -138,18 +138,18 @@ export default function PerformancePage() {
       </section>
 
       {/* N+1 detections */}
-      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-bg-elevated">
+      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-surface-raised">
         <header className="border-b border-border px-5 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">N+1 query detections</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-foreground-subtle">N+1 query detections</p>
         </header>
         {(data?.n1_detections?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No N+1 queries detected.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No N+1 queries detected.</p>
         ) : (
           <ul className="divide-y divide-border">
             {data!.n1_detections!.map((n, i) => (
               <li key={i} className="flex items-center justify-between gap-3 px-5 py-3">
                 <p className="truncate font-mono text-xs text-foreground">{n.route}</p>
-                <span className="shrink-0 text-xs text-text-muted">
+                <span className="shrink-0 text-xs text-foreground-subtle">
                   {n.query_count} queries · first seen {new Date(n.first_seen).toLocaleString()}
                 </span>
               </li>
@@ -159,19 +159,19 @@ export default function PerformancePage() {
       </section>
 
       {/* Recent errors */}
-      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-bg-elevated">
+      <section className="mt-6 overflow-hidden rounded-xl border border-border bg-surface-raised">
         <header className="border-b border-border px-5 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">Recent errors</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-foreground-subtle">Recent errors</p>
         </header>
         {(data?.recent_errors?.length ?? 0) === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-text-muted">No errors recorded.</p>
+          <p className="px-5 py-8 text-center text-sm text-foreground-subtle">No errors recorded.</p>
         ) : (
           <ul className="divide-y divide-border">
             {data!.recent_errors!.map((e) => (
               <li key={e.id} className="px-5 py-3">
                 <div className="flex items-center justify-between">
                   <p className="truncate font-mono text-xs text-foreground">{e.route}</p>
-                  <p className="shrink-0 text-xs text-text-muted">{new Date(e.created_at).toLocaleString()}</p>
+                  <p className="shrink-0 text-xs text-foreground-subtle">{new Date(e.created_at).toLocaleString()}</p>
                 </div>
                 <p className="mt-1 text-sm text-danger">{e.message}</p>
               </li>
@@ -188,8 +188,8 @@ function SignalGroup({ title, tagline, children }: SignalGroupProps) {
   return (
     <section className="mt-6">
       <header className="mb-3">
-        <p className="text-sm font-semibold uppercase tracking-wider text-text-muted">{title}</p>
-        <p className="text-xs text-text-secondary">{tagline}</p>
+        <p className="text-sm font-semibold uppercase tracking-wider text-foreground-subtle">{title}</p>
+        <p className="text-xs text-foreground-muted">{tagline}</p>
       </header>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">{children}</div>
     </section>
@@ -198,12 +198,12 @@ function SignalGroup({ title, tagline, children }: SignalGroupProps) {
 
 interface SignalProps { label: string; value: string; icon: React.ReactNode; tone?: "default" | "warning" | "danger" }
 function Signal({ label, value, icon, tone = "default" }: SignalProps) {
-  const toneClass = { default: "border-border bg-bg-elevated", warning: "border-warning/30 bg-warning/5", danger: "border-danger/30 bg-danger/5" }[tone];
+  const toneClass = { default: "border-border bg-surface-raised", warning: "border-warning/30 bg-warning/5", danger: "border-danger/30 bg-danger/5" }[tone];
   return (
     <div className={"rounded-xl border p-4 " + toneClass}>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</p>
-        <span className="text-text-secondary">{icon}</span>
+        <p className="text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</p>
+        <span className="text-foreground-muted">{icon}</span>
       </div>
       <p className="mt-2 text-2xl font-bold text-foreground">{value}</p>
     </div>

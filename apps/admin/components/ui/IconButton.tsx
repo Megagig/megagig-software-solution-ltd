@@ -14,9 +14,9 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClass: Record<NonNullable<IconButtonProps["variant"]>, string> = {
-  primary: "bg-accent text-white hover:bg-accent-hover",
-  secondary: "border border-border bg-bg-elevated text-foreground hover:bg-bg-hover",
-  ghost: "text-text-secondary hover:bg-bg-hover hover:text-foreground",
+  primary: "bg-brand text-white hover:brightness-90",
+  secondary: "border border-border bg-surface-raised text-foreground hover:bg-foreground/5",
+  ghost: "text-foreground-muted hover:bg-foreground/5 hover:text-foreground",
   danger: "bg-danger text-white hover:opacity-90",
 };
 

@@ -59,7 +59,7 @@ export default function FormSharesPage() {
         actions={
           <button
             onClick={() => setCreateOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white hover:brightness-90"
           >
             <Plus className="h-4 w-4" />
             New share
@@ -70,23 +70,23 @@ export default function FormSharesPage() {
       {isLoading ? (
         <SkeletonCards count={3} />
       ) : shares.length === 0 ? (
-        <div className="mt-6 rounded-xl border border-dashed border-border bg-bg-elevated p-12 text-center">
+        <div className="mt-6 rounded-xl border border-dashed border-border bg-surface-raised p-12 text-center">
           <p className="text-foreground font-medium">No shares yet</p>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-foreground-muted">
             Create a share to let visitors submit forms for one of your resources without an admin login.
           </p>
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-xl border border-border bg-bg-elevated">
+        <div className="mt-6 overflow-hidden rounded-xl border border-border bg-surface-raised">
           <table className="w-full text-sm">
-            <thead className="border-b border-border bg-bg-secondary">
+            <thead className="border-b border-border bg-surface">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-text-secondary">Resource</th>
-                <th className="px-4 py-3 text-left font-medium text-text-secondary">Label</th>
-                <th className="px-4 py-3 text-left font-medium text-text-secondary">Protection</th>
-                <th className="px-4 py-3 text-right font-medium text-text-secondary">Submissions</th>
-                <th className="px-4 py-3 text-left font-medium text-text-secondary">Status</th>
-                <th className="px-4 py-3 text-right font-medium text-text-secondary">Actions</th>
+                <th className="px-4 py-3 text-left font-medium text-foreground-muted">Resource</th>
+                <th className="px-4 py-3 text-left font-medium text-foreground-muted">Label</th>
+                <th className="px-4 py-3 text-left font-medium text-foreground-muted">Protection</th>
+                <th className="px-4 py-3 text-right font-medium text-foreground-muted">Submissions</th>
+                <th className="px-4 py-3 text-left font-medium text-foreground-muted">Status</th>
+                <th className="px-4 py-3 text-right font-medium text-foreground-muted">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -139,16 +139,16 @@ function ShareRow({ share }: { share: FormShare }) {
 
   return (
     <>
-    <tr className="hover:bg-bg-hover">
+    <tr className="hover:bg-foreground/5">
       <td className="px-4 py-3 font-mono text-xs text-foreground">{share.resource_name}</td>
-      <td className="px-4 py-3 text-foreground">{share.label || <span className="text-text-muted">—</span>}</td>
+      <td className="px-4 py-3 text-foreground">{share.label || <span className="text-foreground-subtle">—</span>}</td>
       <td className="px-4 py-3">
         {share.has_password ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-warning">
             <Lock className="h-3 w-3" /> Password
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-bg-secondary px-2 py-0.5 text-xs font-medium text-text-secondary">
+          <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-foreground-muted">
             <Unlock className="h-3 w-3" /> Open
           </span>
         )}
@@ -160,7 +160,7 @@ function ShareRow({ share }: { share: FormShare }) {
           className={
             share.enabled
               ? "inline-flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success hover:bg-success/25"
-              : "inline-flex items-center gap-1 rounded-full bg-bg-secondary px-2 py-0.5 text-xs font-medium text-text-muted hover:bg-bg-hover"
+              : "inline-flex items-center gap-1 rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-foreground-subtle hover:bg-foreground/5"
           }
         >
           {share.enabled ? "Enabled" : "Disabled"}
@@ -170,21 +170,21 @@ function ShareRow({ share }: { share: FormShare }) {
         <div className="flex items-center justify-end gap-1">
           <button
             onClick={() => setEditOpen(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-2 py-1 text-xs text-text-secondary hover:bg-bg-hover hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             title="Edit share"
           >
             <Pencil className="h-3 w-3" /> Edit
           </button>
           <button
             onClick={() => setSubmissionsOpen(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-2 py-1 text-xs text-text-secondary hover:bg-bg-hover hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             title="View submissions"
           >
             <Activity className="h-3 w-3" /> Audit
           </button>
           <button
             onClick={copyLink}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-2 py-1 text-xs text-text-secondary hover:bg-bg-hover hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             title="Copy public link"
           >
             <Copy className="h-3 w-3" /> Copy
@@ -193,7 +193,7 @@ function ShareRow({ share }: { share: FormShare }) {
             href={publicURL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-2 py-1 text-xs text-text-secondary hover:bg-bg-hover hover:text-foreground"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             title="Open public form"
           >
             <ExternalLink className="h-3 w-3" /> Open
@@ -204,7 +204,7 @@ function ShareRow({ share }: { share: FormShare }) {
                 remove();
               }
             }}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-2 py-1 text-xs text-danger hover:bg-danger/10"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs text-danger hover:bg-danger/10"
             title="Delete share"
           >
             <Trash2 className="h-3 w-3" />
@@ -239,48 +239,48 @@ function SubmissionsModal({ share, onClose }: { share: FormShare; onClose: () =>
       <td colSpan={6}>
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-          <div className="relative z-10 w-full max-w-3xl rounded-2xl border border-border bg-bg-secondary shadow-2xl">
+          <div className="relative z-10 w-full max-w-3xl rounded-2xl border border-border bg-surface shadow-2xl">
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Audit log</h2>
-                <p className="text-xs text-text-secondary">
+                <p className="text-xs text-foreground-muted">
                   {share.resource_name} · {share.label || share.token.slice(0, 12) + "…"}
                 </p>
               </div>
-              <button onClick={onClose} className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground">
+              <button onClick={onClose} className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="max-h-[60vh] overflow-y-auto p-6">
               {isLoading ? (
-                <p className="text-sm text-text-secondary">Loading…</p>
+                <p className="text-sm text-foreground-muted">Loading…</p>
               ) : rows.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-border bg-bg-elevated p-8 text-center">
+                <div className="rounded-xl border border-dashed border-border bg-surface-raised p-8 text-center">
                   <p className="text-foreground font-medium">No submissions yet</p>
-                  <p className="mt-1 text-sm text-text-secondary">Audit rows appear here after the first public submission.</p>
+                  <p className="mt-1 text-sm text-foreground-muted">Audit rows appear here after the first public submission.</p>
                 </div>
               ) : (
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="px-2 py-2 text-left font-medium text-text-secondary">When</th>
-                      <th className="px-2 py-2 text-left font-medium text-text-secondary">Record ID</th>
-                      <th className="px-2 py-2 text-left font-medium text-text-secondary">IP</th>
-                      <th className="px-2 py-2 text-left font-medium text-text-secondary">User Agent</th>
+                      <th className="px-2 py-2 text-left font-medium text-foreground-muted">When</th>
+                      <th className="px-2 py-2 text-left font-medium text-foreground-muted">Record ID</th>
+                      <th className="px-2 py-2 text-left font-medium text-foreground-muted">IP</th>
+                      <th className="px-2 py-2 text-left font-medium text-foreground-muted">User Agent</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {rows.map((row) => (
                       <tr key={row.id}>
-                        <td className="px-2 py-2 text-xs text-text-secondary whitespace-nowrap">
+                        <td className="px-2 py-2 text-xs text-foreground-muted whitespace-nowrap">
                           {new Date(row.created_at).toLocaleString()}
                         </td>
                         <td className="px-2 py-2 font-mono text-xs text-foreground">
                           {row.record_id.slice(0, 8)}…
                         </td>
-                        <td className="px-2 py-2 font-mono text-xs text-text-secondary">{row.ip || "—"}</td>
-                        <td className="px-2 py-2 text-xs text-text-muted truncate max-w-xs" title={row.user_agent}>
+                        <td className="px-2 py-2 font-mono text-xs text-foreground-muted">{row.ip || "—"}</td>
+                        <td className="px-2 py-2 text-xs text-foreground-subtle truncate max-w-xs" title={row.user_agent}>
                           {row.user_agent || "—"}
                         </td>
                       </tr>
@@ -378,10 +378,10 @@ function CreateShareModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 my-8 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-bg-secondary shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-bg-secondary px-6 py-4">
+      <div className="relative z-10 my-8 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface px-6 py-4">
           <h2 className="text-lg font-semibold text-foreground">New form share</h2>
-          <button onClick={onClose} className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground">
+          <button onClick={onClose} className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -390,20 +390,20 @@ function CreateShareModal({ onClose }: { onClose: () => void }) {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">Resource</label>
             <select value={resourceName} onChange={(e) => setResourceName(e.target.value)} required autoFocus
-              className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30">
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30">
               <option value="">{resourcesLoading ? "Loading…" : "Select a resource…"}</option>
               {(resources ?? []).map((r) => (<option key={r} value={r}>{r}</option>))}
             </select>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-foreground-subtle">
               Only resources registered in <code>services/form_share_dispatch.go</code> can be shared publicly.
             </p>
           </div>
 
           {resourceName && (
-            <div className="space-y-2 rounded-xl border border-border bg-bg-elevated/40 p-4">
+            <div className="space-y-2 rounded-xl border border-border bg-surface-raised/40 p-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-foreground">Form preview</p>
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-foreground-subtle">
                   {fieldsLoading ? "Loading fields…" : (fields?.length ?? 0) + " field" + ((fields?.length ?? 0) === 1 ? "" : "s")}
                 </p>
               </div>
@@ -412,17 +412,17 @@ function CreateShareModal({ onClose }: { onClose: () => void }) {
                   {fields.map((f) => {
                     const isHidden = hiddenFields.has(f.key);
                     return (
-                      <li key={f.key} className={"flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm transition-colors " + (isHidden ? "border-border bg-bg-secondary opacity-60" : "border-border bg-bg-elevated")}>
+                      <li key={f.key} className={"flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm transition-colors " + (isHidden ? "border-border bg-surface opacity-60" : "border-border bg-surface-raised")}>
                         <div className="min-w-0">
                           <p className="truncate text-foreground">{f.label}{f.required && <span className="ml-1 text-danger">*</span>}</p>
-                          <p className="text-[11px] text-text-muted">
+                          <p className="text-[11px] text-foreground-subtle">
                             <code className="font-mono">{f.key}</code><span className="mx-1.5">·</span>{f.type}<span className="mx-1.5">·</span>{f.required ? "required" : "optional"}
                           </p>
                         </div>
                         {f.required ? (
-                          <span className="text-[11px] text-text-muted">always shown</span>
+                          <span className="text-[11px] text-foreground-subtle">always shown</span>
                         ) : (
-                          <label className="flex shrink-0 items-center gap-2 text-xs text-text-secondary">
+                          <label className="flex shrink-0 items-center gap-2 text-xs text-foreground-muted">
                             <input type="checkbox" checked={isHidden} onChange={(e) => toggleHidden(f.key, e.target.checked)} className="h-3.5 w-3.5 rounded border-border" />
                             Hide
                           </label>
@@ -441,31 +441,31 @@ function CreateShareModal({ onClose }: { onClose: () => void }) {
           )}
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Form title <span className="text-text-muted">(optional)</span></label>
-            <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder={resourceName ? "New " + resourceName : "Heading shown on the public form"} className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
-            <p className="text-xs text-text-muted">Shown as the heading on the public form. Blank = falls back to the label, then to the resource name.</p>
+            <label className="block text-sm font-medium text-foreground">Form title <span className="text-foreground-subtle">(optional)</span></label>
+            <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder={resourceName ? "New " + resourceName : "Heading shown on the public form"} className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
+            <p className="text-xs text-foreground-subtle">Shown as the heading on the public form. Blank = falls back to the label, then to the resource name.</p>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Description <span className="text-text-muted">(optional)</span></label>
-            <textarea value={customDescription} onChange={(e) => setCustomDescription(e.target.value)} placeholder="One-line subtitle shown under the heading" rows={2} className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
+            <label className="block text-sm font-medium text-foreground">Description <span className="text-foreground-subtle">(optional)</span></label>
+            <textarea value={customDescription} onChange={(e) => setCustomDescription(e.target.value)} placeholder="One-line subtitle shown under the heading" rows={2} className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Internal label <span className="text-text-muted">(optional)</span></label>
-            <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Q3 lead form" className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
-            <p className="text-xs text-text-muted">Operator-facing tag (the visitor never sees this).</p>
+            <label className="block text-sm font-medium text-foreground">Internal label <span className="text-foreground-subtle">(optional)</span></label>
+            <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Q3 lead form" className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
+            <p className="text-xs text-foreground-subtle">Operator-facing tag (the visitor never sees this).</p>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Password <span className="text-text-muted">(optional)</span></label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Leave blank for open access" className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
-            <p className="text-xs text-text-muted">Stored as bcrypt. Visitors must enter this before the form is shown.</p>
+            <label className="block text-sm font-medium text-foreground">Password <span className="text-foreground-subtle">(optional)</span></label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Leave blank for open access" className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
+            <p className="text-xs text-foreground-subtle">Stored as bcrypt. Visitors must enter this before the form is shown.</p>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border border-border bg-bg-elevated px-4 py-2 text-sm font-medium text-foreground hover:bg-bg-hover">Cancel</button>
-            <button type="submit" disabled={isPending || !resourceName} className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50">
+            <button type="button" onClick={onClose} className="rounded-lg border border-border bg-surface-raised px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground/5">Cancel</button>
+            <button type="submit" disabled={isPending || !resourceName} className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50">
               {isPending ? "Creating…" : "Create share"}
             </button>
           </div>
@@ -526,25 +526,25 @@ function EditShareModal({ share, onClose }: { share: FormShare; onClose: () => v
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 my-8 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-bg-secondary shadow-2xl">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-bg-secondary px-6 py-4">
+      <div className="relative z-10 my-8 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface px-6 py-4">
           <div>
             <h2 className="text-lg font-semibold text-foreground">Edit form share</h2>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-foreground-subtle">
               <code className="font-mono">{share.resource_name}</code>
               <span className="mx-1.5">·</span>{share.token.slice(0, 12)}…
             </p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground">
+          <button onClick={onClose} className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <form onSubmit={(e) => { e.preventDefault(); save(); }} className="space-y-5 p-6">
-          <div className="space-y-2 rounded-xl border border-border bg-bg-elevated/40 p-4">
+          <div className="space-y-2 rounded-xl border border-border bg-surface-raised/40 p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-foreground">Form preview</p>
-              <p className="text-xs text-text-muted">
+              <p className="text-xs text-foreground-subtle">
                 {fieldsLoading ? "Loading fields…" : (fields?.length ?? 0) + " field" + ((fields?.length ?? 0) === 1 ? "" : "s")}
               </p>
             </div>
@@ -553,17 +553,17 @@ function EditShareModal({ share, onClose }: { share: FormShare; onClose: () => v
                 {fields.map((f) => {
                   const isHidden = hiddenFields.has(f.key);
                   return (
-                    <li key={f.key} className={"flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm transition-colors " + (isHidden ? "border-border bg-bg-secondary opacity-60" : "border-border bg-bg-elevated")}>
+                    <li key={f.key} className={"flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm transition-colors " + (isHidden ? "border-border bg-surface opacity-60" : "border-border bg-surface-raised")}>
                       <div className="min-w-0">
                         <p className="truncate text-foreground">{f.label}{f.required && <span className="ml-1 text-danger">*</span>}</p>
-                        <p className="text-[11px] text-text-muted">
+                        <p className="text-[11px] text-foreground-subtle">
                           <code className="font-mono">{f.key}</code><span className="mx-1.5">·</span>{f.type}<span className="mx-1.5">·</span>{f.required ? "required" : "optional"}
                         </p>
                       </div>
                       {f.required ? (
-                        <span className="text-[11px] text-text-muted">always shown</span>
+                        <span className="text-[11px] text-foreground-subtle">always shown</span>
                       ) : (
-                        <label className="flex shrink-0 items-center gap-2 text-xs text-text-secondary">
+                        <label className="flex shrink-0 items-center gap-2 text-xs text-foreground-muted">
                           <input type="checkbox" checked={isHidden} onChange={(e) => toggleHidden(f.key, e.target.checked)} className="h-3.5 w-3.5 rounded border-border" />
                           Hide
                         </label>
@@ -576,35 +576,35 @@ function EditShareModal({ share, onClose }: { share: FormShare; onClose: () => v
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Form title <span className="text-text-muted">(optional)</span></label>
-            <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder={"New " + share.resource_name} className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
+            <label className="block text-sm font-medium text-foreground">Form title <span className="text-foreground-subtle">(optional)</span></label>
+            <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder={"New " + share.resource_name} className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Description <span className="text-text-muted">(optional)</span></label>
-            <textarea value={customDescription} onChange={(e) => setCustomDescription(e.target.value)} rows={2} className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
+            <label className="block text-sm font-medium text-foreground">Description <span className="text-foreground-subtle">(optional)</span></label>
+            <textarea value={customDescription} onChange={(e) => setCustomDescription(e.target.value)} rows={2} className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">Internal label <span className="text-text-muted">(optional)</span></label>
-            <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Q3 lead form" className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
+            <label className="block text-sm font-medium text-foreground">Internal label <span className="text-foreground-subtle">(optional)</span></label>
+            <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Q3 lead form" className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">Password</label>
-            <div className="flex items-center gap-1 rounded-md border border-border bg-bg-tertiary p-0.5">
+            <div className="flex items-center gap-1 rounded-md border border-border bg-foreground/5 p-0.5">
               {(["keep", "set", "remove"] as PasswordMode[]).map((mode) => {
                 const disabled = mode === "remove" && !share.has_password;
                 return (
                   <button key={mode} type="button" onClick={() => !disabled && setPasswordMode(mode)} disabled={disabled}
-                    className={"flex-1 rounded px-2.5 py-1 text-xs font-medium transition-colors " + (passwordMode === mode ? "bg-accent text-white" : disabled ? "text-text-muted opacity-40 cursor-not-allowed" : "text-text-secondary hover:text-foreground")}>
+                    className={"flex-1 rounded px-2.5 py-1 text-xs font-medium transition-colors " + (passwordMode === mode ? "bg-brand text-white" : disabled ? "text-foreground-subtle opacity-40 cursor-not-allowed" : "text-foreground-muted hover:text-foreground")}>
                     {mode === "keep" ? "Keep current" : mode === "set" ? "Set password" : "Remove password"}
                   </button>
                 );
               })}
             </div>
             {passwordMode === "set" && (
-              <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New password" className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" />
+              <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New password" className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-foreground focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30" />
             )}
             {passwordMode === "remove" && (
               <p className="rounded-lg border border-warning/30 bg-warning/5 px-3 py-2 text-xs text-warning">
@@ -614,8 +614,8 @@ function EditShareModal({ share, onClose }: { share: FormShare; onClose: () => v
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border border-border bg-bg-elevated px-4 py-2 text-sm font-medium text-foreground hover:bg-bg-hover">Cancel</button>
-            <button type="submit" disabled={isPending} className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50">
+            <button type="button" onClick={onClose} className="rounded-lg border border-border bg-surface-raised px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground/5">Cancel</button>
+            <button type="submit" disabled={isPending} className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50">
               {isPending ? "Saving…" : "Save changes"}
             </button>
           </div>

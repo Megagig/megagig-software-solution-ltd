@@ -36,14 +36,14 @@ export function FormModal({ resource, item, defaults, onClose }: FormModalProps)
     // are better off using formView: "sheet" or "page" instead.
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-bg-secondary shadow-2xl">
+      <div className="relative z-10 w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-surface shadow-2xl">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="text-lg font-semibold text-foreground">
             {isEdit ? "Edit" : "Create"} {resource.label?.singular ?? resource.name}
           </h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
+            className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

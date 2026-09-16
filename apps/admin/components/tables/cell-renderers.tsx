@@ -15,7 +15,7 @@ export function renderCell(
   }
 
   if (value === null || value === undefined) {
-    return <span className="text-text-muted">—</span>;
+    return <span className="text-foreground-subtle">—</span>;
   }
 
   let content: React.ReactNode;
@@ -88,12 +88,12 @@ function UserCellInline({ row }: { row: Record<string, unknown> }) {
   const initials = ((first[0] || "") + (last[0] || "")).toUpperCase() || "U";
   return (
     <div className="flex items-center gap-2.5 min-w-0">
-      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-border bg-bg-elevated text-xs font-semibold text-foreground overflow-hidden">
+      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-1 ring-border bg-surface-raised text-xs font-semibold text-foreground overflow-hidden">
         {avatar ? <img src={avatar} alt={fullName} className="h-full w-full object-cover" /> : initials}
       </span>
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-foreground">{fullName}</p>
-        {email && <p className="truncate text-xs text-text-muted">{email}</p>}
+        {email && <p className="truncate text-xs text-foreground-subtle">{email}</p>}
       </div>
     </div>
   );
@@ -109,26 +109,26 @@ function BadgeCell({
   const badge = config?.[value];
   if (!badge) {
     return (
-      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-bg-hover text-text-secondary">
+      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-foreground/5 text-foreground-muted">
         {value}
       </span>
     );
   }
 
   const colorMap: Record<string, string> = {
-    accent: "bg-accent/10 text-accent",
+    accent: "bg-brand/10 text-brand",
     success: "bg-success/10 text-success",
     danger: "bg-danger/10 text-danger",
     warning: "bg-warning/10 text-warning",
     info: "bg-info/10 text-info",
-    muted: "bg-bg-hover text-text-secondary",
+    muted: "bg-foreground/5 text-foreground-muted",
     green: "bg-success/10 text-success",
     red: "bg-danger/10 text-danger",
     yellow: "bg-warning/10 text-warning",
     blue: "bg-info/10 text-info",
   };
 
-  const className = colorMap[badge.color] ?? "bg-bg-hover text-text-secondary";
+  const className = colorMap[badge.color] ?? "bg-foreground/5 text-foreground-muted";
 
   return (
     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${className}`}>
@@ -144,7 +144,7 @@ function BooleanCell({ value }: { value: boolean }) {
       <span className="text-xs">Active</span>
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 text-text-muted">
+    <span className="inline-flex items-center gap-1 text-foreground-subtle">
       <X className="h-3.5 w-3.5" />
       <span className="text-xs">Inactive</span>
     </span>
@@ -156,18 +156,18 @@ function CurrencyCell({ value, prefix = "$" }: { value: number; prefix?: string 
 }
 
 function DateCell({ value }: { value: string }) {
-  return <span className="text-text-secondary text-sm">{formatDate(value)}</span>;
+  return <span className="text-foreground-muted text-sm">{formatDate(value)}</span>;
 }
 
 function RelativeCell({ value }: { value: string }) {
-  return <span className="text-text-secondary text-sm">{formatRelative(value)}</span>;
+  return <span className="text-foreground-muted text-sm">{formatRelative(value)}</span>;
 }
 
 function ImageCell({ value }: { value: string }) {
   // Guard empty/invalid values — rendering <img src=""> makes the browser
   // re-request the whole page and logs a console warning.
   if (!value || value === "null" || value === "undefined") {
-    return <span className="text-text-muted">—</span>;
+    return <span className="text-foreground-subtle">—</span>;
   }
   return (
     <img
@@ -180,10 +180,10 @@ function ImageCell({ value }: { value: string }) {
 
 function VideoCell({ value }: { value: string }) {
   if (!value || value === "null" || value === "undefined") {
-    return <span className="text-text-muted">—</span>;
+    return <span className="text-foreground-subtle">—</span>;
   }
   return (
-    <div className="relative h-10 w-16 rounded overflow-hidden bg-bg-tertiary">
+    <div className="relative h-10 w-16 rounded overflow-hidden bg-foreground/5">
       <video src={value} className="h-full w-full object-cover" muted />
       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
         <Play className="h-3.5 w-3.5 text-white fill-white" />
@@ -206,7 +206,7 @@ type FileRefLike = {
 
 function FileRefCell({ value }: { value: FileRefLike | null }) {
   if (!value || !value.url) {
-    return <span className="text-text-muted">—</span>;
+    return <span className="text-foreground-subtle">—</span>;
   }
   const isImage = value.mime?.startsWith("image/");
   if (isImage) {
@@ -225,7 +225,7 @@ function FileRefCell({ value }: { value: FileRefLike | null }) {
       target="_blank"
       rel="noopener noreferrer"
       title={value.name}
-      className="inline-flex items-center gap-1.5 text-sm text-accent hover:underline"
+      className="inline-flex items-center gap-1.5 text-sm text-brand hover:underline"
     >
       <ExternalLink className="h-3.5 w-3.5" />
       <span className="truncate max-w-[140px]">{value.name}</span>
@@ -235,7 +235,7 @@ function FileRefCell({ value }: { value: FileRefLike | null }) {
 
 function FileRefsCell({ value }: { value: FileRefLike[] }) {
   if (!value || value.length === 0) {
-    return <span className="text-text-muted">—</span>;
+    return <span className="text-foreground-subtle">—</span>;
   }
   // Stack the first 3 thumbnails, then a "+N" overflow chip.
   const visible = value.slice(0, 3);
@@ -259,14 +259,14 @@ function FileRefsCell({ value }: { value: FileRefLike[] }) {
           <span
             key={i}
             title={f.name}
-            className="inline-flex h-8 w-8 items-center justify-center rounded border border-border bg-bg-tertiary text-[10px] font-semibold text-text-muted"
+            className="inline-flex h-8 w-8 items-center justify-center rounded border border-border bg-foreground/5 text-[10px] font-semibold text-foreground-subtle"
           >
             FILE
           </span>
         );
       })}
       {overflow > 0 && (
-        <span className="text-xs font-medium text-text-muted ml-1">
+        <span className="text-xs font-medium text-foreground-subtle ml-1">
           +{overflow}
         </span>
       )}
@@ -286,7 +286,7 @@ function LinkCell({ value }: { value: string }) {
       href={value}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 text-sm text-accent hover:underline"
+      className="inline-flex items-center gap-1 text-sm text-brand hover:underline"
     >
       {hostname}
       <ExternalLink className="h-3 w-3" />
@@ -298,7 +298,7 @@ function EmailCell({ value }: { value: string }) {
   return (
     <a
       href={`mailto:${value}`}
-      className="text-sm text-accent hover:underline"
+      className="text-sm text-brand hover:underline"
     >
       {value}
     </a>
@@ -312,7 +312,7 @@ function ColorCell({ value }: { value: string }) {
         className="h-5 w-5 rounded-full border border-border shrink-0"
         style={{ backgroundColor: value }}
       />
-      <span className="font-mono text-xs text-text-secondary">{value}</span>
+      <span className="font-mono text-xs text-foreground-muted">{value}</span>
     </div>
   );
 }
@@ -320,5 +320,5 @@ function ColorCell({ value }: { value: string }) {
 function RichTextCell({ value }: { value: string }) {
   const stripped = value.replace(/<[^>]*>/g, "").trim();
   const truncated = stripped.length > 100 ? stripped.slice(0, 100) + "..." : stripped;
-  return <span className="text-text-secondary">{truncated}</span>;
+  return <span className="text-foreground-muted">{truncated}</span>;
 }

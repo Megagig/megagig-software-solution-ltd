@@ -53,14 +53,14 @@ export default function BlogsPage() {
       {isLoading ? (
         <SkeletonTable rows={6} columns={3} />
       ) : (data?.length ?? 0) === 0 ? (
-        <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center">
-          <FileText className="mx-auto h-10 w-10 text-text-muted" />
+        <div className="rounded-xl border border-border bg-surface-raised p-12 text-center">
+          <FileText className="mx-auto h-10 w-10 text-foreground-subtle" />
           <p className="mt-3 text-base font-medium text-foreground">No blogs yet</p>
-          <p className="mt-1 text-sm text-text-muted">Click New Blog to draft your first article.</p>
+          <p className="mt-1 text-sm text-foreground-subtle">Click New Blog to draft your first article.</p>
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
           >
             <Plus className="h-4 w-4" />
             New Blog
@@ -72,13 +72,13 @@ export default function BlogsPage() {
             <li key={b.id}>
               <Link
                 href={"/resources/blogs/" + b.id}
-                className="flex gap-4 rounded-xl border border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover hover:border-accent/30"
+                className="flex gap-4 rounded-xl border border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5 hover:border-brand/30"
               >
-                <div className="h-20 w-32 shrink-0 overflow-hidden rounded-lg bg-bg-hover">
+                <div className="h-20 w-32 shrink-0 overflow-hidden rounded-lg bg-foreground/5">
                   {b.image ? (
                     <img src={b.image} alt={b.title} className="h-full w-full object-cover" />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-text-muted">
+                    <div className="flex h-full w-full items-center justify-center text-foreground-subtle">
                       <FileText className="h-6 w-6" />
                     </div>
                   )}
@@ -86,12 +86,12 @@ export default function BlogsPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="truncate text-sm font-semibold text-foreground">{b.title}</p>
-                    <span className={"shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase " + (b.published ? "bg-success/10 text-success" : "bg-bg-hover text-text-muted")}>
+                    <span className={"shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase " + (b.published ? "bg-success/10 text-success" : "bg-foreground/5 text-foreground-subtle")}>
                       {b.published ? "Published" : "Draft"}
                     </span>
                   </div>
-                  {b.excerpt && <p className="mt-1 line-clamp-2 text-sm text-text-secondary">{b.excerpt}</p>}
-                  <p className="mt-2 text-xs text-text-muted">Created {new Date(b.created_at).toLocaleString()}</p>
+                  {b.excerpt && <p className="mt-1 line-clamp-2 text-sm text-foreground-muted">{b.excerpt}</p>}
+                  <p className="mt-2 text-xs text-foreground-subtle">Created {new Date(b.created_at).toLocaleString()}</p>
                 </div>
               </Link>
             </li>
@@ -161,14 +161,14 @@ function NewBlogSheet({ open, onClose }: { open: boolean; onClose: () => void })
       description="Add the title and cover image. You'll write the article on the next screen."
       footer={
         <>
-          <button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover">
+          <button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5">
             Cancel
           </button>
           <button
             type="button"
             onClick={submit}
             disabled={!title.trim() || create.isPending}
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
           >
             {create.isPending ? "Creating..." : "Continue to editor"}
           </button>
@@ -183,17 +183,17 @@ function NewBlogSheet({ open, onClose }: { open: boolean; onClose: () => void })
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Your article's headline"
             autoFocus
-            className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
 
         <Field label="Cover image">
           <div className="space-y-2">
-            <div className="aspect-video overflow-hidden rounded-lg border border-dashed border-border bg-bg-elevated">
+            <div className="aspect-video overflow-hidden rounded-lg border border-dashed border-border bg-surface-raised">
               {image ? (
                 <img src={image} alt="Cover preview" className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-text-muted">
+                <div className="flex h-full w-full items-center justify-center text-xs text-foreground-subtle">
                   16:9 cover image
                 </div>
               )}
@@ -203,7 +203,7 @@ function NewBlogSheet({ open, onClose }: { open: boolean; onClose: () => void })
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm font-medium text-foreground hover:bg-bg-hover disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm font-medium text-foreground hover:bg-foreground/5 disabled:opacity-50"
             >
               {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
               {image ? "Replace cover" : "Upload cover"}
@@ -217,7 +217,7 @@ function NewBlogSheet({ open, onClose }: { open: boolean; onClose: () => void })
             onChange={(e) => setExcerpt(e.target.value)}
             rows={3}
             placeholder="A short summary readers see in lists and social previews."
-            className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
       </form>
@@ -228,7 +228,7 @@ function NewBlogSheet({ open, onClose }: { open: boolean; onClose: () => void })
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-text-muted">
+      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">
         {label}
         {required && <span className="ml-1 text-danger">*</span>}
       </span>

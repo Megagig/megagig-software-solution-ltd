@@ -66,20 +66,20 @@ export function ResourceStatCard({ resource, dateRange }: Props) {
   return (
     <Link
       href={"/resources/" + resource.slug}
-      className="group block rounded-xl border border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover"
+      className="group block rounded-xl border border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5"
     >
       <div className="flex items-start justify-between">
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent">
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand/10 text-brand">
           <Icon className="h-4 w-4" />
         </span>
-        <ArrowUpRight className="h-4 w-4 text-text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 text-foreground-subtle opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
-      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-text-muted">
+      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-foreground-subtle">
         Total {label}
       </p>
       <p className="text-2xl font-bold text-foreground">
         {query.isLoading ? (
-          <span className="text-text-muted">—</span>
+          <span className="text-foreground-subtle">—</span>
         ) : (
           total.toLocaleString()
         )}
@@ -91,28 +91,28 @@ export function ResourceStatCard({ resource, dateRange }: Props) {
           <AreaChart data={sparkData} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id={"spark-" + resource.slug} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.45} />
-                <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--color-brand)" stopOpacity={0.45} />
+                <stop offset="100%" stopColor="var(--color-brand)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <Tooltip
               contentStyle={{
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border)",
+                background: "var(--color-surface-raised)",
+                border: "1px solid var(--color-border)",
                 borderRadius: 6,
                 fontSize: 11,
                 padding: "4px 8px",
               }}
-              labelStyle={{ color: "var(--text-secondary)" }}
+              labelStyle={{ color: "var(--color-foreground-muted)" }}
               itemStyle={{ color: "var(--foreground)" }}
-              cursor={{ stroke: "var(--accent)", strokeOpacity: 0.3 }}
+              cursor={{ stroke: "var(--color-brand)", strokeOpacity: 0.3 }}
               formatter={(value: number) => [value + " new", "Count"]}
               labelFormatter={(d: string) => d}
             />
             <Area
               type="monotone"
               dataKey="count"
-              stroke="var(--accent)"
+              stroke="var(--color-brand)"
               strokeWidth={1.5}
               fill={"url(#spark-" + resource.slug + ")"}
               isAnimationActive={false}
@@ -120,7 +120,7 @@ export function ResourceStatCard({ resource, dateRange }: Props) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <p className="mt-1 text-[11px] text-text-muted">Last 30 days</p>
+      <p className="mt-1 text-[11px] text-foreground-subtle">Last 30 days</p>
     </Link>
   );
 }

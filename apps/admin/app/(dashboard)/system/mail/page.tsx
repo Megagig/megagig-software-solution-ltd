@@ -57,7 +57,7 @@ export default function MailPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Email Templates</h1>
-        <p className="text-sm text-text-secondary mt-1">Preview email templates with sample data</p>
+        <p className="text-sm text-foreground-muted mt-1">Preview email templates with sample data</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -69,15 +69,15 @@ export default function MailPage() {
               onClick={() => setSelected(t)}
               className={`w-full text-left rounded-xl border p-4 transition-colors ${
                 selected.name === t.name
-                  ? "border-accent bg-accent/5"
-                  : "border-border bg-bg-secondary hover:border-accent/30"
+                  ? "border-brand bg-brand/5"
+                  : "border-border bg-surface hover:border-brand/30"
               }`}
             >
               <div className="flex items-center gap-3">
-                <Mail className={`h-4 w-4 ${selected.name === t.name ? "text-accent" : "text-text-muted"}`} />
+                <Mail className={`h-4 w-4 ${selected.name === t.name ? "text-brand" : "text-foreground-subtle"}`} />
                 <div>
                   <p className="text-sm font-medium text-foreground">{t.label}</p>
-                  <p className="text-xs text-text-muted mt-0.5">{t.description}</p>
+                  <p className="text-xs text-foreground-subtle mt-0.5">{t.description}</p>
                 </div>
               </div>
             </button>
@@ -86,13 +86,13 @@ export default function MailPage() {
 
         {/* Preview */}
         <div className="lg:col-span-3">
-          <div className="rounded-xl border border-border bg-bg-secondary overflow-hidden">
+          <div className="rounded-xl border border-border bg-surface overflow-hidden">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <div>
                 <p className="text-sm font-medium text-foreground">{selected.label}</p>
-                <p className="text-xs text-text-muted">Template: {selected.name}</p>
+                <p className="text-xs text-foreground-subtle">Template: {selected.name}</p>
               </div>
-              <span className="rounded-md bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+              <span className="rounded-md bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand">
                 Preview
               </span>
             </div>
@@ -135,8 +135,8 @@ export default function MailPage() {
 
             {/* Sample data */}
             <div className="border-t border-border px-4 py-3">
-              <p className="text-xs font-medium text-text-muted uppercase mb-2">Template Data</p>
-              <pre className="text-xs text-text-secondary font-mono bg-bg-tertiary rounded-lg p-3 overflow-x-auto">
+              <p className="text-xs font-medium text-foreground-subtle uppercase mb-2">Template Data</p>
+              <pre className="text-xs text-foreground-muted font-mono bg-foreground/5 rounded-lg p-3 overflow-x-auto">
                 {JSON.stringify(selected.sampleData, null, 2)}
               </pre>
             </div>

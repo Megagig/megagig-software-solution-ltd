@@ -226,7 +226,7 @@ export function Dropzone({
       />
 
       {description && !error && !uploadError && (
-        <p className="text-xs text-text-muted">{description}</p>
+        <p className="text-xs text-foreground-subtle">{description}</p>
       )}
       {(error || uploadError) && (
         <p className="text-xs text-danger">{error || uploadError}</p>
@@ -289,8 +289,8 @@ function DefaultVariant({
         {...getRootProps()}
         className={`flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-8 cursor-pointer transition-all ${
           isDragActive
-            ? "border-accent bg-accent/5 scale-[1.01]"
-            : "border-border hover:border-accent/50 hover:bg-bg-hover/30"
+            ? "border-brand bg-brand/5 scale-[1.01]"
+            : "border-border hover:border-brand/50 hover:bg-foreground/5/30"
         } ${uploading ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         <input {...getInputProps()} />
@@ -298,18 +298,18 @@ function DefaultVariant({
           <UploadProgress variant={progress} percent={uploadProgress} />
         ) : (
           <>
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-bg-tertiary">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground/5">
               {isDragActive ? (
-                <Upload className="h-6 w-6 text-accent" />
+                <Upload className="h-6 w-6 text-brand" />
               ) : (
-                <Upload className="h-6 w-6 text-text-muted" />
+                <Upload className="h-6 w-6 text-foreground-subtle" />
               )}
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-foreground">
                 {isDragActive ? "Drop files here" : "Click to upload or drag and drop"}
               </p>
-              <p className="text-xs text-text-muted mt-1">
+              <p className="text-xs text-foreground-subtle mt-1">
                 Max size: {formatSize(maxSize)}
               </p>
             </div>
@@ -355,17 +355,17 @@ function CompactVariant({
         {...getRootProps()}
         className={`flex items-center gap-3 rounded-lg border-2 border-dashed px-4 py-3 cursor-pointer transition-all ${
           isDragActive
-            ? "border-accent bg-accent/5"
-            : "border-border hover:border-accent/50 hover:bg-bg-hover/30"
+            ? "border-brand bg-brand/5"
+            : "border-border hover:border-brand/50 hover:bg-foreground/5/30"
         } ${uploading ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         <input {...getInputProps()} />
-        {!uploading && <Upload className="h-5 w-5 text-text-muted shrink-0" />}
+        {!uploading && <Upload className="h-5 w-5 text-foreground-subtle shrink-0" />}
         <div className="flex-1 min-w-0">
           {uploading ? (
             <UploadProgress variant={progress} percent={uploadProgress} />
           ) : (
-            <p className="text-sm text-text-secondary">
+            <p className="text-sm text-foreground-muted">
               {isDragActive ? "Drop here..." : `Drop files or click to browse (max ${formatSize(maxSize)})`}
             </p>
           )}
@@ -375,13 +375,13 @@ function CompactVariant({
       {files.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {files.map((file, i) => (
-            <div key={i} className="flex items-center gap-1.5 rounded-md bg-bg-tertiary px-2.5 py-1.5 text-xs">
-              <File className="h-3 w-3 text-text-muted" />
+            <div key={i} className="flex items-center gap-1.5 rounded-md bg-foreground/5 px-2.5 py-1.5 text-xs">
+              <File className="h-3 w-3 text-foreground-subtle" />
               <span className="text-foreground truncate max-w-[150px]">{file.name}</span>
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); removeFile(i); }}
-                className="ml-1 rounded p-0.5 text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                className="ml-1 rounded p-0.5 text-foreground-subtle hover:text-danger hover:bg-danger/10 transition-colors"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -409,8 +409,8 @@ function MinimalVariant({
         {...getRootProps()}
         className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 cursor-pointer transition-all ${
           isDragActive
-            ? "border-accent bg-accent/5 text-accent"
-            : "border-border hover:border-accent/50 text-text-secondary hover:text-foreground"
+            ? "border-brand bg-brand/5 text-brand"
+            : "border-border hover:border-brand/50 text-foreground-muted hover:text-foreground"
         } ${uploading ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         <input {...getInputProps()} />
@@ -427,7 +427,7 @@ function MinimalVariant({
       {files.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {files.map((file, i) => (
-            <div key={i} className="flex items-center gap-1.5 text-xs text-text-secondary">
+            <div key={i} className="flex items-center gap-1.5 text-xs text-foreground-muted">
               <File className="h-3 w-3" />
               <span className="truncate max-w-[150px]">{file.name}</span>
               <button
@@ -468,8 +468,8 @@ function AvatarVariant({
               className="h-24 w-24 rounded-full object-cover border-2 border-border"
             />
           ) : (
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-bg-tertiary border-2 border-border">
-              <File className="h-8 w-8 text-text-muted" />
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-foreground/5 border-2 border-border">
+              <File className="h-8 w-8 text-foreground-subtle" />
             </div>
           )}
           <button
@@ -496,17 +496,17 @@ function AvatarVariant({
           {...getRootProps()}
           className={`flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full border-2 border-dashed cursor-pointer transition-all ${
             isDragActive
-              ? "border-accent bg-accent/5"
-              : "border-border hover:border-accent/50 hover:bg-bg-hover/30"
+              ? "border-brand bg-brand/5"
+              : "border-border hover:border-brand/50 hover:bg-foreground/5/30"
           } ${uploading ? "opacity-60 cursor-not-allowed" : ""}`}
         >
           <input {...getInputProps()} />
           {uploading ? (
-            <Loader2 className="h-6 w-6 animate-spin text-accent" />
+            <Loader2 className="h-6 w-6 animate-spin text-brand" />
           ) : (
             <>
-              <ImageIcon className="h-6 w-6 text-text-muted" />
-              <span className="text-[10px] text-text-muted">Upload</span>
+              <ImageIcon className="h-6 w-6 text-foreground-subtle" />
+              <span className="text-[10px] text-foreground-subtle">Upload</span>
             </>
           )}
         </div>
@@ -532,29 +532,29 @@ function InlineVariant({
         {...getRootProps()}
         className={`flex items-center justify-between rounded-lg border px-4 py-3 cursor-pointer transition-all ${
           isDragActive
-            ? "border-accent bg-accent/5"
-            : "border-border hover:border-accent/50"
+            ? "border-brand bg-brand/5"
+            : "border-border hover:border-brand/50"
         } ${uploading ? "opacity-60 cursor-not-allowed" : ""}`}
       >
         <input {...getInputProps()} />
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-bg-tertiary">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/5">
             {uploading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-accent" />
+              <Loader2 className="h-4 w-4 animate-spin text-brand" />
             ) : (
-              <Upload className="h-4 w-4 text-text-muted" />
+              <Upload className="h-4 w-4 text-foreground-subtle" />
             )}
           </div>
           <div>
             <p className="text-sm font-medium text-foreground">
               {uploading ? "Uploading..." : isDragActive ? "Drop files here" : "Choose files"}
             </p>
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-foreground-subtle">
               Max {formatSize(maxSize)} per file
             </p>
           </div>
         </div>
-        <span className="rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white">
+        <span className="rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white">
           Browse
         </span>
       </div>
@@ -589,7 +589,7 @@ function PreviewThumb({ file }: { file: UploadedFile }) {
   }
   if (mime.startsWith("video/")) {
     return (
-      <div className="relative h-10 w-10 rounded-md overflow-hidden bg-bg-tertiary">
+      <div className="relative h-10 w-10 rounded-md overflow-hidden bg-foreground/5">
         <div className="absolute inset-0 flex items-center justify-center bg-black/30">
           <Play className="h-3.5 w-3.5 text-white fill-white" />
         </div>
@@ -597,13 +597,13 @@ function PreviewThumb({ file }: { file: UploadedFile }) {
     );
   }
   let Icon = File;
-  let tint = "text-text-muted";
+  let tint = "text-foreground-subtle";
   if (mime.startsWith("audio/")) { Icon = Music; tint = "text-info"; }
   else if (mime === "application/pdf") { Icon = FileText; tint = "text-danger"; }
   else if (mime.includes("wordprocessing") || mime === "application/msword") { Icon = FileText; tint = "text-info"; }
   else if (mime.includes("spreadsheet") || mime === "application/vnd.ms-excel" || mime === "text/csv") { Icon = FileSpreadsheet; tint = "text-success"; }
   return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-bg-tertiary">
+    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-foreground/5">
       <Icon className={"h-5 w-5 " + tint} />
     </div>
   );
@@ -625,11 +625,11 @@ interface FilePreviewProps {
 function FilePreview({ file, onRemove, index, total, reorderable, onMove }: FilePreviewProps) {
   const canReorder = reorderable && typeof index === "number" && typeof total === "number" && total > 1 && onMove;
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border bg-bg-secondary px-3 py-2.5">
+    <div className="flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5">
       <PreviewThumb file={file} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-        <p className="text-xs text-text-muted">{formatSize(file.size)}</p>
+        <p className="text-xs text-foreground-subtle">{formatSize(file.size)}</p>
       </div>
       {canReorder && (
         <div className="flex flex-col gap-0.5">
@@ -637,7 +637,7 @@ function FilePreview({ file, onRemove, index, total, reorderable, onMove }: File
             type="button"
             disabled={index === 0}
             onClick={(e) => { e.stopPropagation(); onMove!(index!, -1); }}
-            className="rounded p-0.5 text-text-muted hover:text-foreground hover:bg-bg-hover transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+            className="rounded p-0.5 text-foreground-subtle hover:text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
             title="Move up"
           >
             <ChevronUp className="h-3.5 w-3.5" />
@@ -646,7 +646,7 @@ function FilePreview({ file, onRemove, index, total, reorderable, onMove }: File
             type="button"
             disabled={index === total! - 1}
             onClick={(e) => { e.stopPropagation(); onMove!(index!, 1); }}
-            className="rounded p-0.5 text-text-muted hover:text-foreground hover:bg-bg-hover transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+            className="rounded p-0.5 text-foreground-subtle hover:text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
             title="Move down"
           >
             <ChevronDown className="h-3.5 w-3.5" />
@@ -656,7 +656,7 @@ function FilePreview({ file, onRemove, index, total, reorderable, onMove }: File
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg p-1.5 text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+        className="rounded-lg p-1.5 text-foreground-subtle hover:text-danger hover:bg-danger/10 transition-colors"
       >
         <X className="h-4 w-4" />
       </button>
@@ -682,11 +682,11 @@ function UploadProgress({ variant, percent }: UploadProgressProps) {
 function UploadProgressBar({ percent }: { percent: number }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <Loader2 className="h-8 w-8 animate-spin text-accent" />
-      <p className="text-sm text-text-secondary">Uploading... {percent}%</p>
-      <div className="w-48 h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
+      <Loader2 className="h-8 w-8 animate-spin text-brand" />
+      <p className="text-sm text-foreground-muted">Uploading... {percent}%</p>
+      <div className="w-48 h-1.5 bg-foreground/5 rounded-full overflow-hidden">
         <div
-          className="h-full bg-accent rounded-full transition-all duration-300"
+          className="h-full bg-brand rounded-full transition-all duration-300"
           style={{ width: percent + "%" }}
         />
       </div>
@@ -709,7 +709,7 @@ function UploadProgressCircular({ percent }: { percent: number }) {
             cy="18"
             r={radius}
             fill="none"
-            className="stroke-bg-tertiary"
+            className="stroke-foreground/5"
             strokeWidth="4"
           />
           <circle
@@ -717,7 +717,7 @@ function UploadProgressCircular({ percent }: { percent: number }) {
             cy="18"
             r={radius}
             fill="none"
-            className="stroke-accent transition-[stroke-dashoffset] duration-300"
+            className="stroke-brand transition-[stroke-dashoffset] duration-300"
             strokeWidth="4"
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -728,7 +728,7 @@ function UploadProgressCircular({ percent }: { percent: number }) {
           <span className="text-[10px] font-semibold tabular-nums text-foreground">{percent}%</span>
         </div>
       </div>
-      <p className="text-sm text-text-secondary">Uploading...</p>
+      <p className="text-sm text-foreground-muted">Uploading...</p>
     </div>
   );
 }
@@ -740,11 +740,11 @@ function UploadProgressPulse({ percent }: { percent: number }) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1">
-        <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" style={{ animationDelay: "0ms" }} />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" style={{ animationDelay: "150ms" }} />
-        <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" style={{ animationDelay: "300ms" }} />
+        <span className="h-1.5 w-1.5 rounded-full bg-brand animate-pulse" style={{ animationDelay: "0ms" }} />
+        <span className="h-1.5 w-1.5 rounded-full bg-brand animate-pulse" style={{ animationDelay: "150ms" }} />
+        <span className="h-1.5 w-1.5 rounded-full bg-brand animate-pulse" style={{ animationDelay: "300ms" }} />
       </div>
-      <span className="text-xs font-medium text-text-secondary tabular-nums">Uploading {percent}%</span>
+      <span className="text-xs font-medium text-foreground-muted tabular-nums">Uploading {percent}%</span>
     </div>
   );
 }

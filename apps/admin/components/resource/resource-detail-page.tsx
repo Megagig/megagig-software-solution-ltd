@@ -87,7 +87,7 @@ export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 p-8 text-sm text-text-muted">
+      <div className="flex items-center gap-2 p-8 text-sm text-foreground-subtle">
         <Loader2 className="h-4 w-4 animate-spin" /> Loading…
       </div>
     );
@@ -95,10 +95,10 @@ export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
   if (!record) {
     return (
       <div className="p-8">
-        <Link href={"/resources/" + resource.slug} className="text-sm text-accent hover:underline">
+        <Link href={"/resources/" + resource.slug} className="text-sm text-brand hover:underline">
           ← Back to {resource.label?.plural ?? resource.name}
         </Link>
-        <p className="mt-4 text-sm text-text-muted">This record could not be found.</p>
+        <p className="mt-4 text-sm text-foreground-subtle">This record could not be found.</p>
       </div>
     );
   }
@@ -112,12 +112,12 @@ export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
         <div>
           <Link
             href={"/resources/" + resource.slug}
-            className="no-print mb-2 inline-flex items-center gap-1 text-xs text-text-muted hover:text-foreground"
+            className="no-print mb-2 inline-flex items-center gap-1 text-xs text-foreground-subtle hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to {resource.label?.plural ?? resource.name}
           </Link>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">{titleOf(resource, record)}</h1>
-          <p className="text-sm text-text-muted">{resource.label?.singular ?? resource.name} details</p>
+          <p className="text-sm text-foreground-subtle">{resource.label?.singular ?? resource.name} details</p>
         </div>
         <div className="no-print flex items-center gap-2">
           {/* The PDF is rendered server-side (GET <endpoint>/:id/pdf) so it
@@ -130,27 +130,27 @@ export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
           <button
             onClick={downloadPdf}
             disabled={pdfBusy}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-accent/40 hover:text-foreground transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-foreground-muted hover:border-brand/40 hover:text-foreground transition-colors disabled:opacity-50"
           >
             {pdfBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
             PDF
           </button>
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-accent/40 hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-foreground-muted hover:border-brand/40 hover:text-foreground transition-colors"
           >
             <Printer className="h-4 w-4" /> Print
           </button>
           <button
             onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white hover:brightness-90 transition-colors"
           >
             <Pencil className="h-4 w-4" /> Edit
           </button>
           <button
             disabled={isDeleting}
             onClick={() => setConfirmDelete(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-danger/40 hover:text-danger disabled:opacity-50 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-foreground-muted hover:border-danger/40 hover:text-danger disabled:opacity-50 transition-colors"
           >
             <Trash2 className="h-4 w-4" /> Delete
           </button>
@@ -158,12 +158,12 @@ export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
       </div>
 
       {/* Details */}
-      <div className="rounded-xl border border-border bg-bg-elevated p-6">
+      <div className="rounded-xl border border-border bg-surface-raised p-6">
         <h2 className="mb-5 text-sm font-semibold text-foreground">Details</h2>
         <dl className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
           {cols.map((col) => (
             <div key={col.key} className="min-w-0">
-              <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">{col.label}</dt>
+              <dt className="text-xs font-medium uppercase tracking-wide text-foreground-subtle">{col.label}</dt>
               <dd className="mt-1 break-words text-sm text-foreground">
                 {renderCell(col, record[col.key], record)}
               </dd>
@@ -250,16 +250,16 @@ function RelatedTable({
   const childLabel = createResource?.label?.singular ?? createResource?.name ?? "item";
 
   return (
-    <div className="mt-6 rounded-xl border border-border bg-bg-elevated">
+    <div className="mt-6 rounded-xl border border-border bg-surface-raised">
       <div className="flex items-center justify-between gap-2 border-b border-border px-6 py-4">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          <span className="rounded-full bg-bg-hover px-2 py-0.5 text-xs text-text-muted">{rows.length}</span>
+          <span className="rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-foreground-subtle">{rows.length}</span>
         </div>
         {createResource && (
           <button
             onClick={() => setCreating(true)}
-            className="no-print inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
+            className="no-print inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-medium text-white hover:brightness-90 transition-colors"
           >
             <Plus className="h-3.5 w-3.5" /> New {childLabel}
           </button>

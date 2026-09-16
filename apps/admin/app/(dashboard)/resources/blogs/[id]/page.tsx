@@ -169,12 +169,12 @@ export default function BlogDetailPage() {
       {/* Meta panel — cover, title, excerpt */}
       <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Cover image</p>
-          <div className="relative aspect-video overflow-hidden rounded-xl border border-dashed border-border bg-bg-elevated">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground-subtle">Cover image</p>
+          <div className="relative aspect-video overflow-hidden rounded-xl border border-dashed border-border bg-surface-raised">
             {image ? (
               <img src={image} alt={title} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-text-muted">
+              <div className="flex h-full w-full items-center justify-center text-foreground-subtle">
                 <span className="text-xs">No cover image</span>
               </div>
             )}
@@ -182,7 +182,7 @@ export default function BlogDetailPage() {
               type="button"
               onClick={() => coverInputRef.current?.click()}
               disabled={coverUploading}
-              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-lg bg-bg-elevated/90 px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm backdrop-blur hover:bg-bg-elevated disabled:opacity-50"
+              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-lg bg-surface-raised/90 px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm backdrop-blur hover:bg-surface-raised disabled:opacity-50"
             >
               <Upload className="h-3.5 w-3.5" />
               {coverUploading ? "Uploading..." : (image ? "Replace" : "Upload")}
@@ -199,7 +199,7 @@ export default function BlogDetailPage() {
               onChange={(e) => setTitle(e.target.value)}
               onBlur={() => { if (title !== blog.title) save.mutate({ title }); }}
               placeholder="Article title..."
-              className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-base font-semibold text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-base font-semibold text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </Field>
           <Field label="Excerpt">
@@ -209,7 +209,7 @@ export default function BlogDetailPage() {
               onBlur={() => { if (excerpt !== blog.excerpt) save.mutate({ excerpt }); }}
               rows={3}
               placeholder="A short summary readers see in lists and social previews."
-              className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </Field>
         </div>
@@ -217,7 +217,7 @@ export default function BlogDetailPage() {
 
       {/* Word-style editor */}
       <section>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">Content</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground-subtle">Content</p>
         <WordEditor
           value={content}
           onChange={setContent}
@@ -227,9 +227,9 @@ export default function BlogDetailPage() {
         />
       </section>
 
-      <div className="mt-3 flex items-center justify-between text-xs text-text-muted">
+      <div className="mt-3 flex items-center justify-between text-xs text-foreground-subtle">
         <p>Autosaves when you leave a field. Last updated {new Date(blog.updated_at).toLocaleString()}.</p>
-        <Link href={"/blog/" + blog.slug} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent-hover">
+        <Link href={"/blog/" + blog.slug} target="_blank" rel="noopener noreferrer" className="text-brand hover:opacity-80">
           View public page →
         </Link>
       </div>
@@ -240,7 +240,7 @@ export default function BlogDetailPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</span>
+      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</span>
       {children}
     </label>
   );
@@ -252,15 +252,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function BlogDetailSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="mb-6 h-16 rounded-xl bg-bg-hover" />
+      <div className="mb-6 h-16 rounded-xl bg-foreground/5" />
       <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-bg-hover lg:col-span-1" />
+        <div className="aspect-video rounded-xl bg-foreground/5 lg:col-span-1" />
         <div className="space-y-3 lg:col-span-2">
-          <div className="h-10 rounded-lg bg-bg-hover" />
-          <div className="h-20 rounded-lg bg-bg-hover" />
+          <div className="h-10 rounded-lg bg-foreground/5" />
+          <div className="h-20 rounded-lg bg-foreground/5" />
         </div>
       </section>
-      <div className="h-[500px] rounded-xl bg-bg-hover" />
+      <div className="h-[500px] rounded-xl bg-foreground/5" />
     </div>
   );
 }

@@ -23,7 +23,7 @@ export function TextField({ field, value, onChange, error, onGenerate }: TextFie
 
       <div className="flex">
         {field.prefix && (
-          <span className="inline-flex items-center rounded-l-lg border border-r-0 border-border bg-bg-tertiary px-3 text-sm text-text-muted">
+          <span className="inline-flex items-center rounded-l-lg border border-r-0 border-border bg-foreground/5 px-3 text-sm text-foreground-subtle">
             {field.prefix}
           </span>
         )}
@@ -32,17 +32,17 @@ export function TextField({ field, value, onChange, error, onGenerate }: TextFie
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className={`w-full ${field.prefix ? "rounded-r-lg" : field.suffix ? "rounded-l-lg" : "rounded-lg"} border border-border bg-bg-tertiary px-4 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent ${error ? "border-danger" : ""}`}
+          className={`w-full ${field.prefix ? "rounded-r-lg" : field.suffix ? "rounded-l-lg" : "rounded-lg"} border border-border bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand ${error ? "border-danger" : ""}`}
         />
         {field.suffix && (
-          <span className="inline-flex items-center rounded-r-lg border border-l-0 border-border bg-bg-tertiary px-3 text-sm text-text-muted">
+          <span className="inline-flex items-center rounded-r-lg border border-l-0 border-border bg-foreground/5 px-3 text-sm text-foreground-subtle">
             {field.suffix}
           </span>
         )}
       </div>
 
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

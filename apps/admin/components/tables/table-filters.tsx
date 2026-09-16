@@ -25,7 +25,7 @@ export function TableFilters({ filters, values, onChange }: TableFiltersProps) {
       {hasActiveFilters && (
         <button
           onClick={() => filters.forEach((f) => onChange(f.key, ""))}
-          className="text-xs text-text-secondary hover:text-foreground transition-colors"
+          className="text-xs text-foreground-muted hover:text-foreground transition-colors"
         >
           Clear all
         </button>
@@ -49,7 +49,7 @@ function FilterControl({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="rounded-lg border border-border bg-bg-tertiary px-3 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="rounded-lg border border-border bg-foreground/5 px-3 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         >
           <option value="">{filter.placeholder ?? `All ${filter.label}`}</option>
           {filter.options?.map((opt) => (
@@ -65,7 +65,7 @@ function FilterControl({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="rounded-lg border border-border bg-bg-tertiary px-3 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="rounded-lg border border-border bg-foreground/5 px-3 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         >
           <option value="">{filter.placeholder ?? `All ${filter.label}`}</option>
           <option value="true">Yes</option>
@@ -76,7 +76,7 @@ function FilterControl({
     case "number-range":
       return (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-text-muted">{filter.label}</span>
+          <span className="text-xs text-foreground-subtle">{filter.label}</span>
           <input
             type="number"
             placeholder="Min"
@@ -85,9 +85,9 @@ function FilterControl({
               const max = value.split(",")[1] ?? "";
               onChange([e.target.value, max].join(","));
             }}
-            className="w-20 rounded-lg border border-border bg-bg-tertiary px-2 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+            className="w-20 rounded-lg border border-border bg-foreground/5 px-2 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none"
           />
-          <span className="text-text-muted">—</span>
+          <span className="text-foreground-subtle">—</span>
           <input
             type="number"
             placeholder="Max"
@@ -96,7 +96,7 @@ function FilterControl({
               const min = value.split(",")[0] ?? "";
               onChange([min, e.target.value].join(","));
             }}
-            className="w-20 rounded-lg border border-border bg-bg-tertiary px-2 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+            className="w-20 rounded-lg border border-border bg-foreground/5 px-2 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none"
           />
         </div>
       );
@@ -104,7 +104,7 @@ function FilterControl({
     case "date-range":
       return (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-text-muted">{filter.label}</span>
+          <span className="text-xs text-foreground-subtle">{filter.label}</span>
           <input
             type="date"
             value={value.split(",")[0] ?? ""}
@@ -112,9 +112,9 @@ function FilterControl({
               const end = value.split(",")[1] ?? "";
               onChange([e.target.value, end].join(","));
             }}
-            className="rounded-lg border border-border bg-bg-tertiary px-2 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+            className="rounded-lg border border-border bg-foreground/5 px-2 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none"
           />
-          <span className="text-text-muted">to</span>
+          <span className="text-foreground-subtle">to</span>
           <input
             type="date"
             value={value.split(",")[1] ?? ""}
@@ -122,7 +122,7 @@ function FilterControl({
               const start = value.split(",")[0] ?? "";
               onChange([start, e.target.value].join(","));
             }}
-            className="rounded-lg border border-border bg-bg-tertiary px-2 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+            className="rounded-lg border border-border bg-foreground/5 px-2 py-1.5 text-sm text-foreground focus:border-brand focus:outline-none"
           />
         </div>
       );

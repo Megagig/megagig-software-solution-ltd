@@ -49,18 +49,18 @@ export function FormPageSteps({ resource }: FormPageStepsProps) {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-text-secondary hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
             Back to {pluralName}
           </button>
         </div>
-        <div className="rounded-xl border border-border bg-bg-secondary p-8">
+        <div className="rounded-xl border border-border bg-surface p-8">
           <div className="animate-pulse space-y-4">
-            <div className="h-6 w-48 rounded bg-bg-tertiary" />
-            <div className="h-10 rounded bg-bg-tertiary" />
-            <div className="h-10 rounded bg-bg-tertiary" />
-            <div className="h-10 rounded bg-bg-tertiary" />
+            <div className="h-6 w-48 rounded bg-foreground/5" />
+            <div className="h-10 rounded bg-foreground/5" />
+            <div className="h-10 rounded bg-foreground/5" />
+            <div className="h-10 rounded bg-foreground/5" />
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@ export function FormPageSteps({ resource }: FormPageStepsProps) {
       <div className="flex items-center gap-4">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-text-secondary hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to {pluralName}
@@ -83,12 +83,12 @@ export function FormPageSteps({ resource }: FormPageStepsProps) {
         <h1 className="text-2xl font-bold text-foreground">
           {isEdit ? "Edit" : "Create"} {singularName}
         </h1>
-        <p className="text-text-secondary mt-1">
+        <p className="text-foreground-muted mt-1">
           {isEdit ? `Update this ${singularName.toLowerCase()}'s details` : `Add a new ${singularName.toLowerCase()} to your application`}
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-bg-secondary p-6">
+      <div className="rounded-xl border border-border bg-surface p-6">
         <FormStepper
           form={resource.form}
           defaultValues={isEdit && item?.data ? (item.data as Record<string, unknown>) : undefined}

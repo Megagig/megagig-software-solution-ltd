@@ -109,7 +109,7 @@ export function ExportMenu({
       <button
         onClick={() => run(defaultFormat)}
         disabled={busy !== null}
-        className="flex items-center gap-1.5 rounded-l-lg border border-border bg-bg-tertiary px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-1.5 rounded-l-lg border border-border bg-foreground/5 px-3 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {busy ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -126,7 +126,7 @@ export function ExportMenu({
         <button
           onClick={() => setOpen((v) => !v)}
           disabled={busy !== null}
-          className="flex items-center rounded-r-lg border border-l-0 border-border bg-bg-tertiary px-2 py-1.5 text-text-secondary hover:bg-bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center rounded-r-lg border border-l-0 border-border bg-foreground/5 px-2 py-1.5 text-foreground-muted hover:bg-foreground/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Export format"
         >
           <ChevronDown className="h-3.5 w-3.5" />
@@ -134,16 +134,16 @@ export function ExportMenu({
       )}
 
       {open && (
-        <div className="absolute right-0 top-full z-30 mt-1 w-44 rounded-lg border border-border bg-bg-elevated shadow-lg p-1">
+        <div className="absolute right-0 top-full z-30 mt-1 w-44 rounded-lg border border-border bg-surface-raised shadow-lg p-1">
           {formats.map((f) => (
             <button
               key={f}
               onClick={() => run(f)}
-              className="flex w-full items-center justify-between rounded px-2 py-1.5 text-sm text-foreground hover:bg-bg-hover transition-colors"
+              className="flex w-full items-center justify-between rounded px-2 py-1.5 text-sm text-foreground hover:bg-foreground/5 transition-colors"
             >
               <span>{FORMAT_LABELS[f]}</span>
               {f === defaultFormat && (
-                <span className="text-[10px] text-text-muted uppercase">Default</span>
+                <span className="text-[10px] text-foreground-subtle uppercase">Default</span>
               )}
             </button>
           ))}

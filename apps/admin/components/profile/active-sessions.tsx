@@ -86,12 +86,12 @@ export function ActiveSessions() {
   return (
     <div className="space-y-3">
       {isLoading ? (
-        <div className="flex items-center gap-2 py-6 text-sm text-text-secondary">
+        <div className="flex items-center gap-2 py-6 text-sm text-foreground-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading sessions…
         </div>
       ) : sessions.length === 0 ? (
-        <p className="py-6 text-sm text-text-secondary">No active sessions.</p>
+        <p className="py-6 text-sm text-foreground-muted">No active sessions.</p>
       ) : (
         <ul className="space-y-2">
           {sessions.map((s) => {
@@ -100,10 +100,10 @@ export function ActiveSessions() {
             return (
               <li
                 key={s.id}
-                className="flex flex-col gap-3 rounded-xl border border-border bg-bg-secondary/40 p-4 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border border-border bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-start gap-3">
-                  <span className="mt-0.5 rounded-lg border border-border bg-bg-tertiary p-2 text-text-secondary">
+                  <span className="mt-0.5 rounded-lg border border-border bg-foreground/5 p-2 text-foreground-muted">
                     <Icon className="h-4 w-4" />
                   </span>
                   <div>
@@ -116,7 +116,7 @@ export function ActiveSessions() {
                         </span>
                       )}
                     </p>
-                    <p className="mt-0.5 text-xs text-text-secondary">
+                    <p className="mt-0.5 text-xs text-foreground-muted">
                       {s.ip || "unknown IP"} · last active {relativeTime(s.last_seen_at)}
                     </p>
                   </div>
@@ -127,7 +127,7 @@ export function ActiveSessions() {
                     type="button"
                     onClick={() => revoke.mutate(s.id)}
                     disabled={revoke.isPending}
-                    className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-text-secondary hover:border-danger/40 hover:bg-danger/10 hover:text-danger disabled:opacity-50"
+                    className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground-muted hover:border-danger/40 hover:bg-danger/10 hover:text-danger disabled:opacity-50"
                   >
                     {revoke.isPending && revoke.variables === s.id ? (
                       <Loader2 className="h-3 w-3 animate-spin" />

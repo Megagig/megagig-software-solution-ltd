@@ -26,7 +26,7 @@ export function Skeleton({ shape = "rect", className = "", ...rest }: SkeletonPr
   return (
     <div
       {...rest}
-      className={"animate-pulse bg-bg-hover " + shapeClass + " " + className}
+      className={"animate-pulse bg-foreground/5 " + shapeClass + " " + className}
     />
   );
 }
@@ -39,7 +39,7 @@ export function Skeleton({ shape = "rect", className = "", ...rest }: SkeletonPr
 export function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
   return (
     <>
-      <div className="hidden md:block overflow-hidden rounded-xl border border-border bg-bg-elevated">
+      <div className="hidden md:block overflow-hidden rounded-xl border border-border bg-surface-raised">
         <div className="border-b border-border px-4 py-3 flex gap-4">
           {Array.from({ length: columns }).map((_, i) => (
             <Skeleton key={i} shape="text" className="flex-1 max-w-[120px]" />
@@ -57,7 +57,7 @@ export function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; column
       </div>
       <ul className="md:hidden space-y-3">
         {Array.from({ length: rows }).map((_, i) => (
-          <li key={i} className="rounded-xl border border-border bg-bg-elevated p-4 space-y-2">
+          <li key={i} className="rounded-xl border border-border bg-surface-raised p-4 space-y-2">
             <Skeleton shape="text" className="w-1/2" />
             <Skeleton shape="text" className="w-3/4" />
             <Skeleton shape="text" className="w-1/3" />
@@ -75,7 +75,7 @@ export function SkeletonCards({ count = 4 }: { count?: number }) {
   return (
     <div className={"grid grid-cols-2 gap-3 md:grid-cols-" + count}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-border bg-bg-elevated p-4 space-y-2">
+        <div key={i} className="rounded-xl border border-border bg-surface-raised p-4 space-y-2">
           <Skeleton shape="text" className="w-20" />
           <Skeleton className="h-7 w-16" />
         </div>

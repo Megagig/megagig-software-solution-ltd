@@ -35,14 +35,14 @@ export function FormModalSteps({ resource, item, onClose }: FormModalStepsProps)
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-stretch md:justify-end">
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative z-10 w-full max-h-[90vh] overflow-y-auto rounded-t-2xl border border-border bg-bg-secondary shadow-2xl md:max-h-none md:h-full md:rounded-none md:rounded-l-2xl ${isVertical ? "md:max-w-4xl" : "md:max-w-2xl"}`}>
+      <div className={`relative z-10 w-full max-h-[90vh] overflow-y-auto rounded-t-2xl border border-border bg-surface shadow-2xl md:max-h-none md:h-full md:rounded-none md:rounded-l-2xl ${isVertical ? "md:max-w-4xl" : "md:max-w-2xl"}`}>
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="text-lg font-semibold text-foreground">
             {isEdit ? "Edit" : "Create"} {resource.label?.singular ?? resource.name}
           </h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
+            className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

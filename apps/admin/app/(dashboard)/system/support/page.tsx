@@ -29,7 +29,7 @@ interface ListResponse {
 }
 
 const priorityClass: Record<Ticket["priority"], string> = {
-  low: "bg-bg-hover text-text-secondary",
+  low: "bg-foreground/5 text-foreground-muted",
   medium: "bg-info/10 text-info",
   high: "bg-warning/10 text-warning",
   critical: "bg-danger/10 text-danger",
@@ -64,7 +64,7 @@ export default function SupportPage() {
       />
 
       {/* Status tabs */}
-      <div className="mb-6 flex w-fit rounded-lg border border-border bg-bg-elevated p-1">
+      <div className="mb-6 flex w-fit rounded-lg border border-border bg-surface-raised p-1">
         {(["open", "closed"] as const).map((s) => (
           <button
             key={s}
@@ -72,7 +72,7 @@ export default function SupportPage() {
             onClick={() => setStatus(s)}
             className={
               "inline-flex items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors " +
-              (status === s ? "bg-accent text-white" : "text-text-secondary hover:text-foreground")
+              (status === s ? "bg-brand text-white" : "text-foreground-muted hover:text-foreground")
             }
           >
             {s === "open" ? <MessageSquare className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
@@ -84,21 +84,21 @@ export default function SupportPage() {
       {isLoading ? (
         <ul className="space-y-2 animate-pulse">
           {Array.from({ length: 4 }).map((_, i) => (
-            <li key={i} className="flex gap-4 rounded-xl border border-border bg-bg-elevated p-4">
-              <div className="h-16 w-32 shrink-0 rounded-lg bg-bg-hover" />
+            <li key={i} className="flex gap-4 rounded-xl border border-border bg-surface-raised p-4">
+              <div className="h-16 w-32 shrink-0 rounded-lg bg-foreground/5" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 w-1/3 rounded bg-bg-hover" />
-                <div className="h-3 w-3/4 rounded bg-bg-hover" />
-                <div className="h-3 w-1/4 rounded bg-bg-hover" />
+                <div className="h-4 w-1/3 rounded bg-foreground/5" />
+                <div className="h-3 w-3/4 rounded bg-foreground/5" />
+                <div className="h-3 w-1/4 rounded bg-foreground/5" />
               </div>
             </li>
           ))}
         </ul>
       ) : tickets.length === 0 ? (
-        <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center">
-          <MessageSquare className="mx-auto h-10 w-10 text-text-muted" />
+        <div className="rounded-xl border border-border bg-surface-raised p-12 text-center">
+          <MessageSquare className="mx-auto h-10 w-10 text-foreground-subtle" />
           <p className="mt-3 text-base font-medium text-foreground">No {status} tickets</p>
-          <p className="mt-1 text-sm text-text-muted">
+          <p className="mt-1 text-sm text-foreground-subtle">
             {status === "open"
               ? "When you open a support ticket it'll show up here and our team gets notified."
               : "Closed tickets will appear here once they're resolved."}
@@ -107,7 +107,7 @@ export default function SupportPage() {
             <button
               type="button"
               onClick={() => setOpenSheet(true)}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
             >
               <Plus className="h-4 w-4" />
               New ticket
@@ -120,7 +120,7 @@ export default function SupportPage() {
             <li key={t.id}>
               <Link
                 href={"/system/support/" + t.id}
-                className="block rounded-xl border border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover"
+                className="block rounded-xl border border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -130,8 +130,8 @@ export default function SupportPage() {
                       </span>
                       <p className="truncate text-sm font-semibold text-foreground">{t.subject}</p>
                     </div>
-                    <p className="mt-1 line-clamp-2 text-sm text-text-secondary">{t.description}</p>
-                    <p className="mt-2 text-xs text-text-muted">
+                    <p className="mt-1 line-clamp-2 text-sm text-foreground-muted">{t.description}</p>
+                    <p className="mt-2 text-xs text-foreground-subtle">
                       Opened {new Date(t.created_at).toLocaleString()}
                       {t.user && " by " + t.user.first_name + " " + t.user.last_name}
                     </p>
@@ -187,14 +187,14 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
       description="Tell us what's going wrong (or what you'd like to see)."
       footer={
         <>
-          <button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover">
+          <button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5">
             Cancel
           </button>
           <button
             type="button"
             onClick={submit}
             disabled={create.isPending}
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
           >
             {create.isPending ? "Opening..." : "Open ticket"}
           </button>
@@ -215,7 +215,7 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="One-line summary of the problem"
-            className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
 
@@ -224,7 +224,7 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as Ticket["priority"])}
-              className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -238,7 +238,7 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
               value={labels}
               onChange={(e) => setLabels(e.target.value)}
               placeholder="bug, billing, mobile"
-              className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </Field>
         </div>
@@ -249,7 +249,7 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             placeholder="Steps to reproduce, expected vs. actual behaviour, anything that helps."
-            className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
       </form>
@@ -260,7 +260,7 @@ function NewTicketSheet({ open, onClose }: { open: boolean; onClose: () => void 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-text-muted">
+      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">
         {label}
         {required && <span className="ml-1 text-danger">*</span>}
       </span>

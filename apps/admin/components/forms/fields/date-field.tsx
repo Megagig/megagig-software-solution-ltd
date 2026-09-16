@@ -220,8 +220,8 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
       ref={panelRef}
       role="dialog"
       aria-label={`Choose ${field.label}`}
-      className="fixed z-[9999] rounded-xl border border-border bg-bg-elevated p-3 shadow-2xl"
-      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--bg-elevated, #22222e)" }}
+      className="fixed z-[9999] rounded-xl border border-border bg-surface-raised p-3 shadow-2xl"
+      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--color-surface-raised, #22222e)" }}
     >
       {/* Month and year are dropdowns, not just arrows. Clicking a chevron 480
           times to reach a birth year is the problem this replaces. */}
@@ -230,7 +230,7 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
           type="button"
           onClick={() => shiftMonth(-1)}
           aria-label="Previous month"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-hover hover:text-foreground"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -239,8 +239,8 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
           value={view.month}
           onChange={(e) => setView((v) => ({ ...v, month: Number(e.target.value) }))}
           aria-label="Month"
-          className="min-w-0 flex-1 rounded-lg border border-border bg-bg-secondary px-2 py-1.5 text-sm text-foreground outline-none focus:border-accent"
-          style={{ backgroundColor: "var(--bg-secondary, #111118)" }}
+          className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-2 py-1.5 text-sm text-foreground outline-none focus:border-brand"
+          style={{ backgroundColor: "var(--color-surface, #111118)" }}
         >
           {MONTHS.map((m, i) => (
             <option key={m} value={i}>{m}</option>
@@ -251,8 +251,8 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
           value={view.year}
           onChange={(e) => setView((v) => ({ ...v, year: Number(e.target.value) }))}
           aria-label="Year"
-          className="w-[5.5rem] shrink-0 rounded-lg border border-border bg-bg-secondary px-2 py-1.5 text-sm text-foreground outline-none focus:border-accent"
-          style={{ backgroundColor: "var(--bg-secondary, #111118)" }}
+          className="w-[5.5rem] shrink-0 rounded-lg border border-border bg-surface px-2 py-1.5 text-sm text-foreground outline-none focus:border-brand"
+          style={{ backgroundColor: "var(--color-surface, #111118)" }}
         >
           {years.map((y) => (
             <option key={y} value={y}>{y}</option>
@@ -263,7 +263,7 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
           type="button"
           onClick={() => shiftMonth(1)}
           aria-label="Next month"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-hover hover:text-foreground"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -271,7 +271,7 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
 
       <div className="mt-3 grid grid-cols-7 gap-0.5">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="py-1 text-center text-[11px] font-medium text-text-muted">
+          <div key={w} className="py-1 text-center text-[11px] font-medium text-foreground-subtle">
             {w}
           </div>
         ))}
@@ -297,12 +297,12 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
               className={
                 "flex h-9 items-center justify-center rounded-lg text-sm transition-colors " +
                 (isSelected
-                  ? "bg-accent font-semibold text-white"
+                  ? "bg-brand font-semibold text-white"
                   : off
-                    ? "cursor-not-allowed text-text-muted opacity-40"
+                    ? "cursor-not-allowed text-foreground-subtle opacity-40"
                     : isToday
-                      ? "text-foreground ring-1 ring-accent/60 hover:bg-bg-hover"
-                      : "text-foreground hover:bg-bg-hover")
+                      ? "text-foreground ring-1 ring-brand/60 hover:bg-foreground/5"
+                      : "text-foreground hover:bg-foreground/5")
               }
             >
               {day}
@@ -313,7 +313,7 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
 
       {withTime && (
         <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
-          <label className="text-xs text-text-secondary">Time</label>
+          <label className="text-xs text-foreground-muted">Time</label>
           <input
             type="time"
             value={selected ? `${pad(selected.hour)}:${pad(selected.minute)}` : ""}
@@ -321,8 +321,8 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
               const [h, m] = e.target.value.split(":").map(Number);
               if (!Number.isNaN(h) && !Number.isNaN(m)) setTime(h, m);
             }}
-            className="flex-1 rounded-lg border border-border bg-bg-secondary px-2 py-1.5 text-sm text-foreground outline-none focus:border-accent"
-            style={{ backgroundColor: "var(--bg-secondary, #111118)" }}
+            className="flex-1 rounded-lg border border-border bg-surface px-2 py-1.5 text-sm text-foreground outline-none focus:border-brand"
+            style={{ backgroundColor: "var(--color-surface, #111118)" }}
           />
         </div>
       )}
@@ -335,14 +335,14 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
             setView({ year: t.year, month: t.month });
             commit(t.day, { year: t.year, month: t.month });
           }}
-          className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-accent hover:bg-bg-hover"
+          className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-brand hover:bg-foreground/5"
         >
           Today
         </button>
         <button
           type="button"
           onClick={() => { onChange(""); setOpen(false); }}
-          className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-text-secondary hover:bg-bg-hover hover:text-foreground"
+          className="rounded-lg px-2.5 py-1.5 text-xs font-medium text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
         >
           Clear
         </button>
@@ -365,10 +365,10 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
         aria-haspopup="dialog"
         aria-expanded={open}
         className={
-          "flex w-full items-center justify-between rounded-lg border bg-bg-tertiary px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-1 focus:ring-accent " +
+          "flex w-full items-center justify-between rounded-lg border bg-foreground/5 px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-1 focus:ring-brand " +
           (error ? "border-danger " : "border-border ") +
-          (open ? "border-accent " : "") +
-          (selected ? "text-foreground" : "text-text-secondary")
+          (open ? "border-brand " : "") +
+          (selected ? "text-foreground" : "text-foreground-muted")
         }
       >
         <span>{selected ? label : field.placeholder || "Select a date..."}</span>
@@ -378,7 +378,7 @@ export function DateField({ field, value, onChange, error }: DateFieldProps) {
       {panel}
 
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

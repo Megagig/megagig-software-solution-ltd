@@ -7,13 +7,13 @@
 ---
 
 ## Phase 0 — Scaffold & infrastructure
-- [ ] `grit new megagig-site --triple --next` run
-- [ ] `.env` configured from `.env.example`
+- [x] `grit new megagig-site --triple --next` run
+- [x] `.env` configured from `.env.example`
 - [ ] `docker compose up -d` verified healthy (Postgres, Redis, MinIO, Mailhog)
 - [ ] Base `User`/auth model confirmed
-- [ ] `ui-tokens.md` values wired into `packages/shared/themes`
-- [ ] Global fonts + base Tailwind config set
-- [ ] Dev servers verified: API `:8080`, Web `:3000`, Admin `:3001`, GORM Studio `:8080/studio`
+- [x] `ui-tokens.md` values wired into `packages/shared/themes` — `packages/shared/themes/tokens.css`, Tailwind v4 CSS-first `@theme`, imported by both `apps/web` and `apps/admin` (single source of truth). Both apps upgraded `tailwindcss`/`postcss` config to v4 (`@tailwindcss/postcss`) as part of this. Admin's prior Grit boilerplate multi-theme system (`[data-theme]` atlas/aurora/pulse/midnight, doubled-up classes like `bg-bg-secondary`) was fully renamed across 98 files to the ui-tokens.md-named utilities (`bg-brand`, `bg-surface`, `text-foreground-muted`, etc.); admin's separate `(auth)` login-page theme engine (`packages/shared/themes.ts`) is untouched/out of scope.
+- [ ] Global fonts + base Tailwind config set (fonts still default Inter/JetBrains Mono placeholders per ui-tokens.md — no Megagig-specific font decision made yet)
+- [ ] Dev servers verified: API `:8080`, Web `:3000`, Admin `:3001`, GORM Studio `:8080/studio` (Web/Admin smoke-tested this session and return 200; API/Postgres/Redis/MinIO not yet stood up)
 
 ## Phase 1 — Core content resources
 - [ ] Upload (confirmed present or generated)
@@ -101,4 +101,4 @@
 
 > One line per work session — what shipped, what's next. Newest entry on top. Keep entries short; detail belongs in commit messages, not here.
 
-- _(no sessions logged yet)_
+- 2026-09-16: Wired `ui-tokens.md` into `packages/shared/themes/tokens.css` (Tailwind v4 CSS-first), upgraded `apps/web` + `apps/admin` to Tailwind v4, and renamed admin's entire legacy multi-theme class system (98 files) to match. Both dev servers smoke-tested (200 OK, correct tokens in compiled CSS, no console errors). Next: finish remaining Phase 0 items (docker services, fonts decision, API dev server) before starting Phase 1 resources.

@@ -23,10 +23,10 @@ export function DeleteAccountDialog({ open, onClose }: DeleteAccountDialogProps)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-xl border border-border bg-bg-secondary p-6 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-xl border border-border bg-surface p-6 shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-text-muted hover:text-foreground transition-colors"
+          className="absolute right-4 top-4 text-foreground-subtle hover:text-foreground transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
@@ -37,18 +37,18 @@ export function DeleteAccountDialog({ open, onClose }: DeleteAccountDialogProps)
           </div>
           <div>
             <h3 className="font-semibold text-foreground">Delete Account</h3>
-            <p className="text-xs text-text-muted">This action is permanent</p>
+            <p className="text-xs text-foreground-subtle">This action is permanent</p>
           </div>
         </div>
 
         <div className="mt-4 space-y-3">
-          <p className="text-sm text-text-secondary">
+          <p className="text-sm text-foreground-muted">
             This will permanently delete your account, including all your data, settings, and
             access. This action <strong className="text-foreground">cannot be undone</strong>.
           </p>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-text-secondary">
+            <label className="text-sm font-medium text-foreground-muted">
               Type <span className="font-mono text-danger">DELETE</span> to confirm
             </label>
             <input
@@ -56,7 +56,7 @@ export function DeleteAccountDialog({ open, onClose }: DeleteAccountDialogProps)
               value={confirmation}
               onChange={(e) => setConfirmation(e.target.value)}
               placeholder="DELETE"
-              className="w-full rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-sm text-foreground placeholder:text-text-muted focus:border-danger focus:outline-none focus:ring-1 focus:ring-danger"
+              className="w-full rounded-lg border border-border bg-foreground/5 px-3 py-2 text-sm text-foreground placeholder:text-foreground-subtle focus:border-danger focus:outline-none focus:ring-1 focus:ring-danger"
             />
           </div>
         </div>
@@ -64,7 +64,7 @@ export function DeleteAccountDialog({ open, onClose }: DeleteAccountDialogProps)
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-bg-hover transition-colors"
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
           >
             Cancel
           </button>

@@ -16,7 +16,7 @@ export function ToggleField({ field, value, onChange, error }: ToggleFieldProps)
           type="button"
           onClick={() => onChange(!value)}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-            value ? "bg-accent" : "bg-bg-hover"
+            value ? "bg-brand" : "bg-foreground/5"
           }`}
         >
           <span
@@ -27,7 +27,7 @@ export function ToggleField({ field, value, onChange, error }: ToggleFieldProps)
         </button>
       </div>
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

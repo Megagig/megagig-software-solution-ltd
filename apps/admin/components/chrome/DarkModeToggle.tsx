@@ -10,7 +10,6 @@ type Mode = "light" | "dark";
 // using. Idempotent — safe to call on every render.
 function applyMode(mode: Mode) {
   const root = document.documentElement;
-  root.setAttribute("data-theme-mode", mode);
   root.classList.toggle("dark", mode === "dark");
   root.style.colorScheme = mode;
 }
@@ -60,7 +59,7 @@ export function DarkModeToggle({ className = "" }: { className?: string }) {
       aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={mode === "dark"}
       suppressHydrationWarning
-      className={"inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-elevated text-text-secondary hover:bg-bg-hover transition-colors " + className}
+      className={"inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-raised text-foreground-muted hover:bg-foreground/5 transition-colors " + className}
     >
       {hydrated && mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </button>

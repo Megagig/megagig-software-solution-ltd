@@ -28,7 +28,7 @@ export function GenerateButton({ onGenerate }: GenerateButtonProps) {
       onClick={run}
       disabled={busy}
       title="Generate"
-      className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-tertiary px-2 py-1 text-xs font-medium text-text-secondary transition-colors hover:border-accent/40 hover:text-accent disabled:opacity-50"
+      className="inline-flex items-center gap-1 rounded-md border border-border bg-foreground/5 px-2 py-1 text-xs font-medium text-foreground-muted transition-colors hover:border-brand/40 hover:text-brand disabled:opacity-50"
     >
       {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
       Generate

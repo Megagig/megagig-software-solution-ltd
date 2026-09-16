@@ -22,7 +22,7 @@ const BAND_CLS: Record<string, string> = {
   green:   "bg-success/15 text-success border-success/30",
   amber:   "bg-warning/15 text-warning border-warning/30",
   red:     "bg-danger/15 text-danger border-danger/30",
-  unknown: "bg-bg-elevated text-text-muted border-border",
+  unknown: "bg-surface-raised text-foreground-subtle border-border",
 };
 
 export default function ObservabilityPage() {
@@ -53,9 +53,9 @@ export default function ObservabilityPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2.5">
-            <Activity className="h-6 w-6 text-accent" /> Observability
+            <Activity className="h-6 w-6 text-brand" /> Observability
           </h1>
-          <p className="text-sm text-text-secondary mt-1">
+          <p className="text-sm text-foreground-muted mt-1">
             Live summary from Pulse — percentile latency, SLOs, USE grid, top N+1, errors, runtime
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function ObservabilityPage() {
           href={`${API_URL}/pulse/ui`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-border bg-bg-secondary px-4 py-2.5 text-sm font-medium text-foreground hover:bg-bg-hover transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
         >
           Open full dashboard <ExternalLink className="h-4 w-4" />
         </a>
@@ -73,8 +73,8 @@ export default function ObservabilityPage() {
         <div className="rounded-xl border border-warning/30 bg-warning/5 p-4 text-sm text-warning flex items-start gap-2">
           <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
           <div>
-            <strong>Couldn&apos;t reach Pulse.</strong> Make sure <code className="px-1 py-0.5 rounded bg-bg-secondary text-xs font-mono">PULSE_ENABLED=true</code> and the API is running.
-            <div className="text-xs text-text-muted mt-1">{err}</div>
+            <strong>Couldn&apos;t reach Pulse.</strong> Make sure <code className="px-1 py-0.5 rounded bg-surface text-xs font-mono">PULSE_ENABLED=true</code> and the API is running.
+            <div className="text-xs text-foreground-subtle mt-1">{err}</div>
           </div>
         </div>
       )}
@@ -90,7 +90,7 @@ export default function ObservabilityPage() {
       {/* SLO compliance bars */}
       <Panel title="SLOs">
         {(data?.slos?.data ?? []).length === 0 ? (
-          <p className="text-sm text-text-muted">No SLOs configured. Add to <code className="px-1 py-0.5 rounded bg-bg-elevated text-xs font-mono">pulse.Config.SLOs</code>.</p>
+          <p className="text-sm text-foreground-subtle">No SLOs configured. Add to <code className="px-1 py-0.5 rounded bg-surface-raised text-xs font-mono">pulse.Config.SLOs</code>.</p>
         ) : (
           <div className="space-y-3">
             {(data?.slos?.data ?? []).map((s) => (
@@ -99,10 +99,10 @@ export default function ObservabilityPage() {
                   <span className="font-medium text-foreground">{s.name}</span>
                   <span className={`font-mono ${s.status === "firing" ? "text-danger" : "text-success"}`}>{(s.current * 100).toFixed(2)}% / {(s.target * 100).toFixed(2)}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-bg-elevated overflow-hidden">
+                <div className="h-2 rounded-full bg-surface-raised overflow-hidden">
                   <div className={`h-full ${s.status === "firing" ? "bg-danger" : "bg-success"}`} style={{ width: `${Math.min(s.current * 100, 100)}%` }} />
                 </div>
-                <p className="text-[10px] text-text-muted">Budget remaining: {(s.budget_remaining * 100).toFixed(1)}%</p>
+                <p className="text-[10px] text-foreground-subtle">Budget remaining: {(s.budget_remaining * 100).toFixed(1)}%</p>
               </div>
             ))}
           </div>
@@ -114,7 +114,7 @@ export default function ObservabilityPage() {
         <Panel title="USE method">
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-text-muted">
+              <tr className="text-foreground-subtle">
                 <th className="text-left font-medium py-1">Resource</th>
                 <th className="text-center font-medium">U</th>
                 <th className="text-center font-medium">S</th>
@@ -131,7 +131,7 @@ export default function ObservabilityPage() {
                 </tr>
               ))}
               {(!data?.use?.resources || data.use.resources.length === 0) && (
-                <tr><td colSpan={4} className="text-center text-text-muted py-3">No USE samples yet.</td></tr>
+                <tr><td colSpan={4} className="text-center text-foreground-subtle py-3">No USE samples yet.</td></tr>
               )}
             </tbody>
           </table>
@@ -140,17 +140,17 @@ export default function ObservabilityPage() {
         <Panel title="Top N+1 by impact">
           <ul className="space-y-2 text-xs">
             {(data?.n1_ranked?.data ?? []).slice(0, 6).map((n, i) => (
-              <li key={i} className="rounded-lg border border-border bg-bg-elevated p-2.5">
+              <li key={i} className="rounded-lg border border-border bg-surface-raised p-2.5">
                 <div className="flex items-center justify-between mb-0.5">
                   <span className="font-mono text-foreground truncate">{n.route}</span>
-                  <span className="text-text-muted shrink-0 ml-2">impact {n.impact_score.toFixed(0)}</span>
+                  <span className="text-foreground-subtle shrink-0 ml-2">impact {n.impact_score.toFixed(0)}</span>
                 </div>
-                <p className="font-mono text-[10px] text-text-muted truncate">{n.pattern}</p>
-                <p className="text-[10px] text-text-muted mt-0.5">{n.occurrences} occurrences · ~{n.avg_queries_per_request} queries/req</p>
+                <p className="font-mono text-[10px] text-foreground-subtle truncate">{n.pattern}</p>
+                <p className="text-[10px] text-foreground-subtle mt-0.5">{n.occurrences} occurrences · ~{n.avg_queries_per_request} queries/req</p>
               </li>
             ))}
             {(!data?.n1_ranked?.data || data.n1_ranked.data.length === 0) && (
-              <li className="text-text-muted text-center py-3">No N+1 detections.</li>
+              <li className="text-foreground-subtle text-center py-3">No N+1 detections.</li>
             )}
           </ul>
         </Panel>
@@ -163,13 +163,13 @@ export default function ObservabilityPage() {
             {(data?.errors?.data ?? []).slice(0, 6).map((e) => (
               <li key={e.id} className="flex items-start justify-between gap-2 py-1 border-b border-border last:border-0">
                 <div className="min-w-0 flex-1">
-                  <p className="text-foreground truncate"><span className="font-mono text-[10px] text-text-muted">{e.type}</span> {e.message}</p>
-                  <p className="font-mono text-[10px] text-text-muted truncate">{e.route}</p>
+                  <p className="text-foreground truncate"><span className="font-mono text-[10px] text-foreground-subtle">{e.type}</span> {e.message}</p>
+                  <p className="font-mono text-[10px] text-foreground-subtle truncate">{e.route}</p>
                 </div>
-                <span className="text-text-muted shrink-0">{e.count}×</span>
+                <span className="text-foreground-subtle shrink-0">{e.count}×</span>
               </li>
             ))}
-            {(!data?.errors?.data || data.errors.data.length === 0) && <li className="text-text-muted text-center py-3">No unresolved errors.</li>}
+            {(!data?.errors?.data || data.errors.data.length === 0) && <li className="text-foreground-subtle text-center py-3">No unresolved errors.</li>}
           </ul>
         </Panel>
 
@@ -181,7 +181,7 @@ export default function ObservabilityPage() {
           </div>
           {data?.health_checks?.data && data.health_checks.data.length > 0 && (
             <div className="mt-4 pt-3 border-t border-border space-y-1">
-              <p className="text-[10px] uppercase font-mono tracking-wider text-text-muted">Health checks</p>
+              <p className="text-[10px] uppercase font-mono tracking-wider text-foreground-subtle">Health checks</p>
               {data.health_checks.data.map((h) => (
                 <div key={h.name} className="flex items-center justify-between text-xs">
                   <span className="font-mono text-foreground">{h.name}</span>
@@ -201,9 +201,9 @@ export default function ObservabilityPage() {
 function Kpi({ label, value, tone, icon: Icon }: { label: string; value: any; tone: "default" | "success" | "warning" | "info" | "danger"; icon: any }) {
   const toneCls = { default: "text-foreground", success: "text-success", warning: "text-warning", info: "text-info", danger: "text-danger" }[tone];
   return (
-    <div className="rounded-xl border border-border bg-bg-secondary p-4">
+    <div className="rounded-xl border border-border bg-surface p-4">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted">{label}</span>
+        <span className="text-[10px] font-mono uppercase tracking-wider text-foreground-subtle">{label}</span>
         <Icon className={`h-4 w-4 ${toneCls}`} />
       </div>
       <p className={`text-2xl font-semibold tabular-nums ${toneCls}`}>{value}</p>
@@ -213,7 +213,7 @@ function Kpi({ label, value, tone, icon: Icon }: { label: string; value: any; to
 
 function Panel({ title, children }: { title: string; children: any }) {
   return (
-    <div className="rounded-xl border border-border bg-bg-secondary overflow-hidden">
+    <div className="rounded-xl border border-border bg-surface overflow-hidden">
       <div className="px-4 py-3 border-b border-border"><h2 className="text-sm font-semibold text-foreground">{title}</h2></div>
       <div className="p-4">{children}</div>
     </div>
@@ -222,8 +222,8 @@ function Panel({ title, children }: { title: string; children: any }) {
 
 function Stat({ label, value }: { label: string; value: any }) {
   return (
-    <div className="rounded-lg border border-border bg-bg-elevated px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wider text-text-muted">{label}</p>
+    <div className="rounded-lg border border-border bg-surface-raised px-3 py-2">
+      <p className="text-[10px] uppercase tracking-wider text-foreground-subtle">{label}</p>
       <p className="text-base font-semibold text-foreground tabular-nums">{value}</p>
     </div>
   );

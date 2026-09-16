@@ -188,7 +188,7 @@ export function FormStepper({
               className={idx === currentStep ? "block" : "hidden"}
             >
               {step.description && (
-                <p className="text-sm text-text-secondary mb-4">{step.description}</p>
+                <p className="text-sm text-foreground-muted mb-4">{step.description}</p>
               )}
               <div className={`grid gap-4 ${isTwoColumn ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"}`}>
                 {step.fields.map((field) => (
@@ -208,11 +208,11 @@ export function FormStepper({
         <div className="mt-6 mb-4">
           <div className="h-1 w-full rounded-full bg-border">
             <div
-              className="h-1 rounded-full bg-accent transition-all duration-300"
+              className="h-1 rounded-full bg-brand transition-all duration-300"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
-          <p className="text-xs text-text-muted mt-1.5">
+          <p className="text-xs text-foreground-subtle mt-1.5">
             Step {currentStep + 1} of {steps.length}
             {stepDirty && (
               <span className="text-warning ml-2">Unsaved changes on this step</span>
@@ -227,7 +227,7 @@ export function FormStepper({
               <button
                 type="button"
                 onClick={handlePrev}
-                className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Previous
@@ -236,7 +236,7 @@ export function FormStepper({
               <button
                 type="button"
                 onClick={onCancel}
-                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors"
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors"
               >
                 Cancel
               </button>
@@ -252,7 +252,7 @@ export function FormStepper({
                 onClick={handleStepSave}
                 disabled={!stepDirty || savingStep !== null}
                 title={stepDirty ? undefined : "No changes on this step"}
-                className="flex items-center gap-2 rounded-lg bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:brightness-90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {savingStep === currentStep && <Loader2 className="h-4 w-4 animate-spin" />}
                 Update
@@ -261,7 +261,7 @@ export function FormStepper({
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="rounded-lg border border-border px-5 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors"
+                  className="rounded-lg border border-border px-5 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors"
                 >
                   {doneLabel}
                 </button>
@@ -269,7 +269,7 @@ export function FormStepper({
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-1.5 rounded-lg border border-border px-5 py-2 text-sm font-medium text-foreground hover:bg-bg-hover transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-border px-5 py-2 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />
@@ -283,7 +283,7 @@ export function FormStepper({
                   type="button"
                   onClick={handleFinalSubmit}
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-lg bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+                  className="flex items-center gap-2 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:brightness-90 disabled:opacity-50 transition-colors"
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                   {submitLabel}
@@ -292,7 +292,7 @@ export function FormStepper({
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-1.5 rounded-lg bg-accent px-5 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:brightness-90 transition-colors"
                 >
                   Next
                   <ChevronRight className="h-4 w-4" />
@@ -347,8 +347,8 @@ function HorizontalIndicator({
                   ${state === "completed"
                     ? "bg-success text-white"
                     : state === "active"
-                    ? "bg-accent text-white ring-4 ring-accent/20"
-                    : "bg-bg-hover text-text-muted border border-border group-hover:border-border/80"}
+                    ? "bg-brand text-white ring-4 ring-brand/20"
+                    : "bg-foreground/5 text-foreground-subtle border border-border group-hover:border-border/80"}
                 `}
               >
                 {state === "completed" ? <Check className="h-4 w-4" /> : idx + 1}
@@ -356,7 +356,7 @@ function HorizontalIndicator({
               <span
                 className={`
                   text-xs whitespace-nowrap transition-colors
-                  ${state === "active" ? "text-foreground font-medium" : state === "completed" ? "text-foreground" : "text-text-muted"}
+                  ${state === "active" ? "text-foreground font-medium" : state === "completed" ? "text-foreground" : "text-foreground-subtle"}
                 `}
               >
                 {step.title}
@@ -413,7 +413,7 @@ function VerticalIndicator({
                 onClick={() => handleClick(idx)}
                 className={`
                   flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-left transition-colors
-                  ${state === "active" ? "bg-accent/10" : "hover:bg-bg-hover"}
+                  ${state === "active" ? "bg-brand/10" : "hover:bg-foreground/5"}
                 `}
               >
                 <div
@@ -422,8 +422,8 @@ function VerticalIndicator({
                     ${state === "completed"
                       ? "bg-success text-white"
                       : state === "active"
-                      ? "bg-accent text-white ring-2 ring-accent/20"
-                      : "bg-bg-hover text-text-muted border border-border"}
+                      ? "bg-brand text-white ring-2 ring-brand/20"
+                      : "bg-foreground/5 text-foreground-subtle border border-border"}
                   `}
                 >
                   {state === "completed" ? <Check className="h-3 w-3" /> : idx + 1}
@@ -432,13 +432,13 @@ function VerticalIndicator({
                   <p
                     className={`
                       text-sm truncate
-                      ${state === "active" ? "text-foreground font-medium" : state === "completed" ? "text-foreground" : "text-text-muted"}
+                      ${state === "active" ? "text-foreground font-medium" : state === "completed" ? "text-foreground" : "text-foreground-subtle"}
                     `}
                   >
                     {step.title}
                   </p>
                   {step.description && (
-                    <p className="text-xs text-text-muted truncate">{step.description}</p>
+                    <p className="text-xs text-foreground-subtle truncate">{step.description}</p>
                   )}
                 </div>
               </button>

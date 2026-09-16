@@ -75,8 +75,8 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
         className={
           "flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors " +
           (isActive
-            ? "border-accent bg-accent/10 text-accent"
-            : "border-border bg-bg-tertiary text-text-secondary hover:text-foreground")
+            ? "border-brand bg-brand/10 text-brand"
+            : "border-border bg-foreground/5 text-foreground-muted hover:text-foreground")
         }
       >
         <Calendar className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
                 onChange({});
               }
             }}
-            className="ml-1 rounded p-0.5 hover:bg-accent/20 cursor-pointer"
+            className="ml-1 rounded p-0.5 hover:bg-brand/20 cursor-pointer"
             aria-label="Clear date filter"
           >
             <X className="h-3 w-3" />
@@ -107,8 +107,8 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-30 mt-1 w-64 rounded-lg border border-border bg-bg-elevated shadow-lg">
-          <div className="border-b border-border px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+        <div className="absolute left-0 top-full z-30 mt-1 w-64 rounded-lg border border-border bg-surface-raised shadow-lg">
+          <div className="border-b border-border px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle">
             {label}
           </div>
           <div className="p-1">
@@ -123,8 +123,8 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
                 className={
                   "flex w-full items-center justify-between rounded px-2 py-1.5 text-sm transition-colors " +
                   (value.preset === p.key
-                    ? "bg-accent/10 text-accent"
-                    : "text-foreground hover:bg-bg-hover")
+                    ? "bg-brand/10 text-brand"
+                    : "text-foreground hover:bg-foreground/5")
                 }
               >
                 <span>{p.label}</span>
@@ -132,26 +132,26 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
             ))}
           </div>
           <div className="border-t border-border p-3 space-y-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle">
               Custom range
             </p>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[10px] text-text-muted mb-0.5">From</label>
+                <label className="block text-[10px] text-foreground-subtle mb-0.5">From</label>
                 <input
                   type="date"
                   value={customFrom}
                   onChange={(e) => setCustomFrom(e.target.value)}
-                  className="w-full rounded border border-border bg-bg-secondary px-2 py-1 text-xs text-foreground focus:border-accent focus:outline-none"
+                  className="w-full rounded border border-border bg-surface px-2 py-1 text-xs text-foreground focus:border-brand focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-text-muted mb-0.5">To</label>
+                <label className="block text-[10px] text-foreground-subtle mb-0.5">To</label>
                 <input
                   type="date"
                   value={customTo}
                   onChange={(e) => setCustomTo(e.target.value)}
-                  className="w-full rounded border border-border bg-bg-secondary px-2 py-1 text-xs text-foreground focus:border-accent focus:outline-none"
+                  className="w-full rounded border border-border bg-surface px-2 py-1 text-xs text-foreground focus:border-brand focus:outline-none"
                 />
               </div>
             </div>
@@ -166,7 +166,7 @@ export function DateFilter({ value, onChange, label = "Date" }: DateFilterProps)
                 });
                 setOpen(false);
               }}
-              className="w-full rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full rounded bg-brand px-3 py-1.5 text-xs font-medium text-white hover:brightness-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Apply
             </button>

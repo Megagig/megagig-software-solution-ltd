@@ -2,11 +2,11 @@ import type { FieldDefinition } from "@/lib/resource";
 
 /* Alpha-blended accent, computed at render time rather than with Tailwind's
    /opacity syntax. The themes set --accent to a hex, and Tailwind v3 cannot
-   inject an alpha channel into a bare var() — bg-accent/10 and text-accent/80
+   inject an alpha channel into a bare var() — bg-brand/10 and text-brand/80
    both compile away to nothing. color-mix works against any colour form and
    follows whichever theme is active, light or dark. */
-const SOFT_ACCENT = "color-mix(in srgb, var(--accent) 10%, transparent)";
-const MUTED_ACCENT = "color-mix(in srgb, var(--accent) 85%, transparent)";
+const SOFT_ACCENT = "color-mix(in srgb, var(--color-brand) 10%, transparent)";
+const MUTED_ACCENT = "color-mix(in srgb, var(--color-brand) 85%, transparent)";
 
 interface RadioFieldProps {
   field: FieldDefinition;
@@ -43,7 +43,7 @@ export function RadioField({ field, value, onChange, error }: RadioFieldProps) {
               role="radio"
               aria-checked={selected}
               onClick={() => onChange(opt.value)}
-              // The tint is an inline color-mix, NOT bg-accent/10.
+              // The tint is an inline color-mix, NOT bg-brand/10.
               //
               // The themes declare --accent as a hex, and Tailwind cannot inject
               // an alpha channel into a bare var() — the /10 utility compiles to
@@ -53,22 +53,22 @@ export function RadioField({ field, value, onChange, error }: RadioFieldProps) {
               style={selected ? { backgroundColor: SOFT_ACCENT } : undefined}
               className={
                 "flex w-full items-start gap-3 p-4 text-left transition-colors " +
-                (selected ? "" : "hover:bg-bg-hover")
+                (selected ? "" : "hover:bg-foreground/5")
               }
             >
               <span
                 className={
                   "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors " +
-                  (selected ? "border-accent" : "border-border")
+                  (selected ? "border-brand" : "border-border")
                 }
               >
-                {selected && <span className="size-2 rounded-full bg-accent" />}
+                {selected && <span className="size-2 rounded-full bg-brand" />}
               </span>
 
               <span className="min-w-0 flex-1">
                 <span
                   className={
-                    "block text-sm font-semibold " + (selected ? "text-accent" : "text-foreground")
+                    "block text-sm font-semibold " + (selected ? "text-brand" : "text-foreground")
                   }
                 >
                   {opt.label}
@@ -76,7 +76,7 @@ export function RadioField({ field, value, onChange, error }: RadioFieldProps) {
                 {opt.description && (
                   <span
                     style={selected ? { color: MUTED_ACCENT } : undefined}
-                    className={"mt-0.5 block text-xs " + (selected ? "" : "text-text-muted")}
+                    className={"mt-0.5 block text-xs " + (selected ? "" : "text-foreground-subtle")}
                   >
                     {opt.description}
                   </span>
@@ -86,7 +86,7 @@ export function RadioField({ field, value, onChange, error }: RadioFieldProps) {
               {opt.hint && (
                 <span
                   className={
-                    "shrink-0 text-sm font-medium " + (selected ? "text-accent" : "text-text-muted")
+                    "shrink-0 text-sm font-medium " + (selected ? "text-brand" : "text-foreground-subtle")
                   }
                 >
                   {opt.hint}
@@ -97,7 +97,7 @@ export function RadioField({ field, value, onChange, error }: RadioFieldProps) {
         })}
       </div>
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

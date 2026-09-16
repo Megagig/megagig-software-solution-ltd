@@ -2,11 +2,11 @@ import type { FieldDefinition } from "@/lib/resource";
 
 /* Alpha-blended accent, computed at render time rather than with Tailwind's
    /opacity syntax. The themes set --accent to a hex, and Tailwind v3 cannot
-   inject an alpha channel into a bare var() — bg-accent/10 and text-accent/80
+   inject an alpha channel into a bare var() — bg-brand/10 and text-brand/80
    both compile away to nothing. color-mix works against any colour form and
    follows whichever theme is active, light or dark. */
-const SOFT_ACCENT = "color-mix(in srgb, var(--accent) 10%, transparent)";
-const MUTED_ACCENT = "color-mix(in srgb, var(--accent) 85%, transparent)";
+const SOFT_ACCENT = "color-mix(in srgb, var(--color-brand) 10%, transparent)";
+const MUTED_ACCENT = "color-mix(in srgb, var(--color-brand) 85%, transparent)";
 
 interface CheckboxGroupFieldProps {
   field: FieldDefinition;
@@ -48,17 +48,17 @@ export function CheckboxGroupField({ field, value, onChange, error }: CheckboxGr
               role="checkbox"
               aria-checked={checked}
               onClick={() => toggle(opt.value)}
-              // Inline color-mix rather than bg-accent/10 — see SOFT_ACCENT.
+              // Inline color-mix rather than bg-brand/10 — see SOFT_ACCENT.
               style={checked ? { backgroundColor: SOFT_ACCENT } : undefined}
               className={
                 "flex w-full items-start gap-3 p-4 text-left transition-colors " +
-                (checked ? "" : "hover:bg-bg-hover")
+                (checked ? "" : "hover:bg-foreground/5")
               }
             >
               <span
                 className={
                   "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border-2 transition-colors " +
-                  (checked ? "border-accent bg-accent text-white" : "border-border")
+                  (checked ? "border-brand bg-brand text-white" : "border-border")
                 }
               >
                 {checked && (
@@ -71,7 +71,7 @@ export function CheckboxGroupField({ field, value, onChange, error }: CheckboxGr
               <span className="min-w-0 flex-1">
                 <span
                   className={
-                    "block text-sm font-semibold " + (checked ? "text-accent" : "text-foreground")
+                    "block text-sm font-semibold " + (checked ? "text-brand" : "text-foreground")
                   }
                 >
                   {opt.label}
@@ -79,7 +79,7 @@ export function CheckboxGroupField({ field, value, onChange, error }: CheckboxGr
                 {opt.description && (
                   <span
                     style={checked ? { color: MUTED_ACCENT } : undefined}
-                    className={"mt-0.5 block text-xs " + (checked ? "" : "text-text-muted")}
+                    className={"mt-0.5 block text-xs " + (checked ? "" : "text-foreground-subtle")}
                   >
                     {opt.description}
                   </span>
@@ -89,7 +89,7 @@ export function CheckboxGroupField({ field, value, onChange, error }: CheckboxGr
               {opt.hint && (
                 <span
                   className={
-                    "shrink-0 text-sm font-medium " + (checked ? "text-accent" : "text-text-muted")
+                    "shrink-0 text-sm font-medium " + (checked ? "text-brand" : "text-foreground-subtle")
                   }
                 >
                   {opt.hint}
@@ -100,7 +100,7 @@ export function CheckboxGroupField({ field, value, onChange, error }: CheckboxGr
         })}
       </div>
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

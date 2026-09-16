@@ -118,7 +118,7 @@ export default function AccessReviewPage() {
             type="button"
             onClick={() => setNewOpen(true)}
             disabled={openM.isPending}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
           >
             {openM.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             New review
@@ -139,7 +139,7 @@ export default function AccessReviewPage() {
             <button
               type="button"
               onClick={() => setNewOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-hover"
+              className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted transition-colors hover:bg-foreground/5"
             >
               Cancel
             </button>
@@ -147,7 +147,7 @@ export default function AccessReviewPage() {
               type="button"
               onClick={startReview}
               disabled={!newName.trim() || openM.isPending}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
             >
               {openM.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
               Create review
@@ -168,9 +168,9 @@ export default function AccessReviewPage() {
                 if (e.key === "Enter" && newName.trim()) startReview();
               }}
               placeholder="Q3 2026 quarterly"
-              className="w-full rounded-lg border border-border bg-bg-tertiary px-4 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-foreground-subtle">
               Name it for the period you&rsquo;re certifying — it becomes the audit record.
             </p>
           </div>
@@ -182,7 +182,7 @@ export default function AccessReviewPage() {
               onChange={(e) => setNewNote(e.target.value)}
               rows={3}
               placeholder="Optional context — scope, who requested it, ticket reference…"
-              className="w-full resize-y rounded-lg border border-border bg-bg-tertiary px-4 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full resize-y rounded-lg border border-border bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
 
@@ -196,11 +196,11 @@ export default function AccessReviewPage() {
         {/* Campaign list */}
         <div className="space-y-2">
           {listQ.isLoading ? (
-            <div className="flex items-center gap-2 p-4 text-sm text-text-secondary">
+            <div className="flex items-center gap-2 p-4 text-sm text-foreground-muted">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading…
             </div>
           ) : (listQ.data ?? []).length === 0 ? (
-            <p className="rounded-xl border border-border bg-bg-secondary/40 p-6 text-sm text-text-secondary">
+            <p className="rounded-xl border border-border bg-surface/40 p-6 text-sm text-foreground-muted">
               No access reviews yet. Start one to snapshot every current role assignment for certification.
             </p>
           ) : (
@@ -211,7 +211,7 @@ export default function AccessReviewPage() {
                 onClick={() => setSelected(r.id)}
                 className={
                   "w-full rounded-xl border p-4 text-left transition-colors " +
-                  (selected === r.id ? "border-accent bg-accent/5" : "border-border bg-bg-secondary/40 hover:border-accent/40")
+                  (selected === r.id ? "border-brand bg-brand/5" : "border-border bg-surface/40 hover:border-brand/40")
                 }
               >
                 <div className="flex items-center justify-between gap-2">
@@ -225,7 +225,7 @@ export default function AccessReviewPage() {
                     {r.status}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-text-secondary">
+                <p className="mt-1 text-xs text-foreground-muted">
                   {r.pending_items} pending · {r.approved_items} approved · {r.revoked_items} revoked
                 </p>
               </button>
@@ -236,15 +236,15 @@ export default function AccessReviewPage() {
         {/* Detail */}
         <div>
           {!detail ? (
-            <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-border p-12 text-sm text-text-secondary">
+            <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-border p-12 text-sm text-foreground-muted">
               <ShieldCheck className="mr-2 h-5 w-5" /> Select a review to certify its access.
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-bg-secondary/40 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface/40 p-4">
                 <div>
                   <p className="font-semibold text-foreground">{detail.name}</p>
-                  <p className="text-xs text-text-secondary">
+                  <p className="text-xs text-foreground-muted">
                     Opened by {detail.created_by_email}
                     {detail.completed_at ? " · completed" : " · " + pendingCount + " pending"}
                   </p>
@@ -265,7 +265,7 @@ export default function AccessReviewPage() {
 
               <div className="overflow-hidden rounded-xl border border-border">
                 <table className="w-full text-sm">
-                  <thead className="bg-bg-tertiary text-left text-xs text-text-secondary">
+                  <thead className="bg-foreground/5 text-left text-xs text-foreground-muted">
                     <tr>
                       <th className="px-4 py-2 font-medium">User</th>
                       <th className="px-4 py-2 font-medium">Role</th>
@@ -277,7 +277,7 @@ export default function AccessReviewPage() {
                     {detail.items.map((it) => (
                       <tr key={it.id} className="border-t border-border">
                         <td className="px-4 py-2.5 text-foreground">{it.user_email}</td>
-                        <td className="px-4 py-2.5 text-text-secondary">{it.role_name}</td>
+                        <td className="px-4 py-2.5 text-foreground-muted">{it.role_name}</td>
                         <td className="px-4 py-2.5">
                           <span
                             className={
@@ -286,7 +286,7 @@ export default function AccessReviewPage() {
                                 ? "bg-success/10 text-success"
                                 : it.decision === "revoked"
                                 ? "bg-danger/10 text-danger"
-                                : "bg-bg-hover text-text-secondary")
+                                : "bg-foreground/5 text-foreground-muted")
                             }
                           >
                             {it.decision}
@@ -299,7 +299,7 @@ export default function AccessReviewPage() {
                                 type="button"
                                 onClick={() => decideM.mutate({ itemId: it.id, decision: "approved" })}
                                 disabled={decideM.isPending}
-                                className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-text-secondary hover:border-success/40 hover:text-success disabled:opacity-40"
+                                className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-foreground-muted hover:border-success/40 hover:text-success disabled:opacity-40"
                               >
                                 <Check className="h-3 w-3" /> Keep
                               </button>
@@ -307,7 +307,7 @@ export default function AccessReviewPage() {
                                 type="button"
                                 onClick={() => decideM.mutate({ itemId: it.id, decision: "revoked" })}
                                 disabled={decideM.isPending}
-                                className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-text-secondary hover:border-danger/40 hover:text-danger disabled:opacity-40"
+                                className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-foreground-muted hover:border-danger/40 hover:text-danger disabled:opacity-40"
                               >
                                 <X className="h-3 w-3" /> Revoke
                               </button>
@@ -318,7 +318,7 @@ export default function AccessReviewPage() {
                     ))}
                     {detail.items.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="px-4 py-6 text-center text-text-secondary">
+                        <td colSpan={4} className="px-4 py-6 text-center text-foreground-muted">
                           No role assignments existed when this review was opened.
                         </td>
                       </tr>

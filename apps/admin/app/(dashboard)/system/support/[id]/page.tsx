@@ -31,7 +31,7 @@ interface Ticket {
 }
 
 const priorityClass: Record<Ticket["priority"], string> = {
-  low: "bg-bg-hover text-text-secondary",
+  low: "bg-foreground/5 text-foreground-muted",
   medium: "bg-info/10 text-info",
   high: "bg-warning/10 text-warning",
   critical: "bg-danger/10 text-danger",
@@ -73,13 +73,13 @@ export default function TicketThreadPage() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-16 rounded-xl bg-bg-hover" />
-        <div className="h-6 w-32 rounded bg-bg-hover" />
-        <div className="rounded-xl border border-border bg-bg-elevated p-5 space-y-3">
-          <div className="h-4 w-1/3 rounded bg-bg-hover" />
-          <div className="h-4 w-full rounded bg-bg-hover" />
-          <div className="h-4 w-5/6 rounded bg-bg-hover" />
-          <div className="h-4 w-2/3 rounded bg-bg-hover" />
+        <div className="h-16 rounded-xl bg-foreground/5" />
+        <div className="h-6 w-32 rounded bg-foreground/5" />
+        <div className="rounded-xl border border-border bg-surface-raised p-5 space-y-3">
+          <div className="h-4 w-1/3 rounded bg-foreground/5" />
+          <div className="h-4 w-full rounded bg-foreground/5" />
+          <div className="h-4 w-5/6 rounded bg-foreground/5" />
+          <div className="h-4 w-2/3 rounded bg-foreground/5" />
         </div>
       </div>
     );
@@ -87,9 +87,9 @@ export default function TicketThreadPage() {
 
   if (!ticket) {
     return (
-      <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center">
+      <div className="rounded-xl border border-border bg-surface-raised p-12 text-center">
         <p className="text-base font-medium text-foreground">Ticket not found</p>
-        <p className="mt-1 text-sm text-text-muted">It may have been deleted or you don't have access.</p>
+        <p className="mt-1 text-sm text-foreground-subtle">It may have been deleted or you don't have access.</p>
       </div>
     );
   }
@@ -130,26 +130,26 @@ export default function TicketThreadPage() {
 
       {/* Meta chips */}
       <div className="mb-6 flex flex-wrap items-center gap-2">
-        <span className={"inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium uppercase " + (ticket.status === "open" ? "bg-success/10 text-success" : "bg-text-muted/10 text-text-muted")}>
+        <span className={"inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium uppercase " + (ticket.status === "open" ? "bg-success/10 text-success" : "bg-foreground-subtle/10 text-foreground-subtle")}>
           {ticket.status}
         </span>
         <span className={"inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium capitalize " + priorityClass[ticket.priority]}>
           {ticket.priority} priority
         </span>
         {labels.map((l) => (
-          <span key={l} className="inline-flex items-center rounded-md border border-border bg-bg-elevated px-2.5 py-1 text-xs font-medium text-text-secondary">
+          <span key={l} className="inline-flex items-center rounded-md border border-border bg-surface-raised px-2.5 py-1 text-xs font-medium text-foreground-muted">
             {l}
           </span>
         ))}
       </div>
 
       {/* Original message */}
-      <article className="rounded-xl border border-border bg-bg-elevated p-5">
+      <article className="rounded-xl border border-border bg-surface-raised p-5">
         <header className="mb-3 flex items-center justify-between">
           <p className="text-sm font-semibold text-foreground">
             {ticket.user ? ticket.user.first_name + " " + ticket.user.last_name : "Unknown"}
           </p>
-          <p className="text-xs text-text-muted">{new Date(ticket.created_at).toLocaleString()}</p>
+          <p className="text-xs text-foreground-subtle">{new Date(ticket.created_at).toLocaleString()}</p>
         </header>
         <p className="whitespace-pre-wrap text-sm text-foreground">{ticket.description}</p>
       </article>
@@ -163,20 +163,20 @@ export default function TicketThreadPage() {
               className={
                 "rounded-xl border p-5 " +
                 (r.is_admin_reply
-                  ? "border-accent/30 bg-accent/5"
-                  : "border-border bg-bg-elevated")
+                  ? "border-brand/30 bg-brand/5"
+                  : "border-border bg-surface-raised")
               }
             >
               <header className="mb-3 flex items-center justify-between">
                 <p className="text-sm font-semibold text-foreground">
                   {r.user ? r.user.first_name + " " + r.user.last_name : "Unknown"}
                   {r.is_admin_reply && (
-                    <span className="ml-2 rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent">
+                    <span className="ml-2 rounded bg-brand/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-brand">
                       Staff
                     </span>
                   )}
                 </p>
-                <p className="text-xs text-text-muted">{new Date(r.created_at).toLocaleString()}</p>
+                <p className="text-xs text-foreground-subtle">{new Date(r.created_at).toLocaleString()}</p>
               </header>
               <p className="whitespace-pre-wrap text-sm text-foreground">{r.body}</p>
             </li>
@@ -188,9 +188,9 @@ export default function TicketThreadPage() {
       {ticket.status === "open" && (
         <form
           onSubmit={(e) => { e.preventDefault(); if (reply.trim()) replyM.mutate(); }}
-          className="mt-6 rounded-xl border border-border bg-bg-elevated p-5"
+          className="mt-6 rounded-xl border border-border bg-surface-raised p-5"
         >
-          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-text-muted">
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">
             Add a reply
           </label>
           <textarea
@@ -198,13 +198,13 @@ export default function TicketThreadPage() {
             onChange={(e) => setReply(e.target.value)}
             rows={4}
             placeholder="Write a reply..."
-            className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
           <div className="mt-3 flex justify-end">
             <button
               type="submit"
               disabled={replyM.isPending || !reply.trim()}
-              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+              className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
             >
               {replyM.isPending ? "Sending..." : "Send reply"}
             </button>

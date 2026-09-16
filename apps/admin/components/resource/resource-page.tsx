@@ -353,7 +353,7 @@ function ResourceListView({ resource }: ResourcePageProps) {
   const headerActions = actions.includes("create") ? (
     <button
       onClick={handleCreate}
-      className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 h-9 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+      className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 h-9 text-sm font-medium text-white hover:brightness-90 transition-colors"
     >
       <span className="text-base leading-none">+</span>
       New {singularName}
@@ -369,7 +369,7 @@ function ResourceListView({ resource }: ResourcePageProps) {
         stats={statsCards}
       />
 
-      <div className="rounded-xl border border-border bg-bg-secondary">
+      <div className="rounded-xl border border-border bg-surface">
         <TableToolbar
           resource={resource}
           search={search}

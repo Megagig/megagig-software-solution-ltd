@@ -51,7 +51,7 @@ function TriCheckbox({
 			ref={ref}
 			type="checkbox"
 			aria-label={label}
-			className="h-4 w-4 shrink-0 cursor-pointer rounded border-border accent-accent disabled:cursor-not-allowed disabled:opacity-50"
+			className="h-4 w-4 shrink-0 cursor-pointer rounded border-border accent-brand disabled:cursor-not-allowed disabled:opacity-50"
 			checked={state === "on"}
 			disabled={disabled}
 			onChange={(e) => onChange(e.target.checked)}
@@ -71,13 +71,13 @@ function RolesList({
 	return (
 		<div>
 			<div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-				<p className="text-sm text-text-secondary">
+				<p className="text-sm text-foreground-muted">
 					Define what each role can do. A role granted a whole resource keeps any
 					actions added to it later.
 				</p>
 				<button
 					onClick={onNew}
-					className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+					className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
 				>
 					<Plus className="h-4 w-4" />
 					New role
@@ -89,27 +89,27 @@ function RolesList({
 					<button
 						key={role.id}
 						onClick={() => onEdit(role)}
-						className="rounded-xl border border-border bg-bg-elevated p-5 text-left transition-colors hover:border-accent/40"
+						className="rounded-xl border border-border bg-surface-raised p-5 text-left transition-colors hover:border-brand/40"
 					>
 						<div className="mb-3 flex items-start justify-between gap-3">
 							<div className="flex items-center gap-2">
 								{role.is_system ? (
-									<Lock className="h-4 w-4 shrink-0 text-text-muted" />
+									<Lock className="h-4 w-4 shrink-0 text-foreground-subtle" />
 								) : (
-									<ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
+									<ShieldCheck className="h-4 w-4 shrink-0 text-brand" />
 								)}
-								<span className="font-semibold text-text-primary">{role.name}</span>
+								<span className="font-semibold text-foreground">{role.name}</span>
 							</div>
 							{role.is_system ? (
-								<span className="shrink-0 rounded border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+								<span className="shrink-0 rounded border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground-subtle">
 									Built-in
 								</span>
 							) : null}
 						</div>
-						<p className="mb-4 line-clamp-2 text-sm text-text-secondary">
+						<p className="mb-4 line-clamp-2 text-sm text-foreground-muted">
 							{role.description || "No description."}
 						</p>
-						<div className="flex items-center justify-between text-xs text-text-muted">
+						<div className="flex items-center justify-between text-xs text-foreground-subtle">
 							<span className="inline-flex items-center gap-1.5">
 								<Users className="h-3.5 w-3.5" />
 								{role.user_count} {role.user_count === 1 ? "user" : "users"}
@@ -151,7 +151,7 @@ function FeatureRow({
 						disabled={disabled}
 						label={feature.name}
 					/>
-					<span className="text-sm text-text-primary">{feature.name}</span>
+					<span className="text-sm text-foreground">{feature.name}</span>
 				</label>
 			</td>
 			{ACTIONS.map((a) => {
@@ -159,7 +159,7 @@ function FeatureRow({
 				// report shows a dash rather than a checkbox that does nothing.
 				if (feature.actions.indexOf(a) < 0) {
 					return (
-						<td key={a} className="px-3 py-2 text-center text-text-muted">
+						<td key={a} className="px-3 py-2 text-center text-foreground-subtle">
 							&mdash;
 						</td>
 					);
@@ -170,7 +170,7 @@ function FeatureRow({
 						<input
 							type="checkbox"
 							aria-label={feature.name + " " + a}
-							className="h-4 w-4 cursor-pointer rounded border-border accent-accent disabled:cursor-not-allowed disabled:opacity-50"
+							className="h-4 w-4 cursor-pointer rounded border-border accent-brand disabled:cursor-not-allowed disabled:opacity-50"
 							checked={selected.has(key)}
 							disabled={disabled}
 							onChange={(e) => toggle([key], e.target.checked)}
@@ -246,13 +246,13 @@ function ModuleSection({
 							strokeWidth="2.5"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-							className={"text-text-muted transition-transform " + (isOpen ? "rotate-90" : "")}
+							className={"text-foreground-subtle transition-transform " + (isOpen ? "rotate-90" : "")}
 						>
 							<polyline points="9 18 15 12 9 6" />
 						</svg>
-						<span className="font-semibold text-text-primary">{module.name}</span>
+						<span className="font-semibold text-foreground">{module.name}</span>
 					</span>
-					<span className="font-mono text-xs text-text-muted">
+					<span className="font-mono text-xs text-foreground-subtle">
 						{granted} / {keys.length}
 					</span>
 				</button>
@@ -272,11 +272,11 @@ function ModuleSection({
 										disabled={disabled}
 										label={g.name}
 									/>
-									<span className="text-sm font-medium text-text-secondary">{g.name}</span>
+									<span className="text-sm font-medium text-foreground-muted">{g.name}</span>
 								</div>
 								<table className="w-full">
 									<thead>
-										<tr className="text-[10px] uppercase tracking-wider text-text-muted">
+										<tr className="text-[10px] uppercase tracking-wider text-foreground-subtle">
 											<th className="pb-1 pl-10 pr-4 text-left font-medium">Feature</th>
 											{ACTIONS.map((a) => (
 												<th key={a} className="px-3 pb-1 text-center font-medium">
@@ -391,7 +391,7 @@ function RoleEditor({
 			<div className="mb-6 flex items-center justify-between gap-4">
 				<button
 					onClick={onBack}
-					className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary"
+					className="inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground"
 				>
 					<ArrowLeft className="h-4 w-4" />
 					All roles
@@ -410,7 +410,7 @@ function RoleEditor({
 					<button
 						onClick={save}
 						disabled={saving}
-						className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+						className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
 					>
 						<Save className="h-4 w-4" />
 						{saving ? "Saving..." : "Save role"}
@@ -426,7 +426,7 @@ function RoleEditor({
 
 			<div className="mb-4 grid gap-4 md:grid-cols-2">
 				<div>
-					<label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-text-muted">
+					<label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-foreground-subtle">
 						Name
 					</label>
 					<input
@@ -434,33 +434,33 @@ function RoleEditor({
 						onChange={(e) => setName(e.target.value)}
 						disabled={role ? role.is_system : false}
 						placeholder="e.g. Support"
-						className="w-full rounded-lg border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary disabled:opacity-60"
+						className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground disabled:opacity-60"
 					/>
 				</div>
 				<div>
-					<label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-text-muted">
+					<label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-foreground-subtle">
 						Description
 					</label>
 					<input
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
 						placeholder="What is this role for?"
-						className="w-full rounded-lg border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary"
+						className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
 					/>
 				</div>
 			</div>
 
 			{role && role.is_system ? (
-				<p className="mb-4 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-text-secondary">
-					<strong className="text-text-primary">Built-in role.</strong> Its permissions are
+				<p className="mb-4 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-foreground-muted">
+					<strong className="text-foreground">Built-in role.</strong> Its permissions are
 					editable, but the name is fixed and it cannot be deleted &mdash; routes and the
 					upgrade path resolve this role by name.
 				</p>
 			) : null}
 
 			{roles.length > 0 ? (
-				<div className="mb-4 rounded-xl border border-border bg-bg-elevated p-4">
-					<p className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
+				<div className="mb-4 rounded-xl border border-border bg-surface-raised p-4">
+					<p className="mb-2 text-xs font-medium uppercase tracking-wider text-foreground-subtle">
 						Copy permissions from
 					</p>
 					<div className="flex flex-wrap gap-2">
@@ -470,7 +470,7 @@ function RoleEditor({
 								<button
 									key={r.id}
 									onClick={() => setSelected(new Set(r.expanded ?? []))}
-									className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent/40 hover:text-text-primary"
+									className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs text-foreground-muted transition-colors hover:border-brand/40 hover:text-foreground"
 								>
 									<Copy className="h-3 w-3" />
 									{r.name}
@@ -480,28 +480,28 @@ function RoleEditor({
 				</div>
 			) : null}
 
-			<div className="rounded-xl border border-border bg-bg-elevated">
+			<div className="rounded-xl border border-border bg-surface-raised">
 				<div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
-					<span className="font-semibold text-text-primary">Permissions</span>
+					<span className="font-semibold text-foreground">Permissions</span>
 					<div className="flex items-center gap-3">
-						<span className="font-mono text-xs text-text-muted">
+						<span className="font-mono text-xs text-foreground-subtle">
 							{isSuper ? "all permissions" : selected.size + " / " + totalKeys + " granted"}
 						</span>
 						<div className="relative">
-							<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
+							<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground-subtle" />
 							<input
 								value={filter}
 								onChange={(e) => setFilter(e.target.value)}
 								placeholder="Filter..."
-								className="w-44 rounded-lg border border-border bg-bg-primary py-1.5 pl-8 pr-3 text-xs text-text-primary"
+								className="w-44 rounded-lg border border-border bg-background py-1.5 pl-8 pr-3 text-xs text-foreground"
 							/>
 						</div>
 					</div>
 				</div>
 
 				{isSuper ? (
-					<p className="px-4 py-6 text-sm text-text-secondary">
-						This role holds the <code className="font-mono text-accent">*</code> grant
+					<p className="px-4 py-6 text-sm text-foreground-muted">
+						This role holds the <code className="font-mono text-brand">*</code> grant
 						&mdash; every permission, including any added in future. Remove that grant to
 						pick individual permissions.
 					</p>
@@ -546,7 +546,7 @@ export default function RolesPage() {
 			/>
 
 			{loading ? (
-				<p className="text-sm text-text-secondary">Loading...</p>
+				<p className="text-sm text-foreground-muted">Loading...</p>
 			) : editing === undefined ? (
 				<RolesList
 					roles={roles || []}

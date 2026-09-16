@@ -46,14 +46,14 @@ const BLANK = {
 };
 
 const inputCls =
-  "w-full rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+  "w-full rounded-lg border border-border bg-foreground/5 px-3 py-2 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
       <label className="block text-sm font-medium text-foreground">{label}</label>
       {children}
-      {hint && <p className="text-xs text-text-muted">{hint}</p>}
+      {hint && <p className="text-xs text-foreground-subtle">{hint}</p>}
     </div>
   );
 }
@@ -155,23 +155,23 @@ export default function SSOPage() {
           <button
             type="button"
             onClick={() => { setEditing(null); setForm({ ...BLANK }); setOpen(true); }}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
           >
             <Plus className="h-4 w-4" /> New connection
           </button>
         }
       />
 
-      <div className="rounded-xl border border-border bg-bg-elevated p-6">
+      <div className="rounded-xl border border-border bg-surface-raised p-6">
         {listQ.isLoading ? (
-          <p className="flex items-center gap-2 text-sm text-text-secondary">
+          <p className="flex items-center gap-2 text-sm text-foreground-muted">
             <Loader2 className="h-4 w-4 animate-spin" /> Loading&hellip;
           </p>
         ) : rows.length === 0 ? (
           <div className="py-8 text-center">
-            <ShieldCheck className="mx-auto mb-3 h-8 w-8 text-text-muted" />
+            <ShieldCheck className="mx-auto mb-3 h-8 w-8 text-foreground-subtle" />
             <p className="text-sm font-medium text-foreground">No SSO connections yet</p>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-foreground-muted">
               Add one and anybody whose email matches its domains signs in through that provider
               instead of a password.
             </p>
@@ -179,7 +179,7 @@ export default function SSOPage() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-text-muted">
+              <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-foreground-subtle">
                 <th className="pb-3">Connection</th>
                 <th className="pb-3">Domains</th>
                 <th className="pb-3">Status</th>
@@ -191,11 +191,11 @@ export default function SSOPage() {
                 <tr key={c.id} className="border-b border-border/50">
                   <td className="py-3">
                     <span className="block font-medium text-foreground">{c.name}</span>
-                    <span className="block text-xs text-text-muted">{c.issuer_url}</span>
+                    <span className="block text-xs text-foreground-subtle">{c.issuer_url}</span>
                   </td>
-                  <td className="py-3 text-text-secondary">
-                    {c.domains || <span className="text-text-muted">&mdash;</span>}
-                    <span className="ml-2 rounded bg-bg-tertiary px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-text-muted">
+                  <td className="py-3 text-foreground-muted">
+                    {c.domains || <span className="text-foreground-subtle">&mdash;</span>}
+                    <span className="ml-2 rounded bg-foreground/5 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-foreground-subtle">
                       {c.protocol || "oidc"}
                     </span>
                   </td>
@@ -205,22 +205,22 @@ export default function SSOPage() {
                         <Check className="h-3.5 w-3.5" /> Enabled
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs text-text-muted">
+                      <span className="inline-flex items-center gap-1 text-xs text-foreground-subtle">
                         <AlertTriangle className="h-3.5 w-3.5" /> Disabled
                       </span>
                     )}
                     {!c.has_secret && <span className="ml-2 text-xs text-danger">no secret</span>}
                   </td>
                   <td className="py-3 text-right">
-                    <button onClick={() => copyCallback(c)} className="mr-3 text-xs text-text-secondary hover:text-accent">
+                    <button onClick={() => copyCallback(c)} className="mr-3 text-xs text-foreground-muted hover:text-brand">
                       <Copy className="mr-1 inline h-3 w-3" />IdP URLs
                     </button>
-                    <button onClick={() => startEdit(c)} className="mr-3 text-xs text-text-secondary hover:text-accent">
+                    <button onClick={() => startEdit(c)} className="mr-3 text-xs text-foreground-muted hover:text-brand">
                       Edit
                     </button>
                     <button
                       onClick={() => setPendingDelete(c)}
-                      className="text-xs text-text-secondary hover:text-danger"
+                      className="text-xs text-foreground-muted hover:text-danger"
                     >
                       <Trash2 className="mr-1 inline h-3 w-3" />Delete
                     </button>
@@ -254,13 +254,13 @@ export default function SSOPage() {
         size="lg"
         footer={
           <div className="flex items-center justify-end gap-3">
-            <button onClick={() => setOpen(false)} className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary hover:bg-bg-hover">
+            <button onClick={() => setOpen(false)} className="rounded-lg border border-border px-4 py-2 text-sm text-foreground-muted hover:bg-foreground/5">
               Cancel
             </button>
             <button
               onClick={() => saveM.mutate()}
               disabled={saveM.isPending}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50"
             >
               {saveM.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
               {editing ? "Save" : "Create"}
@@ -308,7 +308,7 @@ export default function SSOPage() {
                 <input type="checkbox" checked={form.allow_idp_initiated} onChange={(e) => setForm({ ...form, allow_idp_initiated: e.target.checked })} className="mt-0.5" />
                 <span>
                   <span className="font-medium text-foreground">Allow IdP-initiated sign-in</span>
-                  <span className="block text-xs text-text-muted">
+                  <span className="block text-xs text-foreground-subtle">
                     Lets users start from their provider&rsquo;s app tile rather than this login page. Most enterprise users sign in that way. Assertions are still signature-checked and time-bounded.
                   </span>
                 </span>
@@ -355,7 +355,7 @@ export default function SSOPage() {
             />
             <span>
               <span className="font-medium text-foreground">Create accounts on first login</span>
-              <span className="block text-xs text-text-muted">
+              <span className="block text-xs text-foreground-subtle">
                 Off means the user must already exist here before they can sign in.
               </span>
             </span>

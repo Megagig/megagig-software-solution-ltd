@@ -1,0 +1,129 @@
+/*
+ * Design tokens — single source of truth for apps/web and apps/admin.
+ * Mirrors context/ui-tokens.md exactly (values, names, and grouping).
+ * Do not hand-edit a value here without updating that file first.
+ *
+ * Written for Tailwind CSS v4's CSS-first config: names inside @theme use
+ * Tailwind's reserved namespaces (--color-*, --font-*, --text-*, --radius-*,
+ * --shadow-*, --ease-*, --duration-*) so each token both (a) becomes a real
+ * CSS custom property and (b) generates matching utilities (e.g. --color-brand
+ * -> bg-brand/text-brand/border-brand). Dark mode overrides the same
+ * variable names under .dark, which cascades into every utility that
+ * resolved to var(--token-name) at build time.
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand */
+  --color-brand: #2563eb;
+  --color-brand-foreground: #ffffff;
+  --color-brand-muted: #dbeafe;
+  --color-accent: #16a34a;
+  --color-accent-foreground: #ffffff;
+
+  /* Surfaces */
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-surface-raised: #ffffff;
+  --color-border: #e2e8f0;
+
+  /* Text */
+  --color-foreground: #0f172a;
+  --color-foreground-muted: #475569;
+  --color-foreground-subtle: #94a3b8;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-info: #2563eb;
+
+  /* Lead status (admin only) */
+  --color-status-new: #2563eb;
+  --color-status-contacted: #d97706;
+  --color-status-quoted: #7c3aed;
+  --color-status-won: #16a34a;
+  --color-status-lost: #64748b;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.16);
+  --shadow-glow-brand: 0 0 40px -8px var(--color-brand);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-standard: 250ms;
+  --duration-slow: 400ms;
+}
+
+/*
+ * Non-utility tokens: consumed via arbitrary-value syntax
+ * (e.g. py-[--space-section-y]), not meant to generate their own
+ * Tailwind utilities, so they stay outside @theme's reserved namespaces.
+ */
+:root {
+  --space-section-y: 6rem;
+  --space-section-y-mobile: 3.5rem;
+  --space-container-x: 1.5rem;
+  --space-container-max: 80rem;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+}
+
+/* Dark theme overrides — same variable names, new values. */
+.dark {
+  --color-brand: #3b82f6;
+  --color-brand-foreground: #0b1120;
+  --color-brand-muted: #1e3a8a;
+  --color-accent: #22c55e;
+  --color-accent-foreground: #052e16;
+
+  --color-background: #0b0f19;
+  --color-surface: #111827;
+  --color-surface-raised: #1a2233;
+  --color-border: #1f2937;
+
+  --color-foreground: #f1f5f9;
+  --color-foreground-muted: #94a3b8;
+  --color-foreground-subtle: #64748b;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.5);
+}

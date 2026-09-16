@@ -55,7 +55,7 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
       Underline,
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: "text-accent underline" },
+        HTMLAttributes: { class: "text-brand underline" },
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       TextStyle,
@@ -67,7 +67,7 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
       }),
       Table.configure({ resizable: true, HTMLAttributes: { class: "border-collapse border border-border my-3" } }),
       TableRow,
-      TableHeader.configure({ HTMLAttributes: { class: "border border-border bg-bg-hover px-3 py-2 font-semibold" } }),
+      TableHeader.configure({ HTMLAttributes: { class: "border border-border bg-foreground/5 px-3 py-2 font-semibold" } }),
       TableCell.configure({ HTMLAttributes: { class: "border border-border px-3 py-2 align-top" } }),
       Placeholder.configure({ placeholder: placeholder || "Start writing..." }),
     ],
@@ -82,10 +82,10 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
           "prose max-w-none p-8 focus:outline-none text-foreground " +
           "prose-headings:text-foreground prose-headings:font-bold " +
           "prose-p:text-foreground prose-strong:text-foreground prose-em:text-foreground " +
-          "prose-li:text-foreground prose-a:text-accent " +
-          "prose-blockquote:text-text-secondary prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:bg-bg-hover prose-blockquote:px-4 prose-blockquote:py-1 " +
-          "prose-code:text-accent prose-code:bg-bg-hover prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none " +
-          "prose-pre:bg-bg-secondary prose-pre:border prose-pre:border-border prose-pre:rounded-lg",
+          "prose-li:text-foreground prose-a:text-brand " +
+          "prose-blockquote:text-foreground-muted prose-blockquote:border-l-4 prose-blockquote:border-brand prose-blockquote:bg-foreground/5 prose-blockquote:px-4 prose-blockquote:py-1 " +
+          "prose-code:text-brand prose-code:bg-foreground/5 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none " +
+          "prose-pre:bg-surface prose-pre:border prose-pre:border-border prose-pre:rounded-lg",
       },
     },
     immediatelyRender: false,
@@ -132,17 +132,17 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
 
   if (!editor) {
     return (
-      <div className="rounded-xl border border-border bg-bg-elevated p-8 text-sm text-text-muted">
+      <div className="rounded-xl border border-border bg-surface-raised p-8 text-sm text-foreground-subtle">
         Loading editor...
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-border bg-bg-elevated shadow-sm overflow-hidden">
+    <div className="rounded-xl border border-border bg-surface-raised shadow-sm overflow-hidden">
       {/* Sticky toolbar — stays anchored to the top of the editor card
           so it's always accessible while writing long articles. */}
-      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-border bg-bg-elevated/95 backdrop-blur px-3 py-2">
+      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-border bg-surface-raised/95 backdrop-blur px-3 py-2">
         <ToolbarGroup>
           <ToolbarBtn onClick={() => editor.chain().focus().undo().run()} aria-label="Undo" disabled={!editor.can().undo()}>
             <Undo className="h-4 w-4" />
@@ -188,7 +188,7 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
         {/* Text color + highlight — pick from a small native palette so
             we don't pull in a separate picker component for v3.31. */}
         <ToolbarGroup>
-          <label className="relative inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-text-secondary hover:bg-bg-hover" title="Text color">
+          <label className="relative inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-foreground-muted hover:bg-foreground/5" title="Text color">
             <Palette className="h-4 w-4" />
             <input
               type="color"
@@ -196,7 +196,7 @@ export function WordEditor({ value, onChange, placeholder, onBlur, minHeight }: 
               className="absolute inset-0 cursor-pointer opacity-0"
             />
           </label>
-          <label className="relative inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-text-secondary hover:bg-bg-hover" title="Highlight">
+          <label className="relative inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-foreground-muted hover:bg-foreground/5" title="Highlight">
             <Highlighter className="h-4 w-4" />
             <input
               type="color"
@@ -292,7 +292,7 @@ function ToolbarBtn({ children, onClick, active, disabled, ...rest }: ToolbarBtn
       aria-pressed={active}
       className={
         "inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors disabled:opacity-30 disabled:hover:bg-transparent " +
-        (active ? "bg-accent/10 text-accent" : "text-text-secondary hover:bg-bg-hover hover:text-foreground")
+        (active ? "bg-brand/10 text-brand" : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground")
       }
       {...rest}
     >

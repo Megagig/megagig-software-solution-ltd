@@ -87,7 +87,7 @@ export function PageHeader({
     // long page content scrolls behind it. -mx-4 md:-mx-8 cancels the
     // main's px-* padding so the bg + border stretch to the edges, and
     // px-* inside brings the content back inside the original gutter.
-    <header className="sticky top-0 z-20 -mx-4 mb-6 border-b border-border bg-bg-primary/90 backdrop-blur supports-[backdrop-filter]:bg-bg-primary/75 md:-mx-8">
+    <header className="sticky top-0 z-20 -mx-4 mb-6 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75 md:-mx-8">
       <div className="flex flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-8">
         {/* Title block — min-w-0 + flex-shrink lets the title wrap
             cleanly when long subtitles share the row with action chrome. */}
@@ -95,26 +95,26 @@ export function PageHeader({
           {backTo && (
             <Link
               href={backTo.href}
-              className="mb-1.5 inline-flex items-center gap-1.5 text-xs font-medium text-text-muted transition-colors hover:text-accent"
+              className="mb-1.5 inline-flex items-center gap-1.5 text-xs font-medium text-foreground-subtle transition-colors hover:text-brand"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {backTo.label}
             </Link>
           )}
           <h1 className="text-2xl font-bold text-foreground tracking-tight truncate">{title}</h1>
-          {subtitle && <p className="mt-1 text-sm text-text-secondary md:line-clamp-2">{subtitle}</p>}
+          {subtitle && <p className="mt-1 text-sm text-foreground-muted md:line-clamp-2">{subtitle}</p>}
         </div>
 
         {/* Search */}
         {searchPlaceholder && (
           <div className="relative w-full md:max-w-xs md:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground-subtle" />
             <input
               type="search"
               value={searchValue ?? ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full rounded-lg border border-border bg-bg-elevated py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface-raised py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </div>
         )}
@@ -127,7 +127,7 @@ export function PageHeader({
               type="button"
               onClick={onRefresh}
               aria-label="Refresh"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-elevated text-text-secondary hover:bg-bg-hover transition-colors"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-raised text-foreground-muted hover:bg-foreground/5 transition-colors"
             >
               <RefreshCw className="h-4 w-4" />
             </button>

@@ -69,7 +69,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(fu
 
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">
+      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground-subtle">
         {prefix}
       </span>
       <input
@@ -80,7 +80,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(fu
         value={display}
         onChange={handleChange}
         className={
-          "w-full rounded-lg border border-border bg-bg-elevated pl-7 pr-3 py-2.5 text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent " +
+          "w-full rounded-lg border border-border bg-surface-raised pl-7 pr-3 py-2.5 text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand " +
           className
         }
       />

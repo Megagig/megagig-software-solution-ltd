@@ -11,7 +11,7 @@ export function TableSkeleton({ columns, rows = 5 }: TableSkeletonProps) {
           <tr className="border-b border-border">
             {Array.from({ length: columns }).map((_, i) => (
               <th key={i} className="px-4 py-3">
-                <div className="h-3 w-16 animate-pulse rounded bg-bg-hover" />
+                <div className="h-3 w-16 animate-pulse rounded bg-foreground/5" />
               </th>
             ))}
           </tr>
@@ -22,7 +22,7 @@ export function TableSkeleton({ columns, rows = 5 }: TableSkeletonProps) {
               {Array.from({ length: columns }).map((_, colIdx) => (
                 <td key={colIdx} className="px-4 py-3">
                   <div
-                    className="h-4 animate-pulse rounded bg-bg-hover"
+                    className="h-4 animate-pulse rounded bg-foreground/5"
                     style={{ width: `${50 + Math.random() * 50}%` }}
                   />
                 </td>

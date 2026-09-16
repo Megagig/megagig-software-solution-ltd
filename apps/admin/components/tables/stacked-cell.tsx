@@ -21,7 +21,7 @@ export function StackedCell({
     <div className="flex flex-col">
       <span className={topClassName ?? "font-medium text-foreground"}>{top}</span>
       {bottom && (
-        <span className={bottomClassName ?? "text-xs text-text-muted"}>
+        <span className={bottomClassName ?? "text-xs text-foreground-subtle"}>
           {bottom}
         </span>
       )}

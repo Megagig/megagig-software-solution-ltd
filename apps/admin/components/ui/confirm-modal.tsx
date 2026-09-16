@@ -30,18 +30,18 @@ export function ConfirmModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onCancel} />
-      <div className="relative z-10 w-full max-w-sm rounded-xl border border-border bg-bg-secondary p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-10 w-full max-w-sm rounded-xl border border-border bg-surface p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-start gap-4">
           <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-            variant === "danger" ? "bg-danger/10" : "bg-accent/10"
+            variant === "danger" ? "bg-danger/10" : "bg-brand/10"
           }`}>
             <AlertCircle className={`h-5 w-5 ${
-              variant === "danger" ? "text-danger" : "text-accent"
+              variant === "danger" ? "text-danger" : "text-brand"
             }`} />
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-            <p className="text-sm text-text-secondary">{description}</p>
+            <p className="text-sm text-foreground-muted">{description}</p>
           </div>
         </div>
 
@@ -50,7 +50,7 @@ export function ConfirmModal({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors disabled:opacity-50"
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -61,7 +61,7 @@ export function ConfirmModal({
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50 ${
               variant === "danger"
                 ? "bg-danger hover:bg-danger/90"
-                : "bg-accent hover:bg-accent-hover"
+                : "bg-brand hover:brightness-90"
             }`}
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}

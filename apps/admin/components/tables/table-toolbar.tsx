@@ -69,14 +69,14 @@ export function TableToolbar({
     <div className="flex flex-wrap items-center gap-3 border-b border-border p-4">
       {/* Search */}
       {resource.table.searchable && (
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-bg-tertiary px-3 py-2">
-          <Search className="h-4 w-4 text-text-muted" />
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-foreground/5 px-3 py-2">
+          <Search className="h-4 w-4 text-foreground-subtle" />
           <input
             type="text"
             value={search}
             onChange={(e) => onSearch(e.target.value)}
             placeholder={resource.table.searchPlaceholder ?? "Search..."}
-            className="w-48 bg-transparent text-sm text-foreground placeholder:text-text-muted focus:outline-none"
+            className="w-48 bg-transparent text-sm text-foreground placeholder:text-foreground-subtle focus:outline-none"
           />
         </div>
       )}
@@ -95,7 +95,7 @@ export function TableToolbar({
       {/* Bulk actions */}
       {selectedCount > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-sm text-text-secondary">
+          <span className="text-sm text-foreground-muted">
             {selectedCount} selected
           </span>
           {resource.table.bulkActions?.includes("delete") && onBulkDelete && (
@@ -110,7 +110,7 @@ export function TableToolbar({
           {resource.table.bulkActions?.includes("export") && (
             <button
               onClick={handleBulkExport}
-              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors"
             >
               <Download className="h-3.5 w-3.5" />
               Export selection
@@ -123,7 +123,7 @@ export function TableToolbar({
       <div className="relative">
         <button
           onClick={() => setColumnsOpen(!columnsOpen)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors"
           title="Toggle columns"
         >
           <Columns3 className="h-3.5 w-3.5" />
@@ -132,17 +132,17 @@ export function TableToolbar({
         {columnsOpen && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setColumnsOpen(false)} />
-            <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-bg-elevated shadow-lg z-50 p-2">
+            <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-surface-raised shadow-lg z-50 p-2">
               {allColumns.map((col) => (
                 <label
                   key={col.key}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-bg-hover cursor-pointer"
+                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-foreground/5 cursor-pointer"
                 >
                   <input
                     type="checkbox"
                     checked={!hiddenColumns.includes(col.key)}
                     onChange={() => onToggleColumn(col.key)}
-                    className="h-3.5 w-3.5 rounded border-border bg-bg-tertiary accent-accent"
+                    className="h-3.5 w-3.5 rounded border-border bg-foreground/5 accent-brand"
                   />
                   {col.label}
                 </label>
@@ -157,7 +157,7 @@ export function TableToolbar({
       {onImport && resource.table.import !== false && (
         <button
           onClick={onImport}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors"
           title="Import from Excel"
         >
           <Upload className="h-3.5 w-3.5" />
@@ -180,7 +180,7 @@ export function TableToolbar({
       {onCreate && (
         <button
           onClick={onCreate}
-          className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+          className="flex items-center gap-1.5 rounded-lg bg-brand px-4 py-1.5 text-sm font-medium text-white hover:brightness-90 transition-colors"
         >
           <Plus className="h-3.5 w-3.5" />
           New {resource.label?.singular ?? resource.name}

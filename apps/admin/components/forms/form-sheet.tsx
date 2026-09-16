@@ -44,7 +44,7 @@ export function FormSheet({ resource, item, defaults, onClose }: FormSheetProps)
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div
         className={
-          "relative z-10 w-full max-h-[90vh] overflow-y-auto rounded-t-2xl border border-border bg-bg-secondary shadow-2xl transition-[width] duration-200 md:max-h-none md:h-full md:max-w-none md:rounded-none " +
+          "relative z-10 w-full max-h-[90vh] overflow-y-auto rounded-t-2xl border border-border bg-surface shadow-2xl transition-[width] duration-200 md:max-h-none md:h-full md:max-w-none md:rounded-none " +
           widthClass
         }
       >
@@ -55,7 +55,7 @@ export function FormSheet({ resource, item, defaults, onClose }: FormSheetProps)
           <div className="flex items-center gap-1">
             <button
               onClick={() => setExpanded((e) => !e)}
-              className="hidden rounded-lg p-1 text-text-secondary transition-colors hover:bg-bg-hover hover:text-foreground md:block"
+              className="hidden rounded-lg p-1 text-foreground-muted transition-colors hover:bg-foreground/5 hover:text-foreground md:block"
               title={expanded ? "Restore width" : "Maximize"}
               aria-label={expanded ? "Restore width" : "Maximize"}
             >
@@ -63,7 +63,7 @@ export function FormSheet({ resource, item, defaults, onClose }: FormSheetProps)
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
+              className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground transition-colors"
             >
               <X className="h-5 w-5" />
             </button>

@@ -14,7 +14,7 @@ interface StatsCardProps {
 }
 
 const colorMap: Record<string, string> = {
-  accent: "from-accent/20 to-accent/5",
+  accent: "from-brand/20 to-brand/5",
   success: "from-success/20 to-success/5",
   danger: "from-danger/20 to-danger/5",
   warning: "from-warning/20 to-warning/5",
@@ -22,7 +22,7 @@ const colorMap: Record<string, string> = {
 };
 
 const iconColorMap: Record<string, string> = {
-  accent: "text-accent",
+  accent: "text-brand",
   success: "text-success",
   danger: "text-danger",
   warning: "text-warning",
@@ -44,13 +44,13 @@ export function StatsCard({ label, value, change, icon, color = "accent", format
       <div className={`rounded-xl border border-border bg-gradient-to-br ${gradient} p-6 transition-colors hover:border-border/80`}>
         <div className="flex items-center justify-between">
           {Icon && (
-            <div className="rounded-lg bg-bg-secondary/50 p-2">
+            <div className="rounded-lg bg-surface/50 p-2">
               <Icon className={`h-5 w-5 ${iconColor}`} />
             </div>
           )}
           {change && (
             <span className={`text-xs font-medium ${
-              change.startsWith("+") ? "text-success" : change.startsWith("-") ? "text-danger" : "text-text-secondary"
+              change.startsWith("+") ? "text-success" : change.startsWith("-") ? "text-danger" : "text-foreground-muted"
             }`}>
               {change}
             </span>
@@ -58,7 +58,7 @@ export function StatsCard({ label, value, change, icon, color = "accent", format
         </div>
         <div className="mt-4">
           <p className="text-3xl font-bold text-foreground">{displayValue}</p>
-          <p className="text-sm text-text-secondary mt-1">{label}</p>
+          <p className="text-sm text-foreground-muted mt-1">{label}</p>
         </div>
       </div>
     </Wrapper>

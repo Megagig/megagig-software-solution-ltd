@@ -78,7 +78,7 @@ function ResourceTabs({
   const label = resource.label?.plural ?? resource.slug;
 
   return (
-    <div className="rounded-xl border border-border bg-bg-elevated">
+    <div className="rounded-xl border border-border bg-surface-raised">
       <div className="flex items-center gap-1 border-b border-border px-2 py-2">
         <TabButton
           active={active === "total"}
@@ -118,8 +118,8 @@ function TabButton({
       className={
         "rounded-md px-3 py-1.5 text-sm font-medium transition-colors " +
         (active
-          ? "bg-accent/15 text-accent"
-          : "text-text-secondary hover:bg-bg-hover hover:text-foreground")
+          ? "bg-brand/15 text-brand"
+          : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground")
       }
     >
       {label}

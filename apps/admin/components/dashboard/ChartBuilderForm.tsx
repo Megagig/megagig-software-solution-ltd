@@ -117,12 +117,12 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
   };
 
   return (
-    <div className="space-y-4 rounded-xl border border-accent/30 bg-bg-elevated p-5">
+    <div className="space-y-4 rounded-xl border border-brand/30 bg-surface-raised p-5">
       <header>
         <h3 className="text-sm font-semibold text-foreground">
           {initial ? "Edit chart" : "New chart"}
         </h3>
-        <p className="text-xs text-text-muted">
+        <p className="text-xs text-foreground-subtle">
           Pick a resource, a preset, and a visualization. The chart
           will appear in the Charts section of your dashboard.
         </p>
@@ -134,7 +134,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Orders by status"
-          className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
       </Field>
 
@@ -142,7 +142,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
         <select
           value={resourceSlug}
           onChange={(e) => setResourceSlug(e.target.value)}
-          className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         >
           {resources.map((r) => (
             <option key={r.slug} value={r.slug}>
@@ -165,12 +165,12 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
                 className={
                   "rounded-lg border p-3 text-left transition-colors " +
                   (active
-                    ? "border-accent bg-accent/10"
-                    : "border-border bg-bg-tertiary hover:bg-bg-hover")
+                    ? "border-brand bg-brand/10"
+                    : "border-border bg-foreground/5 hover:bg-foreground/5")
                 }
               >
                 <p className="text-sm font-medium text-foreground">{meta.title}</p>
-                <p className="text-xs text-text-muted">{meta.hint}</p>
+                <p className="text-xs text-foreground-subtle">{meta.hint}</p>
               </button>
             );
           })}
@@ -194,7 +194,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
             <select
               value={field}
               onChange={(e) => setField(e.target.value)}
-              className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             >
               {fieldList.map((c) => (
                 <option key={c.key} value={c.key}>
@@ -214,7 +214,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
             max={100}
             value={limit}
             onChange={(e) => setLimit(Math.max(1, Math.min(100, parseInt(e.target.value, 10) || 1)))}
-            className="w-32 rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-32 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
       )}
@@ -233,10 +233,10 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
                 className={
                   "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors " +
                   (active
-                    ? "border-accent bg-accent text-white"
+                    ? "border-brand bg-brand text-white"
                     : allowed
-                      ? "border-border bg-bg-tertiary text-text-secondary hover:bg-bg-hover"
-                      : "border-border bg-bg-tertiary text-text-muted opacity-40 cursor-not-allowed")
+                      ? "border-border bg-foreground/5 text-foreground-muted hover:bg-foreground/5"
+                      : "border-border bg-foreground/5 text-foreground-subtle opacity-40 cursor-not-allowed")
                 }
               >
                 {CHART_VIZ_LABELS[v]}
@@ -250,7 +250,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-border px-3 py-1.5 text-sm text-text-secondary hover:bg-bg-hover"
+          className="rounded-lg border border-border px-3 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5"
         >
           Cancel
         </button>
@@ -258,7 +258,7 @@ export function ChartBuilderForm({ resources, initial, onSubmit, onCancel }: Pro
           type="button"
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-1.5 text-sm font-medium text-white hover:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {initial ? "Save chart" : "Add chart"}
         </button>
@@ -278,10 +278,10 @@ function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="block text-xs font-medium uppercase tracking-wider text-text-muted">
+      <label className="block text-xs font-medium uppercase tracking-wider text-foreground-subtle">
         {label}
       </label>
-      {hint && <p className="text-[11px] text-text-muted">{hint}</p>}
+      {hint && <p className="text-[11px] text-foreground-subtle">{hint}</p>}
       {children}
     </div>
   );

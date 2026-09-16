@@ -39,9 +39,9 @@ const ChangePasswordSchema = z
 type ChangePasswordValues = z.infer<typeof ChangePasswordSchema>;
 
 const inputClass =
-  "w-full rounded-lg border border-border bg-bg-secondary px-3 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent";
+  "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand";
 const errorInputClass =
-  "w-full rounded-lg border border-danger/50 bg-bg-secondary px-3 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-danger focus:outline-none focus:ring-1 focus:ring-danger";
+  "w-full rounded-lg border border-danger/50 bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-danger focus:outline-none focus:ring-1 focus:ring-danger";
 
 export default function ProfilePage() {
   const { data: user } = useMe();
@@ -112,17 +112,17 @@ export default function ProfilePage() {
           user knows what the Upload New button replaces. Layout: gradient
           banner up top, avatar floating half-out, name/email/role next to
           it, prominent Upload New CTA on the right. */}
-      <section className="mb-6 overflow-hidden rounded-2xl border border-border bg-bg-elevated">
+      <section className="mb-6 overflow-hidden rounded-2xl border border-border bg-surface-raised">
         <header className="border-b border-border px-6 py-4">
           <p className="text-sm font-semibold text-foreground">Profile Picture</p>
-          <p className="mt-0.5 text-xs text-text-muted">
+          <p className="mt-0.5 text-xs text-foreground-subtle">
             Replace the image teammates and customers see on your profile.
           </p>
         </header>
-        <div className="h-20 bg-gradient-to-r from-accent/30 via-accent/15 to-transparent" />
+        <div className="h-20 bg-gradient-to-r from-brand/30 via-brand/15 to-transparent" />
         <div className="-mt-12 flex flex-col items-start gap-4 px-6 pb-6 sm:flex-row sm:items-end">
           <div className="relative">
-            <span className="block h-24 w-24 overflow-hidden rounded-2xl ring-4 ring-bg-elevated bg-bg-secondary">
+            <span className="block h-24 w-24 overflow-hidden rounded-2xl ring-4 ring-surface-raised bg-surface">
               {user.avatar ? (
                 <img src={user.avatar} alt={fullName || "Avatar"} className="h-full w-full object-cover" />
               ) : (
@@ -134,8 +134,8 @@ export default function ProfilePage() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-lg font-bold text-foreground truncate">{fullName || "Anonymous"}</p>
-            <p className="text-sm text-text-muted truncate">{user.email}</p>
-            <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+            <p className="text-sm text-foreground-subtle truncate">{user.email}</p>
+            <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
               {user.role}
             </span>
           </div>
@@ -145,7 +145,7 @@ export default function ProfilePage() {
               type="button"
               onClick={() => avatarInputRef.current?.click()}
               disabled={avatarUploading}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:brightness-90 disabled:opacity-50"
             >
               {avatarUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
               Upload new
@@ -275,7 +275,7 @@ export default function ProfilePage() {
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-foreground">Delete account</p>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-foreground-muted">
               Permanently remove your account and all associated data. This action cannot be undone.
             </p>
           </div>
@@ -305,15 +305,15 @@ function ProfileCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mb-6 rounded-2xl border border-border bg-bg-elevated">
+    <section className="mb-6 rounded-2xl border border-border bg-surface-raised">
       <header className="flex items-start justify-between gap-3 border-b border-border px-6 py-4">
         <div className="flex items-start gap-3 min-w-0">
-          <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+          <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
             {icon}
           </span>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-foreground">{title}</p>
-            <p className="mt-0.5 text-xs text-text-muted">{description}</p>
+            <p className="mt-0.5 text-xs text-foreground-subtle">{description}</p>
           </div>
         </div>
         {message && (
@@ -330,7 +330,7 @@ function ProfileCard({
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</span>
+      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</span>
       {children}
       {error && <p className="mt-1 text-xs text-danger">{error}</p>}
     </label>
@@ -342,7 +342,7 @@ function SubmitButton({ pending, children }: { pending: boolean; children: React
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+      className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:brightness-90 disabled:opacity-50"
     >
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : children}
     </button>

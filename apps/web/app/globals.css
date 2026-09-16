@@ -1,92 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "../../../packages/shared/themes/tokens.css";
 
-/* v3.28.1 — theme-aware CSS variables. Web mirrors admin's variable
- * system so a single THEME=<name> in .env paints both surfaces. */
-
-/* atlas (default) */
-:root,
-[data-theme="atlas"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --bg-elevated: #ffffff;
-  --bg-hover: #f1f5f9;
-  --border: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --info: #0ea5e9;
-}
-
-[data-theme="aurora"] {
-  --bg-primary: #fbfbfd;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f5f5f7;
-  --bg-elevated: #ffffff;
-  --bg-hover: #f5f5f7;
-  --border: #d2d2d7;
-  --text-primary: #1d1d1f;
-  --text-secondary: #424245;
-  --text-muted: #86868b;
-  --accent: #1d1d1f;
-  --accent-hover: #000000;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --info: #0071e3;
-}
-
-[data-theme="pulse"] {
-  --bg-primary: #f6f7f9;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #eef1f5;
-  --bg-elevated: #ffffff;
-  --bg-hover: #eef1f5;
-  --border: #e0e4e9;
-  --text-primary: #1d1f26;
-  --text-secondary: #4b5563;
-  --text-muted: #8a94a6;
-  --accent: #0051c3;
-  --accent-hover: #003d99;
-  --success: #16a34a;
-  --danger: #dc2626;
-  --warning: #f6821f;
-  --info: #0051c3;
-}
-
-[data-theme="midnight"] {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-tertiary: #1a1a24;
-  --bg-elevated: #22222e;
-  --bg-hover: #2a2a38;
-  --border: #2a2a3a;
-  --text-primary: #e8e8f0;
-  --text-secondary: #9090a8;
-  --text-muted: #606078;
-  --accent: #6c5ce7;
-  --accent-hover: #7c6cf7;
-  --success: #00b894;
-  --danger: #ff6b6b;
-  --warning: #fdcb6e;
-  --info: #74b9ff;
-}
+/* The .dark class (see tokens.css) is toggled by the shared theme provider
+ * (Phase 3) and persisted to localStorage; it defaults to system preference
+ * on first visit via that provider, not via CSS media queries here. */
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-display), system-ui, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
 }
 
 * {
-  border-color: var(--border);
+  border-color: var(--color-border);
 }
 
 ::-webkit-scrollbar {
@@ -95,78 +21,79 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-hover);
-  border-radius: 3px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--color-foreground-subtle);
 }
 
 /* Blog prose styles for rendered HTML content */
 .prose-blog {
-  color: var(--text-primary);
+  color: var(--color-foreground);
   font-size: 1.0625rem;
-  line-height: 1.8;
+  line-height: var(--leading-normal);
 }
 
 .prose-blog h1 {
-  font-size: 2rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  letter-spacing: -0.025em;
-  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-foreground);
 }
 
 .prose-blog h2 {
-  font-size: 1.5rem;
+  font-size: var(--text-2xl);
   font-weight: 700;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  letter-spacing: -0.025em;
-  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-foreground);
 }
 
 .prose-blog h3 {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  color: var(--color-foreground);
 }
 
 .prose-blog h4 {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  color: var(--color-foreground);
 }
 
 .prose-blog p {
   margin-bottom: 1.25rem;
-  color: var(--text-secondary);
+  color: var(--color-foreground-muted);
 }
 
 .prose-blog a {
-  color: var(--accent);
+  color: var(--color-brand);
   text-decoration: underline;
   text-underline-offset: 2px;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 .prose-blog a:hover {
-  color: var(--accent-hover);
+  color: var(--color-brand);
+  opacity: 0.85;
 }
 
 .prose-blog strong {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-foreground);
 }
 
 .prose-blog em {
@@ -187,44 +114,44 @@ body {
 
 .prose-blog li {
   margin-bottom: 0.375rem;
-  color: var(--text-secondary);
+  color: var(--color-foreground-muted);
 }
 
 .prose-blog li::marker {
-  color: var(--text-muted);
+  color: var(--color-foreground-subtle);
 }
 
 .prose-blog blockquote {
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--color-brand);
   padding-left: 1rem;
   margin: 1.5rem 0;
   font-style: italic;
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
+  color: var(--color-foreground-muted);
+  background: var(--color-surface);
   padding: 1rem 1.25rem;
-  border-radius: 0 0.5rem 0.5rem 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .prose-blog pre {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
   line-height: 1.7;
 }
 
 .prose-blog code {
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.875em;
-  background: var(--bg-elevated);
+  background: var(--color-surface-raised);
   padding: 0.15rem 0.4rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--border);
-  color: var(--accent);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  color: var(--color-brand);
 }
 
 .prose-blog pre code {
@@ -233,20 +160,20 @@ body {
   border: none;
   border-radius: 0;
   font-size: inherit;
-  color: var(--text-primary);
+  color: var(--color-foreground);
 }
 
 .prose-blog img {
   max-width: 100%;
   height: auto;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   margin: 1.5rem 0;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
 }
 
 .prose-blog hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--color-border);
   margin: 2rem 0;
 }
 
@@ -259,17 +186,17 @@ body {
 .prose-blog th {
   text-align: left;
   padding: 0.75rem 1rem;
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--color-border);
   font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.875rem;
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
 }
 
 .prose-blog td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-foreground-muted);
+  font-size: var(--text-sm);
 }
 
 .prose-blog tr:last-child td {

@@ -15,7 +15,7 @@ export function ViewModal({ resource, item, onClose, onEdit }: ViewModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border border-border bg-bg-secondary shadow-2xl">
+      <div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border border-border bg-surface shadow-2xl">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="text-lg font-semibold text-foreground">
             {resource.label?.singular ?? resource.name} Details
@@ -24,7 +24,7 @@ export function ViewModal({ resource, item, onClose, onEdit }: ViewModalProps) {
             {onEdit && (
               <button
                 onClick={() => { onClose(); onEdit(item); }}
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-accent hover:bg-accent/10 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-brand hover:bg-brand/10 transition-colors"
               >
                 <Pencil className="h-3.5 w-3.5" />
                 Edit
@@ -32,7 +32,7 @@ export function ViewModal({ resource, item, onClose, onEdit }: ViewModalProps) {
             )}
             <button
               onClick={onClose}
-              className="rounded-lg p-1 text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
+              className="rounded-lg p-1 text-foreground-muted hover:bg-foreground/5 hover:text-foreground transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
@@ -46,13 +46,13 @@ export function ViewModal({ resource, item, onClose, onEdit }: ViewModalProps) {
 
               return (
                 <div key={col.key} className="space-y-1.5">
-                  <p className="text-xs font-medium text-text-muted uppercase tracking-wider">
+                  <p className="text-xs font-medium text-foreground-subtle uppercase tracking-wider">
                     {col.label}
                   </p>
                   <div className="text-sm text-foreground">
                     {value !== null && value !== undefined
                       ? renderCell(col, value, item)
-                      : <span className="text-text-muted">—</span>
+                      : <span className="text-foreground-subtle">—</span>
                     }
                   </div>
                 </div>
@@ -64,7 +64,7 @@ export function ViewModal({ resource, item, onClose, onEdit }: ViewModalProps) {
         <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover transition-colors"
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground-muted hover:bg-foreground/5 transition-colors"
           >
             Close
           </button>

@@ -23,13 +23,13 @@ export function TablePagination({
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border p-4">
       <div className="flex items-center gap-3">
-        <p className="text-sm text-text-muted">
+        <p className="text-sm text-foreground-subtle">
           Showing {start}–{end} of {total}
         </p>
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="rounded-lg border border-border bg-bg-tertiary px-2 py-1 text-sm text-foreground focus:border-accent focus:outline-none"
+          className="rounded-lg border border-border bg-foreground/5 px-2 py-1 text-sm text-foreground focus:border-brand focus:outline-none"
         >
           {[10, 20, 50, 100].map((size) => (
             <option key={size} value={size}>
@@ -43,29 +43,29 @@ export function TablePagination({
         <button
           onClick={() => onPageChange(1)}
           disabled={page <= 1}
-          className="rounded-lg border border-border bg-bg-tertiary px-2.5 py-1.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-border bg-foreground/5 px-2.5 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           First
         </button>
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="rounded-lg border border-border bg-bg-tertiary px-2.5 py-1.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-border bg-foreground/5 px-2.5 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Prev
         </button>
 
         {generatePageNumbers(page, totalPages).map((p, i) =>
           p === -1 ? (
-            <span key={`ellipsis-${i}`} className="px-1 text-text-muted">...</span>
+            <span key={`ellipsis-${i}`} className="px-1 text-foreground-subtle">...</span>
           ) : (
             <button
               key={p}
               onClick={() => onPageChange(p)}
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 p === page
-                  ? "bg-accent text-white"
-                  : "border border-border bg-bg-tertiary text-text-secondary hover:bg-bg-hover"
+                  ? "bg-brand text-white"
+                  : "border border-border bg-foreground/5 text-foreground-muted hover:bg-foreground/5"
               }`}
             >
               {p}
@@ -76,14 +76,14 @@ export function TablePagination({
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          className="rounded-lg border border-border bg-bg-tertiary px-2.5 py-1.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-border bg-foreground/5 px-2.5 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Next
         </button>
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={page >= totalPages}
-          className="rounded-lg border border-border bg-bg-tertiary px-2.5 py-1.5 text-sm text-text-secondary hover:bg-bg-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-border bg-foreground/5 px-2.5 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Last
         </button>

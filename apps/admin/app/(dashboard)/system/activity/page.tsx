@@ -41,18 +41,18 @@ function actionChip(action: string): { label: string; icon: React.ReactNode; ton
   if (action.startsWith("auth.login"))
     return { label: "Sign-in", icon: <LogIn className="h-3.5 w-3.5" />, tone: "bg-success/10 text-success" };
   if (action.startsWith("auth.logout"))
-    return { label: "Sign-out", icon: <LogOut className="h-3.5 w-3.5" />, tone: "bg-text-muted/10 text-text-secondary" };
+    return { label: "Sign-out", icon: <LogOut className="h-3.5 w-3.5" />, tone: "bg-foreground-subtle/10 text-foreground-muted" };
   if (action.startsWith("auth.register"))
     return { label: "Sign-up", icon: <UserPlus className="h-3.5 w-3.5" />, tone: "bg-info/10 text-info" };
   if (action.startsWith("ticket"))
     return { label: "Ticket", icon: <FileText className="h-3.5 w-3.5" />, tone: "bg-warning/10 text-warning" };
   if (action.startsWith("sale") || action.startsWith("order"))
-    return { label: "Sale", icon: <ShoppingCart className="h-3.5 w-3.5" />, tone: "bg-accent/10 text-accent" };
+    return { label: "Sale", icon: <ShoppingCart className="h-3.5 w-3.5" />, tone: "bg-brand/10 text-brand" };
   if (action.startsWith("user"))
     return { label: "User", icon: <UsersIcon className="h-3.5 w-3.5" />, tone: "bg-info/10 text-info" };
   if (action.startsWith("settings"))
-    return { label: "Settings", icon: <SettingsIcon className="h-3.5 w-3.5" />, tone: "bg-text-muted/10 text-text-secondary" };
-  return { label: "Event", icon: <ActivityIcon className="h-3.5 w-3.5" />, tone: "bg-accent/10 text-accent" };
+    return { label: "Settings", icon: <SettingsIcon className="h-3.5 w-3.5" />, tone: "bg-foreground-subtle/10 text-foreground-muted" };
+  return { label: "Event", icon: <ActivityIcon className="h-3.5 w-3.5" />, tone: "bg-brand/10 text-brand" };
 }
 
 export default function ActivityPage() {
@@ -154,8 +154,8 @@ export default function ActivityPage() {
               className={
                 "inline-flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition-colors -mb-px " +
                 (active
-                  ? "border-accent text-accent"
-                  : "border-transparent text-text-secondary hover:text-foreground")
+                  ? "border-brand text-brand"
+                  : "border-transparent text-foreground-muted hover:text-foreground")
               }
             >
               <Icon className="h-4 w-4" />
@@ -178,13 +178,13 @@ export default function ActivityPage() {
       )}
 
       {/* Filter bar */}
-      <div className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-border bg-bg-elevated p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
+      <div className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-border bg-surface-raised p-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
         <Field label="From">
           <input
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
         <Field label="To">
@@ -192,7 +192,7 @@ export default function ActivityPage() {
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="w-full rounded-lg border border-border bg-bg-secondary px-3 py-2 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
           />
         </Field>
         <IconButton
@@ -207,17 +207,17 @@ export default function ActivityPage() {
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-border bg-bg-elevated p-4">
+            <div key={i} className="rounded-xl border border-border bg-surface-raised p-4">
               <Skeleton shape="text" className="w-1/2 mb-2" />
               <Skeleton shape="text" className="w-3/4" />
             </div>
           ))}
         </div>
       ) : grouped.length === 0 ? (
-        <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center">
-          <ActivityIcon className="mx-auto h-10 w-10 text-text-muted" />
+        <div className="rounded-xl border border-border bg-surface-raised p-12 text-center">
+          <ActivityIcon className="mx-auto h-10 w-10 text-foreground-subtle" />
           <p className="mt-3 text-base font-medium text-foreground">No matching events</p>
-          <p className="mt-1 text-sm text-text-muted">Try a different tab or widen the date range.</p>
+          <p className="mt-1 text-sm text-foreground-subtle">Try a different tab or widen the date range.</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -228,7 +228,7 @@ export default function ActivityPage() {
             const isToday = today.getTime() === target.getTime();
             return (
               <section key={day}>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-foreground-subtle">
                   {isToday ? "Today" : "On"} · {date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" })} · {items.length} event{items.length === 1 ? "" : "s"}
                 </p>
                 <ul className="space-y-2">
@@ -237,9 +237,9 @@ export default function ActivityPage() {
                     return (
                       <li
                         key={row.id}
-                        className="flex items-start gap-4 rounded-xl border border-border bg-bg-elevated px-4 py-3"
+                        className="flex items-start gap-4 rounded-xl border border-border bg-surface-raised px-4 py-3"
                       >
-                        <span className="shrink-0 pt-0.5 text-xs font-mono text-text-muted">
+                        <span className="shrink-0 pt-0.5 text-xs font-mono text-foreground-subtle">
                           {new Date(row.created_at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
                         </span>
                         <span className={"inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-0.5 text-xs font-semibold " + chip.tone}>
@@ -248,7 +248,7 @@ export default function ActivityPage() {
                         </span>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-foreground">{row.summary}</p>
-                          <p className="truncate text-xs text-text-muted">
+                          <p className="truncate text-xs text-foreground-subtle">
                             <code className="font-mono">{row.action}</code>
                             {row.ip_address && <span> · {prettyIP(row.ip_address)}</span>}
                           </p>
@@ -256,7 +256,7 @@ export default function ActivityPage() {
                         <button
                           type="button"
                           onClick={() => setDetail(row)}
-                          className="shrink-0 rounded-md border border-border bg-bg-secondary px-2.5 py-1 text-xs font-medium text-text-secondary hover:bg-bg-hover hover:text-foreground"
+                          className="shrink-0 rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
                         >
                           Info
                         </button>
@@ -285,11 +285,11 @@ export default function ActivityPage() {
             <KV label="Resource" value={detail.resource_type ? detail.resource_type + " · " + detail.resource_id : "—"} />
             <KV label="User" value={detail.user_id || "system"} />
             <KV label="IP" value={prettyIP(detail.ip_address)} />
-            <KV label="User agent" value={<span className="text-xs text-text-muted">{detail.user_agent || "—"}</span>} />
+            <KV label="User agent" value={<span className="text-xs text-foreground-subtle">{detail.user_agent || "—"}</span>} />
             {detail.metadata && (
               <div>
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-text-muted">Metadata</p>
-                <pre className="overflow-x-auto rounded-lg bg-bg-secondary p-3 text-xs">{prettyJSON(detail.metadata)}</pre>
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-foreground-subtle">Metadata</p>
+                <pre className="overflow-x-auto rounded-lg bg-surface p-3 text-xs">{prettyJSON(detail.metadata)}</pre>
               </div>
             )}
           </dl>
@@ -309,7 +309,7 @@ function prettyIP(ip: string | null | undefined): React.ReactNode {
   if (ip === "::1" || ip === "127.0.0.1" || ip === "0.0.0.0") {
     return (
       <span title={ip}>
-        localhost <span className="text-xs text-text-muted">({ip})</span>
+        localhost <span className="text-xs text-foreground-subtle">({ip})</span>
       </span>
     );
   }
@@ -318,13 +318,13 @@ function prettyIP(ip: string | null | undefined): React.ReactNode {
 
 function SummaryCard({ label, value, icon, tone }: { label: string; value: number; icon: React.ReactNode; tone: "default" | "warning" | "danger" | "info" }) {
   const toneClass = {
-    default: "border-border bg-bg-elevated",
+    default: "border-border bg-surface-raised",
     warning: "border-warning/30 bg-warning/5",
     danger:  "border-danger/30 bg-danger/5",
     info:    "border-info/30 bg-info/5",
   }[tone];
   const iconClass = {
-    default: "text-text-secondary",
+    default: "text-foreground-muted",
     warning: "text-warning",
     danger:  "text-danger",
     info:    "text-info",
@@ -332,7 +332,7 @@ function SummaryCard({ label, value, icon, tone }: { label: string; value: numbe
   return (
     <div className={"rounded-xl border p-4 " + toneClass}>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</p>
         <span className={iconClass}>{icon}</span>
       </div>
       <p className="mt-2 text-2xl font-bold text-foreground">{value}</p>
@@ -343,7 +343,7 @@ function SummaryCard({ label, value, icon, tone }: { label: string; value: numbe
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</span>
+      <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</span>
       {children}
     </label>
   );
@@ -352,7 +352,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function KV({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid grid-cols-3 gap-3 border-b border-border pb-2 last:border-b-0">
-      <dt className="text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</dt>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-foreground-subtle">{label}</dt>
       <dd className="col-span-2 text-sm text-foreground">{value}</dd>
     </div>
   );

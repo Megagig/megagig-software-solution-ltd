@@ -158,7 +158,7 @@ export function CollapsibleSidebar({
 
       <aside
         className={
-          "fixed top-0 left-0 z-40 flex h-screen flex-col border-r border-border bg-bg-secondary transition-all duration-200 " +
+          "fixed top-0 left-0 z-40 flex h-screen flex-col border-r border-border bg-surface transition-all duration-200 " +
           (collapsed ? "w-16 " : "w-64 ") +
           (mobileOpen ? "translate-x-0 " : "-translate-x-full md:translate-x-0 ")
         }
@@ -178,7 +178,7 @@ export function CollapsibleSidebar({
             type="button"
             onClick={onToggleCollapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="absolute -right-3 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-bg-elevated text-text-secondary shadow-sm hover:text-foreground md:flex"
+            className="absolute -right-3 top-1/2 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface-raised text-foreground-muted shadow-sm hover:text-foreground md:flex"
           >
             {collapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
           </button>
@@ -187,7 +187,7 @@ export function CollapsibleSidebar({
         {/* Nav — scrollable middle zone. flex-1 + min-h-0 makes it scroll
             instead of pushing the footer off-screen when there are many
             items. Custom scrollbar styles keep the rail subtle. */}
-        <nav className="flex-1 min-h-0 space-y-1 overflow-y-auto px-2 py-3 [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent]">
+        <nav className="flex-1 min-h-0 space-y-1 overflow-y-auto px-2 py-3 [scrollbar-width:thin] [scrollbar-color:var(--color-border)_transparent]">
           <SidebarLink
             href="/dashboard"
             icon={<LayoutDashboard className="h-5 w-5" />}
@@ -220,7 +220,7 @@ export function CollapsibleSidebar({
                   <button
                     type="button"
                     onClick={() => toggle(groupName)}
-                    className="flex w-full items-center justify-between rounded px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted hover:text-text-secondary"
+                    className="flex w-full items-center justify-between rounded px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-foreground-subtle hover:text-foreground-muted"
                   >
                     <span>{groupName}</span>
                     <ChevronDown
@@ -302,13 +302,13 @@ function SidebarUserMenu({ user, collapsed }: { user: User; collapsed: boolean }
         onClick={() => setOpen((v) => !v)}
         aria-label="Open account menu"
         className={
-          "flex w-full items-center gap-3 px-3 py-3 text-left transition-colors hover:bg-bg-hover " +
+          "flex w-full items-center gap-3 px-3 py-3 text-left transition-colors hover:bg-foreground/5 " +
           (collapsed ? "justify-center" : "")
         }
       >
         <span
           className={
-            "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full overflow-hidden ring-2 ring-accent/30 bg-bg-elevated text-sm font-semibold text-foreground"
+            "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full overflow-hidden ring-2 ring-brand/30 bg-surface-raised text-sm font-semibold text-foreground"
           }
         >
           {user.avatar ? (
@@ -318,25 +318,25 @@ function SidebarUserMenu({ user, collapsed }: { user: User; collapsed: boolean }
         {!collapsed && (
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-semibold text-foreground">{fullName}</span>
-            <span className="block truncate text-xs text-text-muted">{user.email}</span>
+            <span className="block truncate text-xs text-foreground-subtle">{user.email}</span>
           </span>
         )}
         {!collapsed && (
-          <ChevronDown className={"h-3.5 w-3.5 text-text-muted transition-transform " + (open ? "rotate-180" : "")} />
+          <ChevronDown className={"h-3.5 w-3.5 text-foreground-subtle transition-transform " + (open ? "rotate-180" : "")} />
         )}
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-2 right-2 mb-2 overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-xl">
+        <div className="absolute bottom-full left-2 right-2 mb-2 overflow-hidden rounded-xl border border-border bg-surface-raised shadow-xl">
           <div className="border-b border-border px-4 py-3">
             <p className="text-sm font-semibold text-foreground truncate">{fullName}</p>
-            <p className="text-xs text-text-muted truncate">{user.email}</p>
+            <p className="text-xs text-foreground-subtle truncate">{user.email}</p>
           </div>
           <nav className="py-1 text-sm">
             <Link
               href="/system/activity"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex items-center gap-3 px-4 py-2.5 text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <Activity className="h-4 w-4" />
               User Activity
@@ -344,7 +344,7 @@ function SidebarUserMenu({ user, collapsed }: { user: User; collapsed: boolean }
             <Link
               href="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex items-center gap-3 px-4 py-2.5 text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <UserIcon className="h-4 w-4" />
               Profile
@@ -352,7 +352,7 @@ function SidebarUserMenu({ user, collapsed }: { user: User; collapsed: boolean }
             <button
               type="button"
               onClick={() => { setOpen(false); logout(); }}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-text-secondary hover:bg-bg-hover hover:text-foreground"
+              className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
               Log out
@@ -360,7 +360,7 @@ function SidebarUserMenu({ user, collapsed }: { user: User; collapsed: boolean }
           </nav>
           {!collapsed && (
             <div className="border-t border-border px-4 py-2 text-center">
-              <p className="text-[10px] uppercase tracking-wide text-text-muted">Grit {GRIT_CLI_VERSION}</p>
+              <p className="text-[10px] uppercase tracking-wide text-foreground-subtle">Grit {GRIT_CLI_VERSION}</p>
             </div>
           )}
         </div>
@@ -383,7 +383,7 @@ function BrandMark({ collapsed }: { collapsed: boolean }) {
   }
 
   return (
-    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-white font-bold text-sm">
+    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white font-bold text-sm">
       {brand.logo.text}
     </span>
   );
@@ -408,8 +408,8 @@ function SidebarLink({ href, icon, label, active, collapsed, onClick }: LinkProp
       className={
         "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors " +
         (active
-          ? "bg-accent/10 text-accent"
-          : "text-text-secondary hover:bg-bg-hover hover:text-foreground")
+          ? "bg-brand/10 text-brand"
+          : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground")
       }
     >
       <span className="flex h-5 w-5 shrink-0 items-center justify-center">{icon}</span>

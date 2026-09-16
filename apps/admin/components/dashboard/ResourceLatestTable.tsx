@@ -99,27 +99,27 @@ export function ResourceLatestTable({ resource, dateRange, limit = 5 }: Props) {
   const label = resource.label?.plural ?? resource.slug;
 
   return (
-    <div className="rounded-xl border border-border bg-bg-elevated">
+    <div className="rounded-xl border border-border bg-surface-raised">
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <div>
           <p className="text-sm font-semibold text-foreground">Latest {label}</p>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Newest first within the selected range
           </p>
         </div>
         <Link
           href={"/resources/" + resource.slug}
-          className="text-xs font-medium text-accent hover:text-accent-hover"
+          className="text-xs font-medium text-brand hover:opacity-80"
         >
           View all
         </Link>
       </header>
       {query.isLoading ? (
-        <div className="px-4 py-10 text-center text-sm text-text-muted">Loading…</div>
+        <div className="px-4 py-10 text-center text-sm text-foreground-subtle">Loading…</div>
       ) : rows.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-10 text-center">
-          <FolderOpen className="h-5 w-5 text-text-muted" />
-          <p className="text-sm text-text-muted">No {label.toLowerCase()} in this range yet.</p>
+          <FolderOpen className="h-5 w-5 text-foreground-subtle" />
+          <p className="text-sm text-foreground-subtle">No {label.toLowerCase()} in this range yet.</p>
         </div>
       ) : (
         // v3.31.46 -- proper table layout. Reuses the same renderCell
@@ -133,12 +133,12 @@ export function ResourceLatestTable({ resource, dateRange, limit = 5 }: Props) {
                 {cols.map((c) => (
                   <th
                     key={c.key}
-                    className="px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted"
+                    className="px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle"
                   >
                     {c.label}
                   </th>
                 ))}
-                <th className="px-4 py-2 text-right text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                <th className="px-4 py-2 text-right text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle">
                   Created
                 </th>
               </tr>
@@ -148,13 +148,13 @@ export function ResourceLatestTable({ resource, dateRange, limit = 5 }: Props) {
                 const id = String(row.id ?? idx);
                 const createdAt = String(row.created_at ?? "");
                 return (
-                  <tr key={id} className="transition-colors hover:bg-bg-hover">
+                  <tr key={id} className="transition-colors hover:bg-foreground/5">
                     {cols.map((c) => (
                       <td key={c.key} className="px-4 py-2.5 text-foreground">
                         {renderCell(c, row[c.key], row)}
                       </td>
                     ))}
-                    <td className="px-4 py-2.5 text-right text-xs text-text-muted whitespace-nowrap">
+                    <td className="px-4 py-2.5 text-right text-xs text-foreground-subtle whitespace-nowrap">
                       {createdAt ? timeAgo(createdAt) : "—"}
                     </td>
                   </tr>

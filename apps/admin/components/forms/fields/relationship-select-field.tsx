@@ -128,8 +128,8 @@ export function RelationshipSelectField({ field, value, onChange, error }: Relat
   const dropdown = open ? createPortal(
     <div
       ref={dropdownRef}
-      className="fixed z-[9999] rounded-md border border-border bg-bg-elevated shadow-lg"
-      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--bg-elevated, #22222e)" }}
+      className="fixed z-[9999] rounded-md border border-border bg-surface-raised shadow-lg"
+      style={{ top: pos.top, left: pos.left, width: pos.width, backgroundColor: "var(--color-surface-raised, #22222e)" }}
     >
       <div className="p-2">
         <input
@@ -137,23 +137,23 @@ export function RelationshipSelectField({ field, value, onChange, error }: Relat
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex h-9 w-full rounded-md border border-border bg-bg-secondary px-3 py-1 text-sm text-foreground outline-none placeholder:text-text-secondary"
-          style={{ backgroundColor: "var(--bg-secondary, #111118)" }}
+          className="flex h-9 w-full rounded-md border border-border bg-surface px-3 py-1 text-sm text-foreground outline-none placeholder:text-foreground-muted"
+          style={{ backgroundColor: "var(--color-surface, #111118)" }}
           autoFocus
         />
       </div>
       <div className="max-h-60 overflow-y-auto p-1">
         {isLoading ? (
-          <div className="px-3 py-2 text-sm text-text-secondary">Loading...</div>
+          <div className="px-3 py-2 text-sm text-foreground-muted">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="px-3 py-2 text-sm text-text-secondary">No results found</div>
+          <div className="px-3 py-2 text-sm text-foreground-muted">No results found</div>
         ) : (
           <>
             {value && (
               <button
                 type="button"
                 onClick={() => { onChange(null); setOpen(false); setSearch(""); }}
-                className="flex w-full items-center rounded-sm px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
+                className="flex w-full items-center rounded-sm px-3 py-2 text-sm text-foreground-muted hover:bg-foreground/5"
               >
                 Clear selection
               </button>
@@ -166,8 +166,8 @@ export function RelationshipSelectField({ field, value, onChange, error }: Relat
                   key={id}
                   type="button"
                   onClick={() => { onChange(id); setOpen(false); setSearch(""); }}
-                  className={`flex w-full items-center rounded-sm px-3 py-2 text-sm text-foreground hover:bg-bg-hover
-                    ${value === id ? "bg-bg-hover font-medium" : ""}`}
+                  className={`flex w-full items-center rounded-sm px-3 py-2 text-sm text-foreground hover:bg-foreground/5
+                    ${value === id ? "bg-foreground/5 font-medium" : ""}`}
                 >
                   {label}
                 </button>
@@ -186,7 +186,7 @@ export function RelationshipSelectField({ field, value, onChange, error }: Relat
           <button
             type="button"
             onClick={() => { setOpen(false); setCreating(true); }}
-            className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-accent hover:bg-bg-hover"
+            className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm font-medium text-brand hover:bg-foreground/5"
           >
             <Plus className="h-4 w-4 shrink-0" />
             <span className="truncate">
@@ -206,11 +206,11 @@ export function RelationshipSelectField({ field, value, onChange, error }: Relat
         ref={triggerRef}
         type="button"
         onClick={() => { if (!open) updatePosition(); setOpen(!open); }}
-        className={`flex h-10 w-full items-center justify-between rounded-md border bg-bg-secondary px-3 py-2 text-sm text-foreground transition-colors
+        className={`flex h-10 w-full items-center justify-between rounded-md border bg-surface px-3 py-2 text-sm text-foreground transition-colors
           ${error ? "border-red-500" : "border-border"}
-          ${open ? "ring-2 ring-accent" : ""}`}
+          ${open ? "ring-2 ring-brand" : ""}`}
       >
-        <span className={value ? "text-foreground" : "text-text-secondary"}>
+        <span className={value ? "text-foreground" : "text-foreground-muted"}>
           {value ? selectedLabel : `Select ${field.label}...`}
         </span>
         <svg className="h-4 w-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

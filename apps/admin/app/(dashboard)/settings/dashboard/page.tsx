@@ -125,17 +125,17 @@ export default function DashboardSettingsPage() {
         subtitle="Choose which widgets show up, and reorder the dashboard sections."
       />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-bg-elevated px-5 py-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface-raised px-5 py-4">
         <div>
           <p className="text-sm font-semibold text-foreground">Save your selection</p>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Changes apply only to your account. Other admins keep their own preferences.
           </p>
         </div>
         <button
           onClick={handleSave}
           disabled={save.isPending}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {save.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           Save preferences
@@ -143,7 +143,7 @@ export default function DashboardSettingsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20 text-text-muted">
+        <div className="flex items-center justify-center py-20 text-foreground-subtle">
           <Loader2 className="h-5 w-5 animate-spin" />
         </div>
       ) : (
@@ -210,18 +210,18 @@ interface SectionOrderPanelProps {
 function SectionOrderPanel({ order, onMove, onReset }: SectionOrderPanelProps) {
   const isDefault = order.every((k, i) => k === DEFAULT_SECTION_ORDER[i]);
   return (
-    <section className="rounded-xl border border-border bg-bg-elevated">
+    <section className="rounded-xl border border-border bg-surface-raised">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">Section order</h2>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Drag-free ordering: tap the arrows to move a section up or down. Top renders first on the dashboard.
           </p>
         </div>
         <button
           onClick={onReset}
           disabled={isDefault}
-          className="rounded-md border border-border px-2.5 py-1 text-xs text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="rounded-md border border-border px-2.5 py-1 text-xs text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           Reset to default
         </button>
@@ -231,19 +231,19 @@ function SectionOrderPanel({ order, onMove, onReset }: SectionOrderPanelProps) {
           const meta = SECTION_LABELS[key];
           return (
             <li key={key} className="flex items-center gap-3 px-5 py-3">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-accent/10 text-accent text-xs font-mono">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-brand/10 text-brand text-xs font-mono">
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-foreground">{meta.title}</p>
-                <p className="truncate text-xs text-text-muted">{meta.description}</p>
+                <p className="truncate text-xs text-foreground-subtle">{meta.description}</p>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => onMove(key, -1)}
                   disabled={i === 0}
-                  className="rounded-md border border-border bg-bg-tertiary p-1.5 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="rounded-md border border-border bg-foreground/5 p-1.5 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label={"Move " + meta.title + " up"}
                 >
                   <ChevronUp className="h-3.5 w-3.5" />
@@ -252,7 +252,7 @@ function SectionOrderPanel({ order, onMove, onReset }: SectionOrderPanelProps) {
                   type="button"
                   onClick={() => onMove(key, 1)}
                   disabled={i === order.length - 1}
-                  className="rounded-md border border-border bg-bg-tertiary p-1.5 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="rounded-md border border-border bg-foreground/5 p-1.5 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label={"Move " + meta.title + " down"}
                 >
                   <ChevronDown className="h-3.5 w-3.5" />
@@ -292,14 +292,14 @@ function ResourceLayoutPanel({ resources, enabled, layouts, onChange }: Resource
 
   if (visible.length === 0) {
     return (
-      <section className="rounded-xl border border-border bg-bg-elevated">
+      <section className="rounded-xl border border-border bg-surface-raised">
         <header className="border-b border-border px-5 py-4">
           <h2 className="text-sm font-semibold text-foreground">Resource layout</h2>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Enable at least one By Resource widget above to choose how each resource lays out on the dashboard.
           </p>
         </header>
-        <p className="px-5 py-10 text-center text-sm text-text-muted">
+        <p className="px-5 py-10 text-center text-sm text-foreground-subtle">
           No resources have widgets enabled yet.
         </p>
       </section>
@@ -307,10 +307,10 @@ function ResourceLayoutPanel({ resources, enabled, layouts, onChange }: Resource
   }
 
   return (
-    <section className="rounded-xl border border-border bg-bg-elevated">
+    <section className="rounded-xl border border-border bg-surface-raised">
       <header className="border-b border-border px-5 py-4">
         <h2 className="text-sm font-semibold text-foreground">Resource layout</h2>
-        <p className="text-xs text-text-muted">
+        <p className="text-xs text-foreground-subtle">
           Split puts the Total stat and Latest table side-by-side (33/67). Tabs puts each in its own full-width tab.
         </p>
       </header>
@@ -321,22 +321,22 @@ function ResourceLayoutPanel({ resources, enabled, layouts, onChange }: Resource
           const label = r.label?.plural ?? r.name;
           return (
             <li key={r.slug} className="flex items-center gap-3 px-5 py-3">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-accent/10 text-accent">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-brand/10 text-brand">
                 <Icon className="h-3.5 w-3.5" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-foreground">{label}</p>
-                <p className="truncate text-xs text-text-muted">{r.slug}</p>
+                <p className="truncate text-xs text-foreground-subtle">{r.slug}</p>
               </div>
-              <div className="flex items-center gap-1 rounded-md border border-border bg-bg-tertiary p-0.5">
+              <div className="flex items-center gap-1 rounded-md border border-border bg-foreground/5 p-0.5">
                 <button
                   type="button"
                   onClick={() => setLayout(r.slug, "split")}
                   className={
                     "rounded px-2.5 py-1 text-xs font-medium transition-colors " +
                     (mode === "split"
-                      ? "bg-accent text-white"
-                      : "text-text-secondary hover:text-foreground")
+                      ? "bg-brand text-white"
+                      : "text-foreground-muted hover:text-foreground")
                   }
                 >
                   Split
@@ -347,8 +347,8 @@ function ResourceLayoutPanel({ resources, enabled, layouts, onChange }: Resource
                   className={
                     "rounded px-2.5 py-1 text-xs font-medium transition-colors " +
                     (mode === "tabs"
-                      ? "bg-accent text-white"
-                      : "text-text-secondary hover:text-foreground")
+                      ? "bg-brand text-white"
+                      : "text-foreground-muted hover:text-foreground")
                   }
                 >
                   Tabs
@@ -401,25 +401,25 @@ function CustomChartsPanel({ resources, charts, onChange }: CustomChartsPanelPro
   }
 
   return (
-    <section className="rounded-xl border border-border bg-bg-elevated">
+    <section className="rounded-xl border border-border bg-surface-raised">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">Custom charts</h2>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Build bar / line / pie charts from your data. Renders in the Charts section of the dashboard.
           </p>
         </div>
         <button
           type="button"
           onClick={() => setEditing("new")}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand hover:bg-brand/20"
         >
           <Plus className="h-3.5 w-3.5" />
           Add chart
         </button>
       </header>
       {charts.length === 0 ? (
-        <p className="px-5 py-10 text-center text-sm text-text-muted">
+        <p className="px-5 py-10 text-center text-sm text-foreground-subtle">
           No custom charts yet. Click <em>Add chart</em> to build your first one.
         </p>
       ) : (
@@ -431,7 +431,7 @@ function CustomChartsPanel({ resources, charts, onChange }: CustomChartsPanelPro
               <li key={chart.id} className="flex items-center gap-3 px-5 py-3">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground">{chart.title}</p>
-                  <p className="truncate text-xs text-text-muted">
+                  <p className="truncate text-xs text-foreground-subtle">
                     {presetMeta.title}
                     <span className="mx-1.5">·</span>
                     {(resource?.label?.plural ?? chart.resource)}
@@ -448,7 +448,7 @@ function CustomChartsPanel({ resources, charts, onChange }: CustomChartsPanelPro
                 <button
                   type="button"
                   onClick={() => setEditing(chart.id)}
-                  className="rounded-md border border-border bg-bg-tertiary p-1.5 text-text-secondary hover:bg-bg-hover"
+                  className="rounded-md border border-border bg-foreground/5 p-1.5 text-foreground-muted hover:bg-foreground/5"
                   aria-label="Edit chart"
                 >
                   <Pencil className="h-3.5 w-3.5" />
@@ -456,7 +456,7 @@ function CustomChartsPanel({ resources, charts, onChange }: CustomChartsPanelPro
                 <button
                   type="button"
                   onClick={() => remove(chart.id)}
-                  className="rounded-md border border-border bg-bg-tertiary p-1.5 text-danger hover:bg-danger/10"
+                  className="rounded-md border border-border bg-foreground/5 p-1.5 text-danger hover:bg-danger/10"
                   aria-label="Delete chart"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -504,24 +504,24 @@ function Section({ title, description, widgets, enabled, onChange }: SectionProp
   };
 
   return (
-    <section className="rounded-xl border border-border bg-bg-elevated">
+    <section className="rounded-xl border border-border bg-surface-raised">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          <p className="text-xs text-text-muted">{description}</p>
+          <p className="text-xs text-foreground-subtle">{description}</p>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <button
             onClick={() => onChange(new Set(allKeys))}
             disabled={allChecked}
-            className="rounded-md border border-border px-2.5 py-1 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md border border-border px-2.5 py-1 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Select all
           </button>
           <button
             onClick={() => onChange(new Set())}
             disabled={noneChecked}
-            className="rounded-md border border-border px-2.5 py-1 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md border border-border px-2.5 py-1 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Deselect all
           </button>
@@ -529,9 +529,9 @@ function Section({ title, description, widgets, enabled, onChange }: SectionProp
       </header>
 
       {widgets.length === 0 ? (
-        <p className="px-5 py-10 text-center text-sm text-text-muted">
+        <p className="px-5 py-10 text-center text-sm text-foreground-subtle">
           No widgets available. Add{" "}
-          <code className="rounded bg-bg-hover px-1.5 py-0.5 text-[11px]">
+          <code className="rounded bg-foreground/5 px-1.5 py-0.5 text-[11px]">
             dashboard.widgets
           </code>{" "}
           to a resource definition to populate this section.
@@ -548,13 +548,13 @@ function Section({ title, description, widgets, enabled, onChange }: SectionProp
               <div key={moduleName} className="px-5 py-4">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-accent/10 text-accent">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-brand/10 text-brand">
                       <Icon className="h-3.5 w-3.5" />
                     </span>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-foreground-subtle">
                       {moduleName}
                     </span>
-                    <span className="text-[10px] text-text-muted">
+                    <span className="text-[10px] text-foreground-subtle">
                       {moduleKeys.filter((k) => enabled.has(k)).length}/{moduleKeys.length} selected
                     </span>
                   </div>
@@ -562,14 +562,14 @@ function Section({ title, description, widgets, enabled, onChange }: SectionProp
                     <button
                       onClick={() => setAllInGroup(moduleKeys, true)}
                       disabled={moduleAll}
-                      className="rounded px-1.5 py-0.5 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="rounded px-1.5 py-0.5 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       All
                     </button>
                     <button
                       onClick={() => setAllInGroup(moduleKeys, false)}
                       disabled={moduleNone}
-                      className="rounded px-1.5 py-0.5 text-text-secondary hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="rounded px-1.5 py-0.5 text-foreground-muted hover:bg-foreground/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       None
                     </button>
@@ -582,20 +582,20 @@ function Section({ title, description, widgets, enabled, onChange }: SectionProp
                       className={
                         "flex cursor-pointer items-start gap-2.5 rounded-lg border p-3 transition-colors " +
                         (enabled.has(w.key)
-                          ? "border-accent/40 bg-accent/5"
-                          : "border-border bg-bg-tertiary hover:bg-bg-hover")
+                          ? "border-brand/40 bg-brand/5"
+                          : "border-border bg-foreground/5 hover:bg-foreground/5")
                       }
                     >
                       <input
                         type="checkbox"
                         checked={enabled.has(w.key)}
                         onChange={() => toggle(w.key)}
-                        className="mt-0.5 h-4 w-4 rounded border-border bg-bg-secondary accent-accent"
+                        className="mt-0.5 h-4 w-4 rounded border-border bg-surface accent-brand"
                       />
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium text-foreground">{w.label}</p>
                         {w.description && (
-                          <p className="truncate text-xs text-text-muted">{w.description}</p>
+                          <p className="truncate text-xs text-foreground-subtle">{w.description}</p>
                         )}
                       </div>
                     </label>

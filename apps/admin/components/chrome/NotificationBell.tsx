@@ -27,8 +27,8 @@ const severityColor: Record<Notification["severity"], string> = {
   critical: "text-danger",
   high: "text-warning",
   medium: "text-info",
-  low: "text-text-secondary",
-  info: "text-text-secondary",
+  low: "text-foreground-muted",
+  info: "text-foreground-muted",
 };
 
 const sourceIcon: Record<Notification["source"], typeof AlertCircle> = {
@@ -91,7 +91,7 @@ export function NotificationBell() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={"Notifications" + (unread > 0 ? " (" + unread + " unread)" : "")}
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-bg-elevated text-text-secondary hover:bg-bg-hover transition-colors"
+        className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-raised text-foreground-muted hover:bg-foreground/5 transition-colors"
       >
         <Bell className="h-4 w-4" />
         {unread > 0 && (
@@ -102,7 +102,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-96 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-xl">
+        <div className="absolute right-0 z-50 mt-2 w-96 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-border bg-surface-raised shadow-xl">
           <header className="flex items-center justify-between border-b border-border px-4 py-3">
             <h3 className="text-sm font-semibold text-foreground">Notifications</h3>
             {unread > 0 && (
@@ -110,7 +110,7 @@ export function NotificationBell() {
                 type="button"
                 onClick={() => markAllRead.mutate()}
                 disabled={markAllRead.isPending}
-                className="text-xs font-medium text-accent hover:text-accent-hover disabled:opacity-50"
+                className="text-xs font-medium text-brand hover:opacity-80 disabled:opacity-50"
               >
                 Mark all read
               </button>
@@ -119,7 +119,7 @@ export function NotificationBell() {
 
           <div className="max-h-96 overflow-y-auto">
             {items.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-text-muted">
+              <p className="px-4 py-8 text-center text-sm text-foreground-subtle">
                 You're all caught up
               </p>
             ) : (
@@ -128,7 +128,7 @@ export function NotificationBell() {
                   const Icon = sourceIcon[n.source] || AlertCircle;
                   const unreadRow = !n.read_at;
                   return (
-                    <li key={n.id} className={unreadRow ? "bg-bg-secondary/50" : ""}>
+                    <li key={n.id} className={unreadRow ? "bg-surface/50" : ""}>
                       <div className="flex gap-3 px-4 py-3">
                         <Icon className={"mt-0.5 h-4 w-4 shrink-0 " + severityColor[n.severity]} />
                         <div className="min-w-0 flex-1">
@@ -140,13 +140,13 @@ export function NotificationBell() {
                             <p className="text-sm font-medium text-foreground truncate">
                               {n.title}
                               {n.count > 1 && (
-                                <span className="ml-1 text-xs text-text-muted">×{n.count}</span>
+                                <span className="ml-1 text-xs text-foreground-subtle">×{n.count}</span>
                               )}
                             </p>
                             {n.body && (
-                              <p className="mt-0.5 text-xs text-text-secondary line-clamp-2">{n.body}</p>
+                              <p className="mt-0.5 text-xs text-foreground-muted line-clamp-2">{n.body}</p>
                             )}
-                            <p className="mt-1 text-[10px] uppercase tracking-wide text-text-muted">
+                            <p className="mt-1 text-[10px] uppercase tracking-wide text-foreground-subtle">
                               {n.source} · {new Date(n.created_at).toLocaleString()}
                             </p>
                           </Link>
@@ -156,7 +156,7 @@ export function NotificationBell() {
                             type="button"
                             onClick={() => markRead.mutate(n.id)}
                             aria-label="Mark read"
-                            className="shrink-0 rounded p-1 text-text-muted hover:bg-bg-hover hover:text-foreground"
+                            className="shrink-0 rounded p-1 text-foreground-subtle hover:bg-foreground/5 hover:text-foreground"
                           >
                             <Check className="h-3.5 w-3.5" />
                           </button>
@@ -173,7 +173,7 @@ export function NotificationBell() {
             <Link
               href="/system/notifications"
               onClick={() => setOpen(false)}
-              className="text-xs font-medium text-accent hover:text-accent-hover"
+              className="text-xs font-medium text-brand hover:opacity-80"
             >
               View all notifications
             </Link>

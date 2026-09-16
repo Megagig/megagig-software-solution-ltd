@@ -104,7 +104,7 @@ export function SessionWatchdog() {
       aria-labelledby="session-watchdog-title"
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
     >
-      <div className="w-full max-w-md rounded-2xl border border-border bg-bg-elevated p-6 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface-raised p-6 shadow-2xl">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
@@ -117,15 +117,15 @@ export function SessionWatchdog() {
           </h2>
         </div>
 
-        <p className="mt-3 text-sm text-text-secondary">
+        <p className="mt-3 text-sm text-foreground-muted">
           For your security we&apos;ll sign you out automatically after{' '}
           <span className="font-semibold text-foreground">{seconds}s</span> of further inactivity.
         </p>
 
         <div className="mt-5">
-          <div className="h-1 w-full overflow-hidden rounded-full bg-bg-hover">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-foreground/5">
             <div
-              className="h-full bg-accent transition-[width] duration-1000 ease-linear"
+              className="h-full bg-brand transition-[width] duration-1000 ease-linear"
               style={{ width: ((remaining / COUNTDOWN_MS) * 100) + "%" }}
             />
           </div>
@@ -135,7 +135,7 @@ export function SessionWatchdog() {
           <button
             type="button"
             onClick={signOut}
-            className="inline-flex items-center justify-center rounded-lg border border-border bg-bg-elevated px-4 py-2 text-sm font-medium text-foreground hover:bg-bg-hover"
+            className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-raised px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground/5"
           >
             Sign out
           </button>
@@ -143,7 +143,7 @@ export function SessionWatchdog() {
             type="button"
             onClick={stay}
             autoFocus
-            className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover"
+            className="inline-flex items-center justify-center rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
           >
             Stay signed in
           </button>

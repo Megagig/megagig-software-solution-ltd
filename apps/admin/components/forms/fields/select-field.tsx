@@ -82,29 +82,29 @@ export function SelectField({ field, value, onChange, error }: SelectFieldProps)
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className={`flex w-full items-center justify-between rounded-lg border border-border bg-bg-tertiary px-4 py-2.5 text-left text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent ${error ? "border-danger" : ""}`}
+          className={`flex w-full items-center justify-between rounded-lg border border-border bg-foreground/5 px-4 py-2.5 text-left text-sm text-foreground focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand ${error ? "border-danger" : ""}`}
         >
-          <span className={selected ? "" : "text-text-muted"}>
+          <span className={selected ? "" : "text-foreground-subtle"}>
             {selected ? selected.label : (field.placeholder ?? "Select...")}
           </span>
-          <ChevronDown className="h-4 w-4 shrink-0 text-text-muted" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-foreground-subtle" />
         </button>
         {open && (
-          <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border bg-bg-secondary shadow-lg">
+          <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg">
             <div className="flex items-center gap-2 border-b border-border px-3 py-2">
-              <Search className="h-4 w-4 shrink-0 text-text-muted" />
+              <Search className="h-4 w-4 shrink-0 text-foreground-subtle" />
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setActive(0); }}
                 onKeyDown={onKeyDown}
                 placeholder="Search..."
-                className="w-full bg-transparent text-sm text-foreground placeholder:text-text-muted focus:outline-none"
+                className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground-subtle focus:outline-none"
               />
             </div>
             <ul className="max-h-56 overflow-y-auto py-1">
               {filtered.length === 0 && (
-                <li className="px-3 py-2 text-sm text-text-muted">No matches</li>
+                <li className="px-3 py-2 text-sm text-foreground-subtle">No matches</li>
               )}
               {filtered.map((opt, i) => (
                 <li key={opt.value}>
@@ -113,8 +113,8 @@ export function SelectField({ field, value, onChange, error }: SelectFieldProps)
                     onMouseEnter={() => setActive(i)}
                     onClick={() => pick(opt.value)}
                     className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${
-                      i === active ? "bg-bg-hover" : ""
-                    } ${opt.value === value ? "text-accent" : "text-foreground"}`}
+                      i === active ? "bg-foreground/5" : ""
+                    } ${opt.value === value ? "text-brand" : "text-foreground"}`}
                   >
                     {opt.label}
                     {opt.value === value && <Check className="h-4 w-4" />}
@@ -126,7 +126,7 @@ export function SelectField({ field, value, onChange, error }: SelectFieldProps)
         )}
       </div>
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

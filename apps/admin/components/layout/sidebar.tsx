@@ -52,11 +52,11 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
     <>
       {/* Logo */}
       <div className={`flex h-16 items-center border-b border-border px-4 ${collapsed ? "justify-center" : "gap-2 px-6"}`}>
-        <span className="text-xl font-bold text-accent">G</span>
+        <span className="text-xl font-bold text-brand">G</span>
         {!collapsed && (
           <>
-            <span className="text-xl font-bold text-accent">rit</span>
-            <span className="ml-1 rounded-md bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+            <span className="text-xl font-bold text-brand">rit</span>
+            <span className="ml-1 rounded-md bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand">
               Admin
             </span>
           </>
@@ -81,8 +81,8 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
                 title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-accent/10 text-accent"
-                    : "text-text-secondary hover:bg-bg-hover hover:text-foreground"
+                    ? "bg-brand/10 text-brand"
+                    : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
                 } ${collapsed ? "justify-center" : ""}`}
               >
                 <Icon className="h-4 w-4 shrink-0" />
@@ -102,8 +102,8 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
                 title={collapsed ? profileItem.label : undefined}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isProfileActive
-                    ? "bg-accent/10 text-accent"
-                    : "text-text-secondary hover:bg-bg-hover hover:text-foreground"
+                    ? "bg-brand/10 text-brand"
+                    : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
                 } ${collapsed ? "justify-center" : ""}`}
               >
                 <ProfileIcon className="h-4 w-4 shrink-0" />
@@ -116,7 +116,7 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
           {isAdmin && (
             <>
               {!collapsed && (
-                <p className="px-3 mt-6 mb-2 text-xs font-semibold text-text-muted uppercase tracking-wider">
+                <p className="px-3 mt-6 mb-2 text-xs font-semibold text-foreground-subtle uppercase tracking-wider">
                   System
                 </p>
               )}
@@ -133,8 +133,8 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
                     title={collapsed ? item.label : undefined}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-accent/10 text-accent"
-                        : "text-text-secondary hover:bg-bg-hover hover:text-foreground"
+                        ? "bg-brand/10 text-brand"
+                        : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground"
                     } ${collapsed ? "justify-center" : ""}`}
                   >
                     <Icon className="h-4 w-4 shrink-0" />
@@ -154,7 +154,7 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
     <>
       {/* Desktop sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex flex-col bg-bg-secondary border-r border-border transition-all duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 hidden lg:flex flex-col bg-surface border-r border-border transition-all duration-300 ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
@@ -163,7 +163,7 @@ export function Sidebar({ user, collapsed, mobileOpen, onMobileClose }: SidebarP
 
       {/* Mobile sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-bg-secondary border-r border-border lg:hidden transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-surface border-r border-border lg:hidden transition-transform duration-300 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -38,11 +38,11 @@ interface Props {
 }
 
 const PIE_COLORS = [
-  "var(--accent)",
-  "var(--info)",
-  "var(--success)",
-  "var(--warning)",
-  "var(--danger)",
+  "var(--color-brand)",
+  "var(--color-info)",
+  "var(--color-success)",
+  "var(--color-warning)",
+  "var(--color-danger)",
   "#a78bfa",
   "#f472b6",
   "#34d399",
@@ -73,31 +73,31 @@ export function CustomChartCard({ chart, dateRange }: Props) {
   });
 
   return (
-    <div className="rounded-xl border border-border bg-bg-elevated p-5">
+    <div className="rounded-xl border border-border bg-surface-raised p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">
             {chart.title || chart.resource}
           </p>
-          <p className="text-xs text-text-muted">{describeChart(chart)}</p>
+          <p className="text-xs text-foreground-subtle">{describeChart(chart)}</p>
         </div>
-        <TrendingUp className="h-4 w-4 text-text-muted shrink-0" />
+        <TrendingUp className="h-4 w-4 text-foreground-subtle shrink-0" />
       </div>
       <div className="h-56 w-full">
         {query.isLoading ? (
-          <div className="flex h-full items-center justify-center text-sm text-text-muted">
+          <div className="flex h-full items-center justify-center text-sm text-foreground-subtle">
             Loading…
           </div>
         ) : query.isError ? (
           <div className="flex h-full flex-col items-center justify-center gap-1.5 text-center">
             <AlertCircle className="h-5 w-5 text-danger" />
-            <p className="text-xs text-text-muted">Couldn&apos;t load this chart.</p>
-            <p className="max-w-[260px] truncate text-[11px] text-text-muted">
+            <p className="text-xs text-foreground-subtle">Couldn&apos;t load this chart.</p>
+            <p className="max-w-[260px] truncate text-[11px] text-foreground-subtle">
               {(query.error as Error)?.message ?? "Unknown error"}
             </p>
           </div>
         ) : (query.data?.rows ?? []).length === 0 ? (
-          <div className="flex h-full items-center justify-center text-sm text-text-muted">
+          <div className="flex h-full items-center justify-center text-sm text-foreground-subtle">
             No data yet.
           </div>
         ) : (
@@ -128,21 +128,21 @@ function renderChart(viz: ChartViz, rows: ChartRow[], id: string) {
     case "bar":
       return (
         <BarChart data={rows}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="x" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-          <Tooltip contentStyle={chartTooltipStyle} cursor={{ fill: "var(--bg-hover)" }} />
-          <Bar dataKey="y" fill="var(--accent)" radius={[4, 4, 0, 0]} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+          <XAxis dataKey="x" stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
+          <YAxis stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
+          <Tooltip contentStyle={chartTooltipStyle} cursor={{ fill: "var(--color-border)" }} />
+          <Bar dataKey="y" fill="var(--color-brand)" radius={[4, 4, 0, 0]} />
         </BarChart>
       );
     case "line":
       return (
         <LineChart data={rows}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="x" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+          <XAxis dataKey="x" stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
+          <YAxis stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
           <Tooltip contentStyle={chartTooltipStyle} />
-          <Line type="monotone" dataKey="y" stroke="var(--accent)" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="y" stroke="var(--color-brand)" strokeWidth={2} dot={false} />
         </LineChart>
       );
     case "area":
@@ -150,15 +150,15 @@ function renderChart(viz: ChartViz, rows: ChartRow[], id: string) {
         <AreaChart data={rows}>
           <defs>
             <linearGradient id={"area-" + id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+              <stop offset="0%" stopColor="var(--color-brand)" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="var(--color-brand)" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="x" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+          <XAxis dataKey="x" stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
+          <YAxis stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
           <Tooltip contentStyle={chartTooltipStyle} />
-          <Area type="monotone" dataKey="y" stroke="var(--accent)" strokeWidth={2} fill={"url(#area-" + id + ")"} />
+          <Area type="monotone" dataKey="y" stroke="var(--color-brand)" strokeWidth={2} fill={"url(#area-" + id + ")"} />
         </AreaChart>
       );
     case "pie":
@@ -188,8 +188,8 @@ function renderChart(viz: ChartViz, rows: ChartRow[], id: string) {
 }
 
 const chartTooltipStyle = {
-  background: "var(--bg-elevated)",
-  border: "1px solid var(--border)",
+  background: "var(--color-surface-raised)",
+  border: "1px solid var(--color-border)",
   borderRadius: 8,
   fontSize: 12,
 } as const;

@@ -133,13 +133,13 @@ export default function DashboardPage() {
     const s = activityStats.data;
     if (!s || s.total === 0) {
       return [
-        { name: "Info", value: 1, color: "var(--info)" },
+        { name: "Info", value: 1, color: "var(--color-info)" },
       ];
     }
     return [
-      { name: "Info",     value: s.info,     color: "var(--info)"    },
-      { name: "Warn",     value: s.warn,     color: "var(--warning)" },
-      { name: "Critical", value: s.critical, color: "var(--danger)"  },
+      { name: "Info",     value: s.info,     color: "var(--color-info)"    },
+      { name: "Warn",     value: s.warn,     color: "var(--color-warning)" },
+      { name: "Critical", value: s.critical, color: "var(--color-danger)"  },
     ].filter((d) => d.value > 0);
   }, [activityStats.data]);
 
@@ -157,7 +157,7 @@ export default function DashboardPage() {
           stat tile (count of registered modules) reads correctly
           against the dashboard's overall mode. */}
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
+        <p className="text-xs font-medium uppercase tracking-wide text-foreground-subtle">
           Showing resource activity for
         </p>
         <DateFilter value={dateRange} onChange={setDateRange} label="Range" />
@@ -209,46 +209,46 @@ export default function DashboardPage() {
 
       {/* Charts row */}
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="rounded-xl border border-border bg-bg-elevated p-5 lg:col-span-2">
+        <div className="rounded-xl border border-border bg-surface-raised p-5 lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">Activity, past 7 days</p>
-              <p className="text-xs text-text-muted">Events recorded per day across the platform</p>
+              <p className="text-xs text-foreground-subtle">Events recorded per day across the platform</p>
             </div>
-            <TrendingUp className="h-4 w-4 text-text-muted" />
+            <TrendingUp className="h-4 w-4 text-foreground-subtle" />
           </div>
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weekSeries}>
                 <defs>
                   <linearGradient id="activityFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--color-brand)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--color-brand)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                <XAxis dataKey="day" stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--color-foreground-subtle)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
+                    background: "var(--color-surface-raised)",
+                    border: "1px solid var(--color-border)",
                     borderRadius: 8,
                     fontSize: 12,
                   }}
-                  labelStyle={{ color: "var(--text-secondary)" }}
+                  labelStyle={{ color: "var(--color-foreground-muted)" }}
                   itemStyle={{ color: "var(--foreground)" }}
                 />
-                <Area type="monotone" dataKey="events" stroke="var(--accent)" strokeWidth={2} fill="url(#activityFill)" />
+                <Area type="monotone" dataKey="events" stroke="var(--color-brand)" strokeWidth={2} fill="url(#activityFill)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-xl border border-border bg-bg-elevated p-5">
+        <div className="rounded-xl border border-border bg-surface-raised p-5">
           <div className="mb-4">
             <p className="text-sm font-semibold text-foreground">Severity mix</p>
-            <p className="text-xs text-text-muted">Past 24 hours</p>
+            <p className="text-xs text-foreground-subtle">Past 24 hours</p>
           </div>
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -258,8 +258,8 @@ export default function DashboardPage() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
+                    background: "var(--color-surface-raised)",
+                    border: "1px solid var(--color-border)",
                     borderRadius: 8,
                     fontSize: 12,
                   }}
@@ -270,7 +270,7 @@ export default function DashboardPage() {
           <ul className="mt-2 space-y-1.5 text-xs">
             {severitySeries.map((s) => (
               <li key={s.name} className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-text-secondary">
+                <span className="flex items-center gap-2 text-foreground-muted">
                   <span className="inline-block h-2 w-2 rounded-full" style={{ background: s.color }} />
                   {s.name}
                 </span>
@@ -282,20 +282,20 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent activity feed */}
-      <div className="mt-6 rounded-xl border border-border bg-bg-elevated">
+      <div className="mt-6 rounded-xl border border-border bg-surface-raised">
         <header className="flex items-center justify-between border-b border-border px-5 py-3.5">
           <div>
             <p className="text-sm font-semibold text-foreground">Recent activity</p>
-            <p className="text-xs text-text-muted">Latest 8 events across the platform</p>
+            <p className="text-xs text-foreground-subtle">Latest 8 events across the platform</p>
           </div>
-          <Link href="/system/activity" className="text-xs font-medium text-accent hover:text-accent-hover">
+          <Link href="/system/activity" className="text-xs font-medium text-brand hover:opacity-80">
             View all
           </Link>
         </header>
         {recentActivity.isLoading ? (
-          <div className="px-5 py-12 text-center text-sm text-text-muted">Loading...</div>
+          <div className="px-5 py-12 text-center text-sm text-foreground-subtle">Loading...</div>
         ) : (recentActivity.data ?? []).length === 0 ? (
-          <div className="px-5 py-12 text-center text-sm text-text-muted">No activity yet.</div>
+          <div className="px-5 py-12 text-center text-sm text-foreground-subtle">No activity yet.</div>
         ) : (
           <ul className="divide-y divide-border">
             {(recentActivity.data ?? []).map((row) => (
@@ -303,7 +303,7 @@ export default function DashboardPage() {
                 <SeverityDot severity={row.severity} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-foreground">{row.summary}</p>
-                  <p className="text-xs text-text-muted">
+                  <p className="text-xs text-foreground-subtle">
                     <code className="font-mono">{row.action}</code>
                     {row.ip_address && (
                       <span title={row.ip_address}>
@@ -315,7 +315,7 @@ export default function DashboardPage() {
                     )}
                   </p>
                 </div>
-                <span className="shrink-0 text-xs text-text-muted">
+                <span className="shrink-0 text-xs text-foreground-subtle">
                   {timeAgo(row.created_at)}
                 </span>
               </li>
@@ -326,7 +326,7 @@ export default function DashboardPage() {
 
       {/* Quick Access tiles — bottom section */}
       <div className="mt-6">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-text-muted">Quick access</h2>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-foreground-subtle">Quick access</h2>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {visibleResources.slice(0, 8).map((r) => {
             const Icon = getIcon(r.icon);
@@ -334,28 +334,28 @@ export default function DashboardPage() {
               <Link
                 key={r.slug}
                 href={"/resources/" + r.slug}
-                className="group rounded-xl border border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover"
+                className="group rounded-xl border border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5"
               >
-                <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand/10 text-brand">
                   <Icon className="h-4 w-4" />
                 </div>
-                <p className="text-sm font-semibold text-foreground group-hover:text-accent">
+                <p className="text-sm font-semibold text-foreground group-hover:text-brand">
                   {r.label?.plural ?? r.name}
                 </p>
-                <p className="text-xs text-text-muted">Manage {(r.label?.plural ?? r.slug).toLowerCase()}</p>
+                <p className="text-xs text-foreground-subtle">Manage {(r.label?.plural ?? r.slug).toLowerCase()}</p>
               </Link>
             );
           })}
           {(permsLoading || isSuper) && (
             <Link
               href="/system"
-              className="group rounded-xl border border-dashed border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover"
+              className="group rounded-xl border border-dashed border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5"
             >
-              <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-bg-hover text-text-secondary">
+              <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/5 text-foreground-muted">
                 <Shield className="h-4 w-4" />
               </div>
-              <p className="text-sm font-semibold text-foreground group-hover:text-accent">System hub</p>
-              <p className="text-xs text-text-muted">Jobs, files, security, observability</p>
+              <p className="text-sm font-semibold text-foreground group-hover:text-brand">System hub</p>
+              <p className="text-xs text-foreground-subtle">Jobs, files, security, observability</p>
             </Link>
           )}
         </div>
@@ -370,10 +370,10 @@ export default function DashboardPage() {
       {visibleResources.filter((r) => r.dashboard?.enabled !== false).length > 0 && (
         <div className="mt-8">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-muted">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground-subtle">
               By resource
             </h2>
-            <p className="text-[11px] text-text-muted">
+            <p className="text-[11px] text-foreground-subtle">
               Scoped to the range above &middot; sparkline always last 30 days
             </p>
           </div>
@@ -401,7 +401,7 @@ interface StatTileProps {
 }
 
 const accentClass: Record<StatTileProps["accent"], string> = {
-  default: "bg-accent/10 text-accent",
+  default: "bg-brand/10 text-brand",
   info: "bg-info/10 text-info",
   warning: "bg-warning/10 text-warning",
   danger: "bg-danger/10 text-danger",
@@ -410,22 +410,22 @@ const accentClass: Record<StatTileProps["accent"], string> = {
 const sublabelClass: Record<NonNullable<StatTileProps["sublabelTone"]>, string> = {
   success: "text-success",
   danger: "text-danger",
-  muted: "text-text-muted",
+  muted: "text-foreground-subtle",
 };
 
 function StatTile({ label, value, icon, href, accent, sublabel, sublabelTone = "muted" }: StatTileProps) {
   return (
     <Link
       href={href}
-      className="group rounded-xl border border-border bg-bg-elevated p-4 transition-colors hover:bg-bg-hover"
+      className="group rounded-xl border border-border bg-surface-raised p-4 transition-colors hover:bg-foreground/5"
     >
       <div className="flex items-center justify-between">
         <span className={"inline-flex h-9 w-9 items-center justify-center rounded-lg " + accentClass[accent]}>
           {icon}
         </span>
-        <ArrowUpRight className="h-4 w-4 text-text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 text-foreground-subtle opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
-      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-text-muted">{label}</p>
+      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-foreground-subtle">{label}</p>
       <p className="text-2xl font-bold text-foreground">{value}</p>
       {sublabel && (
         <p className={"mt-1 text-xs " + sublabelClass[sublabelTone]}>{sublabel}</p>

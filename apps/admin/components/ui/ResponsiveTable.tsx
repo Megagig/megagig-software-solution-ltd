@@ -56,17 +56,17 @@ export function ResponsiveTable<T>({
     const skeletonCols = columns.length || 4;
     return (
       <div className="animate-pulse">
-        <div className="hidden md:block overflow-hidden rounded-xl border border-border bg-bg-elevated">
+        <div className="hidden md:block overflow-hidden rounded-xl border border-border bg-surface-raised">
           <div className="flex gap-4 border-b border-border px-4 py-3">
             {Array.from({ length: skeletonCols }).map((_, i) => (
-              <div key={i} className="h-3.5 flex-1 max-w-[120px] rounded bg-bg-hover" />
+              <div key={i} className="h-3.5 flex-1 max-w-[120px] rounded bg-foreground/5" />
             ))}
           </div>
           <div className="divide-y divide-border">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex gap-4 px-4 py-3.5">
                 {Array.from({ length: skeletonCols }).map((_, j) => (
-                  <div key={j} className="h-3.5 flex-1 rounded bg-bg-hover" />
+                  <div key={j} className="h-3.5 flex-1 rounded bg-foreground/5" />
                 ))}
               </div>
             ))}
@@ -74,10 +74,10 @@ export function ResponsiveTable<T>({
         </div>
         <ul className="md:hidden space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <li key={i} className="rounded-xl border border-border bg-bg-elevated p-4 space-y-2">
-              <div className="h-3.5 w-1/2 rounded bg-bg-hover" />
-              <div className="h-3.5 w-3/4 rounded bg-bg-hover" />
-              <div className="h-3.5 w-1/3 rounded bg-bg-hover" />
+            <li key={i} className="rounded-xl border border-border bg-surface-raised p-4 space-y-2">
+              <div className="h-3.5 w-1/2 rounded bg-foreground/5" />
+              <div className="h-3.5 w-3/4 rounded bg-foreground/5" />
+              <div className="h-3.5 w-1/3 rounded bg-foreground/5" />
             </li>
           ))}
         </ul>
@@ -87,7 +87,7 @@ export function ResponsiveTable<T>({
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-border bg-bg-elevated p-12 text-center text-sm text-text-muted">
+      <div className="rounded-xl border border-border bg-surface-raised p-12 text-center text-sm text-foreground-subtle">
         {emptyMessage}
       </div>
     );
@@ -98,7 +98,7 @@ export function ResponsiveTable<T>({
       {/* Desktop table — table-fixed so column widths follow the config
           and long cells truncate cleanly instead of forcing horizontal
           scroll. Columns without an explicit width share remaining space. */}
-      <div className="hidden md:block overflow-x-auto rounded-xl border border-border bg-bg-elevated">
+      <div className="hidden md:block overflow-x-auto rounded-xl border border-border bg-surface-raised">
         <table className="w-full table-fixed divide-y divide-border">
           <colgroup>
             {columns.map((c) => (
@@ -114,7 +114,7 @@ export function ResponsiveTable<T>({
                 <th
                   key={c.key}
                   className={
-                    "px-4 py-3 text-xs font-semibold uppercase tracking-wider text-text-muted " +
+                    "px-4 py-3 text-xs font-semibold uppercase tracking-wider text-foreground-subtle " +
                     (c.align === "right" ? "text-right" : "text-left")
                   }
                 >
@@ -128,7 +128,7 @@ export function ResponsiveTable<T>({
               <tr
                 key={rowKey(row)}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className={onRowClick ? "cursor-pointer hover:bg-bg-hover" : ""}
+                className={onRowClick ? "cursor-pointer hover:bg-foreground/5" : ""}
               >
                 {columns.map((c) => (
                   <td
@@ -155,8 +155,8 @@ export function ResponsiveTable<T>({
             key={rowKey(row)}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
             className={
-              "rounded-xl border border-border bg-bg-elevated p-4 " +
-              (onRowClick ? "cursor-pointer active:bg-bg-hover" : "")
+              "rounded-xl border border-border bg-surface-raised p-4 " +
+              (onRowClick ? "cursor-pointer active:bg-foreground/5" : "")
             }
           >
             <dl className="divide-y divide-border">
@@ -164,7 +164,7 @@ export function ResponsiveTable<T>({
                 .filter((c) => !c.hideOnMobile)
                 .map((c) => (
                   <div key={c.key} className="grid grid-cols-3 gap-3 py-2 first:pt-0 last:pb-0">
-                    <dt className="col-span-1 text-xs font-medium uppercase tracking-wide text-text-muted">
+                    <dt className="col-span-1 text-xs font-medium uppercase tracking-wide text-foreground-subtle">
                       {c.header}
                     </dt>
                     <dd className="col-span-2 text-sm text-foreground">{c.cell(row)}</dd>

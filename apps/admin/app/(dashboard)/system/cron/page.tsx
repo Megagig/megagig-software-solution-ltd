@@ -10,38 +10,38 @@ export default function CronPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Cron Scheduler</h1>
-        <p className="text-sm text-text-secondary mt-1">View registered scheduled tasks</p>
+        <p className="text-sm text-foreground-muted mt-1">View registered scheduled tasks</p>
       </div>
 
-      <div className="rounded-xl border border-border bg-bg-secondary overflow-hidden">
+      <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase">Task</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase">Schedule</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase">Type</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-foreground-subtle uppercase">Task</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-foreground-subtle uppercase">Schedule</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-foreground-subtle uppercase">Type</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
                 <td colSpan={3} className="px-4 py-12 text-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-accent mx-auto" />
+                  <Loader2 className="h-6 w-6 animate-spin text-brand mx-auto" />
                 </td>
               </tr>
             ) : tasks && tasks.length > 0 ? (
               tasks.map((task, i) => (
-                <tr key={i} className="border-b border-border last:border-0 hover:bg-bg-hover transition-colors">
+                <tr key={i} className="border-b border-border last:border-0 hover:bg-foreground/5 transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-sm font-medium text-foreground">{task.name}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <code className="rounded-md bg-bg-tertiary px-2 py-1 text-xs font-mono text-accent">
+                    <code className="rounded-md bg-foreground/5 px-2 py-1 text-xs font-mono text-brand">
                       {task.schedule}
                     </code>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="rounded-md bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+                    <span className="rounded-md bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand">
                       {task.type}
                     </span>
                   </td>
@@ -50,8 +50,8 @@ export default function CronPage() {
             ) : (
               <tr>
                 <td colSpan={3} className="px-4 py-12 text-center">
-                  <Calendar className="h-8 w-8 text-text-muted mx-auto mb-2" />
-                  <p className="text-sm text-text-secondary">No cron tasks registered</p>
+                  <Calendar className="h-8 w-8 text-foreground-subtle mx-auto mb-2" />
+                  <p className="text-sm text-foreground-muted">No cron tasks registered</p>
                 </td>
               </tr>
             )}

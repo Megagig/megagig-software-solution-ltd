@@ -19,10 +19,10 @@ export function TextareaField({ field, value, onChange, error }: TextareaFieldPr
         onChange={(e) => onChange(e.target.value)}
         placeholder={field.placeholder}
         rows={field.rows ?? 4}
-        className={`w-full rounded-lg border border-border bg-bg-tertiary px-4 py-2.5 text-sm text-foreground placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent resize-y ${error ? "border-danger" : ""}`}
+        className={`w-full rounded-lg border border-border bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand resize-y ${error ? "border-danger" : ""}`}
       />
       {field.description && !error && (
-        <p className="text-xs text-text-muted">{field.description}</p>
+        <p className="text-xs text-foreground-subtle">{field.description}</p>
       )}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>

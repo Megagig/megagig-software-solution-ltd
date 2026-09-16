@@ -63,7 +63,7 @@ function ClickableCell({
       type="button"
       onClick={handle}
       title={title}
-      className="group/cell inline-flex max-w-full items-center gap-1.5 text-left hover:text-accent transition-colors"
+      className="group/cell inline-flex max-w-full items-center gap-1.5 text-left hover:text-brand transition-colors"
     >
       <span className="truncate">{children}</span>
       {behavior === "link" && (
@@ -145,7 +145,7 @@ export function DataTable({
                   type="checkbox"
                   checked={allSelected}
                   onChange={toggleAll}
-                  className="h-4 w-4 rounded border-border bg-bg-tertiary accent-accent"
+                  className="h-4 w-4 rounded border-border bg-foreground/5 accent-brand"
                 />
               </th>
             )}
@@ -159,7 +159,7 @@ export function DataTable({
               />
             ))}
             {(onView || onEdit || onDelete || (rowActions && rowActions.length > 0)) && (
-              <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider w-[140px]">
+              <th className="px-4 py-3 text-right text-xs font-medium text-foreground-subtle uppercase tracking-wider w-[140px]">
                 Actions
               </th>
             )}
@@ -174,7 +174,7 @@ export function DataTable({
               <tr
                 key={id || idx}
                 className={`border-b border-border/50 transition-colors ${
-                  isSelected ? "bg-accent/5" : "hover:bg-bg-hover/50"
+                  isSelected ? "bg-brand/5" : "hover:bg-foreground/5/50"
                 }`}
               >
                 {onSelectRows && (
@@ -183,7 +183,7 @@ export function DataTable({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleRow(id)}
-                      className="h-4 w-4 rounded border-border bg-bg-tertiary accent-accent"
+                      className="h-4 w-4 rounded border-border bg-foreground/5 accent-brand"
                     />
                   </td>
                 )}
@@ -209,7 +209,7 @@ export function DataTable({
                       {onView && (
                         <button
                           onClick={() => onView(row)}
-                          className="rounded-md p-1.5 text-text-secondary hover:text-info hover:bg-info/10 transition-colors"
+                          className="rounded-md p-1.5 text-foreground-muted hover:text-info hover:bg-info/10 transition-colors"
                           title="View"
                         >
                           <Eye className="h-3.5 w-3.5" />
@@ -218,7 +218,7 @@ export function DataTable({
                       {onEdit && (
                         <button
                           onClick={() => onEdit(row)}
-                          className="text-xs text-text-secondary hover:text-accent transition-colors"
+                          className="text-xs text-foreground-muted hover:text-brand transition-colors"
                         >
                           Edit
                         </button>
@@ -226,7 +226,7 @@ export function DataTable({
                       {onDelete && (
                         <button
                           onClick={() => onDelete(id)}
-                          className="text-xs text-text-secondary hover:text-danger transition-colors"
+                          className="text-xs text-foreground-muted hover:text-danger transition-colors"
                         >
                           Delete
                         </button>
@@ -241,8 +241,8 @@ export function DataTable({
                               className={
                                 "text-xs transition-colors " +
                                 (a.variant === "danger"
-                                  ? "text-text-secondary hover:text-danger"
-                                  : "text-text-secondary hover:text-accent")
+                                  ? "text-foreground-muted hover:text-danger"
+                                  : "text-foreground-muted hover:text-brand")
                               }
                             >
                               {a.label}
@@ -254,8 +254,8 @@ export function DataTable({
                               className={
                                 "text-xs transition-colors " +
                                 (a.variant === "danger"
-                                  ? "text-text-secondary hover:text-danger"
-                                  : "text-text-secondary hover:text-accent")
+                                  ? "text-foreground-muted hover:text-danger"
+                                  : "text-foreground-muted hover:text-brand")
                               }
                             >
                               {a.label}

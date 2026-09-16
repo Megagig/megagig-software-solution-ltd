@@ -35,7 +35,7 @@ export function RichTextField({ field, value, onChange, error }: RichTextFieldPr
       }),
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: "text-accent underline" },
+        HTMLAttributes: { class: "text-brand underline" },
       }),
     ],
     content: value || "",
@@ -45,12 +45,12 @@ export function RichTextField({ field, value, onChange, error }: RichTextFieldPr
     editorProps: {
       attributes: {
         class:
-          "prose prose-invert max-w-none min-h-[200px] p-4 focus:outline-none text-text-primary " +
-          "prose-headings:text-text-primary prose-p:text-text-primary prose-strong:text-text-primary " +
-          "prose-em:text-text-primary prose-li:text-text-primary prose-a:text-accent " +
-          "prose-blockquote:text-text-secondary prose-blockquote:border-border " +
-          "prose-code:text-accent prose-code:bg-bg-hover prose-code:rounded prose-code:px-1 " +
-          "prose-pre:bg-bg-primary prose-pre:border prose-pre:border-border prose-pre:rounded-lg",
+          "prose prose-invert max-w-none min-h-[200px] p-4 focus:outline-none text-foreground " +
+          "prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground " +
+          "prose-em:text-foreground prose-li:text-foreground prose-a:text-brand " +
+          "prose-blockquote:text-foreground-muted prose-blockquote:border-border " +
+          "prose-code:text-brand prose-code:bg-foreground/5 prose-code:rounded prose-code:px-1 " +
+          "prose-pre:bg-background prose-pre:border prose-pre:border-border prose-pre:rounded-lg",
       },
     },
   });
@@ -77,12 +77,12 @@ export function RichTextField({ field, value, onChange, error }: RichTextFieldPr
 
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-text-primary">
+      <label className="mb-1.5 block text-sm font-medium text-foreground">
         {field.label}
         {field.required && <span className="ml-1 text-red-500">*</span>}
       </label>
-      <div className="overflow-hidden rounded-lg border border-border bg-bg-secondary">
-        <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-bg-tertiary p-1.5">
+      <div className="overflow-hidden rounded-lg border border-border bg-surface">
+        <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-foreground/5 p-1.5">
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             active={editor.isActive("bold")}
@@ -211,7 +211,7 @@ function ToolbarButton({ onClick, active, disabled, title, children }: ToolbarBu
       title={title}
       className={`
         flex h-7 w-7 items-center justify-center rounded text-sm transition-colors
-        ${active ? "bg-accent/20 text-accent" : "text-text-secondary hover:bg-bg-hover hover:text-text-primary"}
+        ${active ? "bg-brand/20 text-brand" : "text-foreground-muted hover:bg-foreground/5 hover:text-foreground"}
         ${disabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}
       `}
     >

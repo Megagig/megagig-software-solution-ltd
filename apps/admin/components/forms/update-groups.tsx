@@ -27,11 +27,11 @@ export function UpdateGroups({ resource, id }: UpdateGroupsProps) {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="rounded-xl border border-border bg-bg-secondary p-6">
+        <div className="rounded-xl border border-border bg-surface p-6">
           <div className="animate-pulse space-y-3">
-            <div className="h-6 w-48 rounded bg-bg-tertiary" />
-            <div className="h-10 rounded bg-bg-tertiary" />
-            <div className="h-10 rounded bg-bg-tertiary" />
+            <div className="h-6 w-48 rounded bg-foreground/5" />
+            <div className="h-10 rounded bg-foreground/5" />
+            <div className="h-10 rounded bg-foreground/5" />
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@ export function UpdateGroups({ resource, id }: UpdateGroupsProps) {
       <div className="flex items-center gap-4">
         <button
           onClick={() => router.push(`/resources/${resource.slug}`)}
-          className="flex items-center gap-2 text-text-secondary hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to {pluralName}
@@ -54,7 +54,7 @@ export function UpdateGroups({ resource, id }: UpdateGroupsProps) {
 
       <div>
         <h1 className="text-2xl font-bold text-foreground">Edit {singularName}</h1>
-        <p className="text-text-secondary mt-1">
+        <p className="text-foreground-muted mt-1">
           Each section saves independently — change what you need without affecting the rest.
         </p>
       </div>
@@ -114,11 +114,11 @@ function GroupCard({ resource, group, record, id }: GroupCardProps) {
   });
 
   return (
-    <section className="rounded-xl border border-border bg-bg-secondary p-6">
+    <section className="rounded-xl border border-border bg-surface p-6">
       <header className="mb-4">
         <h2 className="text-lg font-semibold text-foreground">{group.title}</h2>
         {group.description && (
-          <p className="text-sm text-text-secondary mt-1">{group.description}</p>
+          <p className="text-sm text-foreground-muted mt-1">{group.description}</p>
         )}
       </header>
 
@@ -131,7 +131,7 @@ function GroupCard({ resource, group, record, id }: GroupCardProps) {
           <button
             type="submit"
             disabled={!isDirty || isPending}
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
             Save {group.title.toLowerCase()}

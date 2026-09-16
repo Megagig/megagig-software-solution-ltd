@@ -107,21 +107,21 @@ export function ImportModal({ resource, onClose }: ImportModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-3xl max-h-[85vh] rounded-xl border border-border bg-bg-secondary shadow-2xl flex flex-col">
+      <div className="w-full max-w-3xl max-h-[85vh] rounded-xl border border-border bg-surface shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
               Import {resource.label?.plural ?? resource.slug}
             </h2>
-            <p className="text-xs text-text-muted mt-0.5">
+            <p className="text-xs text-foreground-subtle mt-0.5">
               Upload an .xlsx or .csv file. Validation happens in your browser.
             </p>
           </div>
           <button
             onClick={onClose}
             disabled={stage === "submitting"}
-            className="rounded-md p-1.5 text-text-secondary hover:text-foreground hover:bg-bg-hover transition-colors disabled:opacity-40"
+            className="rounded-md p-1.5 text-foreground-muted hover:text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-40"
           >
             <X className="h-4 w-4" />
           </button>
@@ -175,14 +175,14 @@ export function ImportModal({ resource, onClose }: ImportModalProps) {
                   setParsed(null);
                   setFileName("");
                 }}
-                className="rounded-lg border border-border px-4 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors"
+                className="rounded-lg border border-border px-4 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors"
               >
                 Back
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={validCount === 0}
-                className="rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="rounded-lg bg-brand px-4 py-1.5 text-sm font-medium text-white hover:brightness-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Import {validCount} row{validCount === 1 ? "" : "s"}
               </button>
@@ -191,7 +191,7 @@ export function ImportModal({ resource, onClose }: ImportModalProps) {
           {(stage === "pick" || stage === "done") && (
             <button
               onClick={onClose}
-              className="rounded-lg border border-border px-4 py-1.5 text-sm text-text-secondary hover:bg-bg-hover transition-colors"
+              className="rounded-lg border border-border px-4 py-1.5 text-sm text-foreground-muted hover:bg-foreground/5 transition-colors"
             >
               {stage === "done" ? "Done" : "Cancel"}
             </button>
@@ -224,31 +224,31 @@ function PickStage({ dragOver, setDragOver, onDrop, onPick, onDownloadTemplate }
         className={
           "flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-12 cursor-pointer transition-colors " +
           (dragOver
-            ? "border-accent bg-accent/5"
-            : "border-border bg-bg-tertiary hover:bg-bg-hover")
+            ? "border-brand bg-brand/5"
+            : "border-border bg-foreground/5 hover:bg-foreground/5")
         }
       >
-        <div className="rounded-full bg-bg-elevated p-3 mb-3">
-          <Upload className="h-6 w-6 text-text-secondary" />
+        <div className="rounded-full bg-surface-raised p-3 mb-3">
+          <Upload className="h-6 w-6 text-foreground-muted" />
         </div>
         <p className="text-sm font-medium text-foreground mb-1">
           Drop a file here, or click to browse
         </p>
-        <p className="text-xs text-text-muted">
+        <p className="text-xs text-foreground-subtle">
           Accepts .xlsx, .xls, or .csv
         </p>
       </div>
 
-      <div className="flex items-center justify-between rounded-lg border border-border bg-bg-tertiary px-4 py-3">
+      <div className="flex items-center justify-between rounded-lg border border-border bg-foreground/5 px-4 py-3">
         <div>
           <p className="text-sm font-medium text-foreground">Not sure where to start?</p>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-foreground-subtle">
             Grab a blank template with the right column headers.
           </p>
         </div>
         <button
           onClick={onDownloadTemplate}
-          className="flex items-center gap-1.5 rounded-lg border border-border bg-bg-secondary px-3 py-1.5 text-xs text-text-secondary hover:text-foreground hover:bg-bg-hover transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground-muted hover:text-foreground hover:bg-foreground/5 transition-colors"
         >
           <Download className="h-3.5 w-3.5" />
           Download template
@@ -272,7 +272,7 @@ function PreviewStage({
   const showRows = parsed.rows.slice(0, 25);
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-bg-tertiary px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-foreground/5 px-4 py-3">
         <p className="text-sm font-medium text-foreground flex-1 truncate">
           {fileName}
         </p>
@@ -293,7 +293,7 @@ function PreviewStage({
           <p className="text-xs font-semibold text-warning mb-1">
             Unknown columns ignored
           </p>
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-foreground-muted">
             {parsed.unknownHeaders.join(", ")}
           </p>
         </div>
@@ -302,18 +302,18 @@ function PreviewStage({
       <div className="rounded-lg border border-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-bg-tertiary">
+            <thead className="bg-foreground/5">
               <tr>
-                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle">
                   Row
                 </th>
-                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle">
                   Status
                 </th>
                 {parsed.fields.slice(0, 4).map((f) => (
                   <th
                     key={f.key}
-                    className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-text-muted"
+                    className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-foreground-subtle"
                   >
                     {f.label}
                   </th>
@@ -332,7 +332,7 @@ function PreviewStage({
           </table>
         </div>
         {parsed.rows.length > showRows.length && (
-          <div className="border-t border-border px-3 py-2 text-center text-xs text-text-muted">
+          <div className="border-t border-border px-3 py-2 text-center text-xs text-foreground-subtle">
             Showing {showRows.length} of {parsed.rows.length} rows. All rows will be imported.
           </div>
         )}
@@ -345,7 +345,7 @@ function PreviewRow({ row, fieldKeys }: { row: ParsedImportRow; fieldKeys: strin
   const hasError = row.errors.length > 0;
   return (
     <tr className={"border-t border-border/50 " + (hasError ? "bg-danger/5" : "")}>
-      <td className="px-3 py-2 text-xs text-text-muted font-mono">
+      <td className="px-3 py-2 text-xs text-foreground-subtle font-mono">
         {row.rowNumber}
       </td>
       <td className="px-3 py-2">
@@ -373,13 +373,13 @@ function SubmittingStage({ progress }: { progress: { done: number; total: number
   const pct = progress.total > 0 ? Math.round((progress.done / progress.total) * 100) : 0;
   return (
     <div className="flex flex-col items-center justify-center py-10 space-y-4">
-      <Loader2 className="h-8 w-8 animate-spin text-accent" />
+      <Loader2 className="h-8 w-8 animate-spin text-brand" />
       <p className="text-sm font-medium text-foreground">
         Importing {progress.done} of {progress.total}…
       </p>
-      <div className="w-full max-w-sm h-2 rounded-full bg-bg-tertiary overflow-hidden">
+      <div className="w-full max-w-sm h-2 rounded-full bg-foreground/5 overflow-hidden">
         <div
-          className="h-full bg-accent transition-all"
+          className="h-full bg-brand transition-all"
           style={{ width: pct + "%" }}
         />
       </div>
@@ -403,8 +403,8 @@ function DoneStage({ summary }: { summary: SubmitSummary }) {
           </p>
           <ul className="space-y-1 max-h-48 overflow-y-auto">
             {summary.failed.map((f) => (
-              <li key={f.rowNumber} className="text-xs text-text-secondary">
-                <span className="font-mono text-text-muted">Row {f.rowNumber}:</span> {f.message}
+              <li key={f.rowNumber} className="text-xs text-foreground-muted">
+                <span className="font-mono text-foreground-subtle">Row {f.rowNumber}:</span> {f.message}
               </li>
             ))}
           </ul>

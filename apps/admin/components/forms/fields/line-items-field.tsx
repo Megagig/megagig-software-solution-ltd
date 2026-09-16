@@ -58,7 +58,7 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
         <button
           type="button"
           onClick={addRow}
-          className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-accent hover:bg-bg-hover transition-colors"
+          className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-brand hover:bg-foreground/5 transition-colors"
         >
           <Plus className="h-3.5 w-3.5" /> Add {noun}
         </button>
@@ -67,14 +67,14 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-bg-tertiary/40 text-left">
+            <tr className="border-b border-border bg-foreground/5/40 text-left">
               {cols.map((c) => (
-                <th key={c.key} className="px-3 py-2 text-xs font-medium uppercase tracking-wide text-text-muted">
+                <th key={c.key} className="px-3 py-2 text-xs font-medium uppercase tracking-wide text-foreground-subtle">
                   {c.label}
                 </th>
               ))}
               {showTotal && (
-                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-text-muted">
+                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-foreground-subtle">
                   Total
                 </th>
               )}
@@ -86,7 +86,7 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
               <tr>
                 <td
                   colSpan={cols.length + (showTotal ? 2 : 1)}
-                  className="px-3 py-6 text-center text-xs text-text-muted"
+                  className="px-3 py-6 text-center text-xs text-foreground-subtle"
                 >
                   No {noun}s yet — click &ldquo;Add {noun}&rdquo;.
                 </td>
@@ -112,7 +112,7 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
                     <button
                       type="button"
                       onClick={() => removeRow(i)}
-                      className="rounded-md p-1 text-text-muted hover:bg-bg-hover hover:text-danger transition-colors"
+                      className="rounded-md p-1 text-foreground-subtle hover:bg-foreground/5 hover:text-danger transition-colors"
                       aria-label={"Remove " + noun}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -125,7 +125,7 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
           {showTotal && rows.length > 0 && (
             <tfoot>
               <tr className="border-t border-border">
-                <td colSpan={cols.length} className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-text-muted">
+                <td colSpan={cols.length} className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-foreground-subtle">
                   Total
                 </td>
                 <td className="px-3 py-2 text-right text-sm font-semibold text-foreground">
@@ -137,7 +137,7 @@ export function LineItemsField({ field, value, onChange, error }: LineItemsField
           )}
         </table>
       </div>
-      {field.description && !error && <p className="text-xs text-text-muted">{field.description}</p>}
+      {field.description && !error && <p className="text-xs text-foreground-subtle">{field.description}</p>}
       {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
@@ -155,7 +155,7 @@ function LineItemCell({
   onChange: (v: unknown) => void;
 }) {
   const base =
-    "w-full rounded-md border border-border bg-bg-tertiary px-2 py-1.5 text-sm text-foreground outline-none focus:border-accent";
+    "w-full rounded-md border border-border bg-foreground/5 px-2 py-1.5 text-sm text-foreground outline-none focus:border-brand";
 
   if (col.type === "number") {
     return <LineItemNumberCell col={col} value={value} onChange={onChange} className={base + " text-right"} />;
