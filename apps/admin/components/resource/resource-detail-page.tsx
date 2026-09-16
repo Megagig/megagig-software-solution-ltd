@@ -1,0 +1,286 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { ResourceDefinition, ColumnDefinition, FieldDefinition } from "@/lib/resource";
+import { resources } from "@/resources";
+import { useResourceItem, useResource, useDeleteResource } from "@/hooks/use-resource";
+import { renderCell } from "@/components/tables/cell-renderers";
+import { DataTable } from "@/components/tables/data-table";
+import { FormSheet } from "@/components/forms/form-sheet";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { apiClient } from "@/lib/api-client";
+import { ArrowLeft, Pencil, Trash2, Loader2, Printer, Plus, FileText } from "@/lib/icons";
+
+interface ResourceDetailPageProps {
+  resource: ResourceDefinition;
+  id: string;
+}
+
+// A readable title for the record — the first present human field, else the
+// resource's singular label.
+function titleOf(resource: ResourceDefinition, record: Record<string, unknown>): string {
+  for (const k of ["number", "title", "name", "label", "reference", "slug", "email"]) {
+    const v = record[k];
+    if (typeof v === "string" && v) return v;
+  }
+  return resource.label?.singular ?? resource.name;
+}
+
+// Convert a line-items field's itemFields into table columns for the detail
+// view (read-only). renderCell handles the value formatting.
+function itemColumns(itemFields: FieldDefinition[]): ColumnDefinition[] {
+  return itemFields.map((f) => ({ key: f.key, label: f.label }));
+}
+
+export function ResourceDetailPage({ resource, id }: ResourceDetailPageProps) {
+  const router = useRouter();
+  const { data, isLoading } = useResourceItem<Record<string, unknown>>(resource.endpoint, id);
+  const record = data?.data;
+  const [editing, setEditing] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const { mutate: deleteItem, isPending: isDeleting } = useDeleteResource(resource.endpoint, resource.label?.singular ?? resource.name);
+
+  // Ask the API for the rendered PDF and hand the blob to the browser's
+  // viewer. Going through apiClient means the auth cookies, CSRF header and
+  // 401-refresh interceptor all apply, which a bare <a href> would miss.
+  const downloadPdf = async () => {
+    setPdfBusy(true);
+    try {
+      const res = await apiClient.get(resource.endpoint + "/" + id + "/pdf", {
+        responseType: "blob",
+      });
+      const url = URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
+      window.open(url, "_blank", "noopener,noreferrer");
+      // Revoke late — revoking immediately can race the new tab's load.
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } finally {
+      setPdfBusy(false);
+    }
+  };
+
+  // Inline line-items declared on THIS resource (rendered from the field's own
+  // itemEndpoint + itemFields).
+  const lineItemFields = (resource.form?.fields ?? []).filter((f) => f.type === "line-items");
+
+  // Other registry resources that belongs_to this one — discovered by a
+  // relationship-select field whose relatedEndpoint matches this endpoint.
+  const related = useMemo(() => {
+    const out: { resource: ResourceDefinition; fk: string }[] = [];
+    // Endpoints already rendered as inline line-items — don't show them twice.
+    const inlineEndpoints = new Set(
+      (resource.form?.fields ?? [])
+        .filter((f) => f.type === "line-items" && f.itemEndpoint)
+        .map((f) => f.itemEndpoint as string)
+    );
+    for (const r of resources) {
+      if (r.slug === resource.slug || r.hidden || inlineEndpoints.has(r.endpoint)) continue;
+      const fkField = (r.form?.fields ?? []).find(
+        (f) => f.type === "relationship-select" && f.relatedEndpoint === resource.endpoint
+      );
+      if (fkField) out.push({ resource: r, fk: fkField.key });
+    }
+    return out;
+  }, [resource]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 p-8 text-sm text-text-muted">
+        <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+      </div>
+    );
+  }
+  if (!record) {
+    return (
+      <div className="p-8">
+        <Link href={"/resources/" + resource.slug} className="text-sm text-accent hover:underline">
+          ← Back to {resource.label?.plural ?? resource.name}
+        </Link>
+        <p className="mt-4 text-sm text-text-muted">This record could not be found.</p>
+      </div>
+    );
+  }
+
+  const cols = resource.table.columns.filter((c) => !c.hidden);
+
+  return (
+    <div id="print-area">
+      {/* Header */}
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <Link
+            href={"/resources/" + resource.slug}
+            className="no-print mb-2 inline-flex items-center gap-1 text-xs text-text-muted hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to {resource.label?.plural ?? resource.name}
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{titleOf(resource, record)}</h1>
+          <p className="text-sm text-text-muted">{resource.label?.singular ?? resource.name} details</p>
+        </div>
+        <div className="no-print flex items-center gap-2">
+          {/* The PDF is rendered server-side (GET <endpoint>/:id/pdf) so it
+              looks the same everywhere and can be emailed or archived —
+              unlike the browser's print dialog, which only reproduces the
+              page. Fetched through apiClient rather than opened as a bare
+              link: auth rides HttpOnly cookies, and a cross-origin top-level
+              navigation (admin :3001 → api :8080) would not reliably carry
+              them. The blob is opened in a new tab for viewing/saving. */}
+          <button
+            onClick={downloadPdf}
+            disabled={pdfBusy}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-accent/40 hover:text-foreground transition-colors disabled:opacity-50"
+          >
+            {pdfBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
+            PDF
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-accent/40 hover:text-foreground transition-colors"
+          >
+            <Printer className="h-4 w-4" /> Print
+          </button>
+          <button
+            onClick={() => setEditing(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+          >
+            <Pencil className="h-4 w-4" /> Edit
+          </button>
+          <button
+            disabled={isDeleting}
+            onClick={() => setConfirmDelete(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:border-danger/40 hover:text-danger disabled:opacity-50 transition-colors"
+          >
+            <Trash2 className="h-4 w-4" /> Delete
+          </button>
+        </div>
+      </div>
+
+      {/* Details */}
+      <div className="rounded-xl border border-border bg-bg-elevated p-6">
+        <h2 className="mb-5 text-sm font-semibold text-foreground">Details</h2>
+        <dl className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+          {cols.map((col) => (
+            <div key={col.key} className="min-w-0">
+              <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">{col.label}</dt>
+              <dd className="mt-1 break-words text-sm text-foreground">
+                {renderCell(col, record[col.key], record)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      {/* Inline line-items on this resource */}
+      {lineItemFields.map((f) =>
+        f.itemEndpoint && f.foreignKey ? (
+          <RelatedTable
+            key={f.key}
+            title={f.label}
+            endpoint={f.itemEndpoint}
+            fk={f.foreignKey}
+            parentId={id}
+            columns={itemColumns(f.itemFields ?? [])}
+          />
+        ) : null
+      )}
+
+      {/* Related registry resources — not part of the printed record */}
+      <div className="no-print">
+      {related.map(({ resource: r, fk }) => (
+        <RelatedTable
+          key={r.slug}
+          title={r.label?.plural ?? r.name}
+          endpoint={r.endpoint}
+          fk={fk}
+          parentId={id}
+          columns={r.table.columns.filter((c) => !c.hidden)}
+          slug={r.slug}
+          createResource={r}
+        />
+      ))}
+      </div>
+
+      <ConfirmModal
+        open={confirmDelete}
+        title={"Delete this " + (resource.label?.singular ?? resource.name) + "?"}
+        description="This cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        loading={isDeleting}
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={() => {
+          setConfirmDelete(false);
+          deleteItem(id, { onSuccess: () => router.push("/resources/" + resource.slug) });
+        }}
+      />
+
+      {editing && <FormSheet resource={resource} item={record} onClose={() => setEditing(false)} />}
+    </div>
+  );
+}
+
+function RelatedTable({
+  title,
+  endpoint,
+  fk,
+  parentId,
+  columns,
+  slug,
+  createResource,
+}: {
+  title: string;
+  endpoint: string;
+  fk: string;
+  parentId: string;
+  columns: ColumnDefinition[];
+  slug?: string;
+  // When set, the table gets a "New <child>" button that opens the child's
+  // create form pre-scoped to this parent (its belongs_to FK is pre-filled).
+  createResource?: ResourceDefinition;
+}) {
+  const router = useRouter();
+  const [creating, setCreating] = useState(false);
+  const { data, isLoading } = useResource<Record<string, unknown>>(endpoint, {
+    filters: { [fk]: parentId },
+    pageSize: 100,
+  });
+  const rows = data?.data ?? [];
+  const childLabel = createResource?.label?.singular ?? createResource?.name ?? "item";
+
+  return (
+    <div className="mt-6 rounded-xl border border-border bg-bg-elevated">
+      <div className="flex items-center justify-between gap-2 border-b border-border px-6 py-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+          <span className="rounded-full bg-bg-hover px-2 py-0.5 text-xs text-text-muted">{rows.length}</span>
+        </div>
+        {createResource && (
+          <button
+            onClick={() => setCreating(true)}
+            className="no-print inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" /> New {childLabel}
+          </button>
+        )}
+      </div>
+      <div className="p-2">
+        <DataTable
+          columns={columns}
+          data={rows}
+          isLoading={isLoading}
+          onView={slug ? (item) => router.push("/resources/" + slug + "/" + String(item.id)) : undefined}
+        />
+      </div>
+      {creating && createResource && (
+        <FormSheet
+          resource={createResource}
+          item={null}
+          defaults={{ [fk]: parentId }}
+          onClose={() => setCreating(false)}
+        />
+      )}
+    </div>
+  );
+}

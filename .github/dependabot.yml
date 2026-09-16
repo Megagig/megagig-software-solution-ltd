@@ -1,0 +1,35 @@
+# Dependabot — automated dependency updates.
+# Closes OWASP Top 10:2025 A03 Supply-Chain Failures by surfacing
+# vulnerable dependencies as PRs you can review and merge.
+
+version: 2
+
+updates:
+  # Go modules
+  - package-ecosystem: gomod
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - go
+
+  # Frontend (Vite single-app layout; adjust if your tree differs)
+  - package-ecosystem: npm
+    directory: "/frontend"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - javascript
+
+  # GitHub Actions workflows
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci

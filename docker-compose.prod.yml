@@ -1,0 +1,183 @@
+# Production stack.
+#
+# Security posture: nothing in this file uses `ports:` — only
+# `expose:`. That means none of these services bind to the public host
+# interface. Traffic reaches the API and the front-ends ONLY through
+# your reverse proxy (Traefik, Caddy, nginx, or a managed PaaS like
+# Dokploy/Coolify), which lives on the same Docker network and routes
+# domain.com → `api:8080`, app.domain.com → `admin:3000`, etc.
+#
+# Postgres and Redis have NO host binding at all — they're reachable
+# only by containers on the `megagig-software-solution` network. That's the property you
+# want: a successful host-level compromise still has to pop a container
+# to reach the database.
+#
+# MinIO is included as an option but most production deployments use
+# Cloudflare R2 or AWS S3 (see STORAGE_* in .env). Delete the minio
+# service if you're on managed object storage.
+#
+# To configure your reverse proxy:
+#   - Point your apex domain at the api container's expose port (8080)
+#   - Point app.domain.com at the admin container (3000)
+#   - Point www.domain.com at the web container (3000)
+#   - Use Let's Encrypt or your PaaS' auto-TLS for HTTPS — never serve
+#     the API over plain HTTP in production.
+
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: megagig-software-solution-api
+    restart: unless-stopped
+    expose:
+      - "8080"
+    env_file:
+      - .env
+    # POSTGRES_USER / POSTGRES_PASSWORD / POSTGRES_DB come from .env
+    # (env_file above). We override POSTGRES_HOST so the API hits the
+    # postgres container on the Docker network, and POSTGRES_PORT back
+    # to 5432 because the postgres container listens on 5432 internally
+    # — only the dev host port mapping uses 5434. The Go config builds
+    # DATABASE_URL from these parts at startup.
+    environment:
+      APP_ENV: production
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - megagig-software-solution
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8080}
+    container_name: megagig-software-solution-web
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - megagig-software-solution
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8080}
+    container_name: megagig-software-solution-admin
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - megagig-software-solution
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: megagig-software-solution-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    # Identical credentials to the api service above — they come from the
+    # SAME .env block, so they can't drift. The :-grit fallbacks below
+    # protect against a missing env var blocking startup.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-grit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-grit}
+      POSTGRES_DB: ${POSTGRES_DB:-megagig-software-solution}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-grit} -d ${POSTGRES_DB:-megagig-software-solution}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - megagig-software-solution
+
+  # Connection pooler. Postgres forks a backend process per connection, so
+  # connection count — not query load — is usually what falls over first. The
+  # API and the asynq workers are separate processes against the same database,
+  # which is exactly that setup, and the failure ("too many clients already")
+  # arrives long before any traffic that would justify it.
+  #
+  # transaction pooling multiplexes many client connections onto few server
+  # ones. The tradeoff: session-scoped state (LISTEN/NOTIFY, session advisory
+  # locks, prepared statements outside a transaction) does not survive it. Grit
+  # uses none of those, but if you add them, point that code at postgres:5432
+  # directly and leave everything else on the pooler.
+  #
+  # To use it, set in .env:  DB_HOST=pgbouncer  DB_PORT=6432
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: megagig-software-solution-pgbouncer
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-grit}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-grit}
+      DB_NAME: ${POSTGRES_DB:-megagig-software-solution}
+      POOL_MODE: transaction
+      # Client slots the app may open, against server connections actually held
+      # open to Postgres. The whole point is that the first number can be much
+      # larger than the second.
+      MAX_CLIENT_CONN: 500
+      DEFAULT_POOL_SIZE: 20
+      AUTH_TYPE: scram-sha-256
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 6432 -U ${POSTGRES_USER:-grit}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - megagig-software-solution
+
+  redis:
+    image: redis:7-alpine
+    container_name: megagig-software-solution-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - megagig-software-solution
+
+  minio:
+    image: minio/minio
+    container_name: megagig-software-solution-minio
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - minio-data:/data
+    networks:
+      - megagig-software-solution
+    command: server /data --console-address ":9001"
+
+networks:
+  megagig-software-solution:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:

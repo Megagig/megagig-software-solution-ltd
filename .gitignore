@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+.next/
+out/
+dist/
+build/
+tmp/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+migrate.exe
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+postgres-data/
+redis-data/
+minio-data/
+
+# Turborepo
+.turbo/
+
+# Sentinel (WAF database)
+sentinel.db
+sentinel.db-shm
+sentinel.db-wal
+
+# Testing
+e2e/test-results/
+e2e/playwright-report/
+coverage/
+
+# Debug
+*.log
+npm-debug.log*
+pnpm-debug.log*

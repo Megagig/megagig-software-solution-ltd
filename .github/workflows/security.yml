@@ -1,0 +1,68 @@
+name: security
+
+# Security scans that should run on every PR and on a weekly schedule.
+# Covers OWASP Top 10:2025 A03 (Supply Chain) and A02 (Misconfiguration)
+# via static analysis. Pair with Dependabot for full coverage.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Weekly Monday 06:00 UTC — catches newly-disclosed CVEs in
+    # dependencies that didn't change in your code.
+    - cron: '0 6 * * 1'
+
+jobs:
+  govulncheck:
+    name: Go vulnerability scan (govulncheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - name: Run govulncheck
+        run: govulncheck ./...
+
+  npm-audit:
+    name: Frontend npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.0
+      - name: Install deps
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+      # Fail only on high/critical so noisy mediums don't block PRs.
+      - name: Run npm audit (high+)
+        working-directory: frontend
+        run: pnpm audit --audit-level=high
+
+  codeql:
+    name: CodeQL static analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['go', 'javascript']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
