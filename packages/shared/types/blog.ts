@@ -1,3 +1,5 @@
+import type { TeamMember } from "./team-member";
+
 export interface Blog {
   id: string;
   title: string;
@@ -5,6 +7,11 @@ export interface Blog {
   content: string;
   image: string | null;
   excerpt: string | null;
+  author_id: string | null;
+  author?: TeamMember;
+  tags: string[];
+  seo_title: string | null;
+  seo_description: string | null;
   published: boolean;
   published_at: string | null;
   created_at: string;

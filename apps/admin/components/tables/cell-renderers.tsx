@@ -63,6 +63,9 @@ export function renderCell(
     case "richtext":
       content = <RichTextCell value={String(value)} />;
       break;
+    case "tags":
+      content = <TagsCell value={Array.isArray(value) ? (value as string[]) : []} />;
+      break;
     case "user":
       // v3.31.5: packed avatar + name + email cell. Pulls the related
       // fields off the row so a single column shows everything you'd
@@ -269,6 +272,29 @@ function FileRefsCell({ value }: { value: FileRefLike[] }) {
         <span className="text-xs font-medium text-foreground-subtle ml-1">
           +{overflow}
         </span>
+      )}
+    </div>
+  );
+}
+
+function TagsCell({ value }: { value: string[] }) {
+  if (!value || value.length === 0) {
+    return <span className="text-foreground-subtle">—</span>;
+  }
+  const visible = value.slice(0, 3);
+  const overflow = value.length - visible.length;
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      {visible.map((tag, i) => (
+        <span
+          key={`${tag}-${i}`}
+          className="inline-flex items-center rounded-full bg-brand/10 px-2 py-0.5 text-xs font-medium text-brand"
+        >
+          {tag}
+        </span>
+      ))}
+      {overflow > 0 && (
+        <span className="text-xs font-medium text-foreground-subtle">+{overflow}</span>
       )}
     </div>
   );

@@ -57,5 +57,59 @@ export const API_ROUTES = {
     DELETE: (id: string) => `/api/admin/blogs/${id}`,
   },
   HEALTH: "/api/health",
+  TEAM_MEMBERS: {
+    LIST: "/api/team_members",
+    GET: (id: number) => `/api/team_members/${id}`,
+    CREATE: "/api/team_members",
+    UPDATE: (id: number) => `/api/team_members/${id}`,
+    DELETE: (id: number) => `/api/team_members/${id}`,
+  },
+  CASE_STUDIES: {
+    LIST: "/api/case_studies",
+    GET: (id: number) => `/api/case_studies/${id}`,
+    CREATE: "/api/case_studies",
+    UPDATE: (id: number) => `/api/case_studies/${id}`,
+    DELETE: (id: number) => `/api/case_studies/${id}`,
+  },
+  TESTIMONIALS: {
+    LIST: "/api/testimonials",
+    GET: (id: number) => `/api/testimonials/${id}`,
+    CREATE: "/api/testimonials",
+    UPDATE: (id: number) => `/api/testimonials/${id}`,
+    DELETE: (id: number) => `/api/testimonials/${id}`,
+  },
+  PRODUCTS: {
+    LIST: "/api/products",
+    GET: (id: number) => `/api/products/${id}`,
+    CREATE: "/api/products",
+    UPDATE: (id: number) => `/api/products/${id}`,
+    DELETE: (id: number) => `/api/products/${id}`,
+  },
+  JOB_OPENINGS: {
+    LIST: "/api/job_openings",
+    GET: (id: number) => `/api/job_openings/${id}`,
+    CREATE: "/api/job_openings",
+    UPDATE: (id: number) => `/api/job_openings/${id}`,
+    DELETE: (id: number) => `/api/job_openings/${id}`,
+  },
+  FAQS: {
+    LIST: "/api/faqs",
+    GET: (id: number) => `/api/faqs/${id}`,
+    CREATE: "/api/faqs",
+    UPDATE: (id: number) => `/api/faqs/${id}`,
+    DELETE: (id: number) => `/api/faqs/${id}`,
+  },
+  LEADS: {
+    LIST: "/api/leads",
+    GET: (id: number) => `/api/leads/${id}`,
+    CREATE: "/api/leads",
+    UPDATE: (id: number) => `/api/leads/${id}`,
+    DELETE: (id: number) => `/api/leads/${id}`,
+  },
+  // Singleton — GET is public, PUT is admin-only. No list/create/delete.
+  SITE_SETTINGS: {
+    GET: "/api/site-settings",
+    UPDATE: "/api/site-settings",
+  },
   // grit:api-routes
 } as const;

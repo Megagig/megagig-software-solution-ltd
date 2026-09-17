@@ -60,6 +60,27 @@ func ComputeResourceStats(db *gorm.DB, resourceName string, filter ResourceStats
 		return reflectiveResourceStats(db, resourceName, &models.User{}, filter)
 	case "blogs":
 		return reflectiveResourceStats(db, resourceName, &models.Blog{}, filter)
+	case "team_members":
+		return reflectiveResourceStats(db, resourceName, &models.TeamMember{}, filter)
+
+	case "case_studies":
+		return reflectiveResourceStats(db, resourceName, &models.CaseStudy{}, filter)
+
+	case "testimonials":
+		return reflectiveResourceStats(db, resourceName, &models.Testimonial{}, filter)
+
+	case "products":
+		return reflectiveResourceStats(db, resourceName, &models.Product{}, filter)
+
+	case "job_openings":
+		return reflectiveResourceStats(db, resourceName, &models.JobOpening{}, filter)
+
+	case "faqs":
+		return reflectiveResourceStats(db, resourceName, &models.FAQ{}, filter)
+
+	case "leads":
+		return reflectiveResourceStats(db, resourceName, &models.Lead{}, filter)
+
 	// grit:resource-stats:dispatch
 	default:
 		return nil, fmt.Errorf("dashboard stats not registered for %q", resourceName)

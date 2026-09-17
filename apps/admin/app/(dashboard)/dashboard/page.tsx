@@ -20,9 +20,14 @@ import {
   Users, Bell, TrendingUp, Database, Shield, getIcon,
 } from "@/lib/icons";
 
+const LeadsIcon = getIcon("Target");
+
 interface MeStats {
   users: number;
   active_users: number;
+}
+interface CountResponse {
+  meta?: { total: number };
 }
 interface ActivityRow {
   id: string;
@@ -101,6 +106,59 @@ export default function DashboardPage() {
     refetchInterval: 60_000,
   });
 
+  // Megagig-specific overview: new leads this week and published
+  // counts, distinct from the generic per-resource "Total" widgets
+  // further down (which count all rows, all-time). Reuses the
+  // paginate package's ?created_since=/?published= filters — zero
+  // bespoke endpoints needed. Gated by the same resource permission
+  // as the generic widgets so a viewer without leads/case-studies/
+  // products access doesn't see counts for content they can't open.
+  const canViewLeads = permsLoading || can("leads.view");
+  const canViewCaseStudies = permsLoading || can("case-studies.view");
+  const canViewProducts = permsLoading || can("products.view");
+
+  const newLeadsThisWeek = useQuery<number>({
+    queryKey: ["dashboard", "leads-this-week"],
+    queryFn: async () => {
+      try {
+        const { data } = await apiClient.get<CountResponse>("/api/leads?created_since=7d&page_size=1");
+        return data.meta?.total ?? 0;
+      } catch {
+        return 0;
+      }
+    },
+    enabled: canViewLeads,
+    refetchInterval: 60_000,
+  });
+
+  const publishedCaseStudies = useQuery<number>({
+    queryKey: ["dashboard", "published-case-studies"],
+    queryFn: async () => {
+      try {
+        const { data } = await apiClient.get<CountResponse>("/api/case_studies?published=true&page_size=1");
+        return data.meta?.total ?? 0;
+      } catch {
+        return 0;
+      }
+    },
+    enabled: canViewCaseStudies,
+    refetchInterval: 60_000,
+  });
+
+  const publishedProducts = useQuery<number>({
+    queryKey: ["dashboard", "published-products"],
+    queryFn: async () => {
+      try {
+        const { data } = await apiClient.get<CountResponse>("/api/products?published=true&page_size=1");
+        return data.meta?.total ?? 0;
+      } catch {
+        return 0;
+      }
+    },
+    enabled: canViewProducts,
+    refetchInterval: 60_000,
+  });
+
   const recentActivity = useQuery<ActivityRow[]>({
     queryKey: ["dashboard", "recent-activity"],
     queryFn: async () => {
@@ -151,6 +209,43 @@ export default function DashboardPage() {
         title={greeting + ", " + (user?.first_name || "Admin")}
         subtitle="Here's a snapshot of what's happening across your app right now."
       />
+
+      {/* Megagig overview -- the site-specific numbers build-plan.md
+          Phase 2 calls out by name: new leads this week (a 7-day
+          window, distinct from the generic all-time "Total" widget
+          further down) and published-only counts (the generic widget
+          counts every row, drafts included). */}
+      {(canViewLeads || canViewCaseStudies || canViewProducts) && (
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {canViewLeads && (
+            <StatTile
+              label="New leads this week"
+              value={newLeadsThisWeek.data ?? 0}
+              icon={<LeadsIcon className="h-4 w-4" />}
+              href="/resources/leads"
+              accent="info"
+            />
+          )}
+          {canViewCaseStudies && (
+            <StatTile
+              label="Published case studies"
+              value={publishedCaseStudies.data ?? 0}
+              icon={<Database className="h-4 w-4" />}
+              href="/resources/case-studies"
+              accent="default"
+            />
+          )}
+          {canViewProducts && (
+            <StatTile
+              label="Published products"
+              value={publishedProducts.data ?? 0}
+              icon={<Database className="h-4 w-4" />}
+              href="/resources/products"
+              accent="default"
+            />
+          )}
+        </div>
+      )}
 
       {/* v3.31.44 -- range filter scopes the per-resource widgets
           below. Sits on its own row so the existing "Resources"

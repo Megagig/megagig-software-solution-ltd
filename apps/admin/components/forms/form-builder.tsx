@@ -21,6 +21,7 @@ import { RichTextField } from "./fields/rich-text-field";
 import { RelationshipSelectField } from "./fields/relationship-select-field";
 import { MultiRelationshipSelectField } from "./fields/multi-relationship-select-field";
 import { LineItemsField } from "./fields/line-items-field";
+import { TagsField } from "./fields/tags-field";
 import { Loader2 } from "@/lib/icons";
 
 interface FormBuilderProps {
@@ -202,6 +203,16 @@ export function FieldRenderer({
           )}
         />
       );
+    case "tags":
+      return (
+        <Controller
+          name={field.key}
+          control={control}
+          render={({ field: formField }) => (
+            <TagsField field={field} value={Array.isArray(formField.value) ? formField.value : []} onChange={formField.onChange} error={error} />
+          )}
+        />
+      );
     case "radio":
       return (
         <Controller
@@ -346,6 +357,7 @@ const ARRAY_FIELD_TYPES = new Set([
   "videos",
   "multi-relationship-select",
   "line-items",
+  "tags",
 ]);
 
 const NULLABLE_OBJECT_FIELD_TYPES = new Set([

@@ -205,7 +205,7 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 				cfg.GORMStudioUsername: cfg.GORMStudioPassword,
 			})
 		}
-		studio.Mount(r, db, []interface{}{&models.User{}, &models.Upload{}, &models.Blog{} /* grit:studio */}, studioCfg)
+		studio.Mount(r, db, []interface{}{&models.User{}, &models.Upload{}, &models.Blog{}, &models.TeamMember{}, &models.CaseStudy{}, &models.Testimonial{}, &models.Product{}, &models.JobOpening{}, &models.FAQ{}, &models.Lead{}, &models.SiteSettings{} /* grit:studio */}, studioCfg)
 		log.Println("GORM Studio mounted at /studio")
 	}
 
@@ -345,6 +345,13 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 	syncRegistry.Register("users", &models.User{})
 	syncRegistry.Register("uploads", &models.Upload{})
 	syncRegistry.Register("blogs", &models.Blog{})
+	syncRegistry.Register("team_members", &models.TeamMember{})
+	syncRegistry.Register("case_studies", &models.CaseStudy{})
+	syncRegistry.Register("testimonials", &models.Testimonial{})
+	syncRegistry.Register("products", &models.Product{})
+	syncRegistry.Register("job_openings", &models.JobOpening{})
+	syncRegistry.Register("faqs", &models.FAQ{})
+	syncRegistry.Register("leads", &models.Lead{})
 	// grit:sync
 	syncHandler := handlers.NewSyncHandler(db, syncRegistry)
 	// v3.31.68 — shared background CSV import status endpoint
@@ -368,6 +375,28 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		log.Printf("saml: %v", err)
 	}
 	ssoHandler := handlers.NewSSOHandler(db, authService, cfg, ssoRegistry, samlRegistry)
+	teamMemberHandler := &handlers.TeamMemberHandler{
+		DB: db,
+	}
+	caseStudyHandler := &handlers.CaseStudyHandler{
+		DB: db,
+	}
+	testimonialHandler := &handlers.TestimonialHandler{
+		DB: db,
+	}
+	productHandler := &handlers.ProductHandler{
+		DB: db,
+	}
+	jobOpeningHandler := &handlers.JobOpeningHandler{
+		DB: db,
+	}
+	fAQHandler := &handlers.FAQHandler{
+		DB: db,
+	}
+	leadHandler := &handlers.LeadHandler{
+		DB: db,
+	}
+	siteSettingsHandler := handlers.NewSiteSettingsHandler(db)
 	// grit:handlers
 
 	// Health check
@@ -499,6 +528,10 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		blogs.GET("", blogHandler.ListPublished)
 		blogs.GET("/:slug", blogHandler.GetBySlug)
 	}
+
+	// Public site settings (no auth required) — contact info, hero copy,
+	// pricing blurbs read by apps/web. Writes are admin-only, see below.
+	v1.GET("/site-settings", siteSettingsHandler.Get)
 
 	// Public auth routes
 	auth := v1.Group("/auth")
@@ -633,6 +666,69 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		// v3.31.68 — poll a background CSV import's progress/result.
 		protected.GET("/imports/:id", importJobHandler.GetByID)
 
+		protected.GET("/team_members", teamMemberHandler.List)
+		protected.GET("/team_members/export", teamMemberHandler.Export)
+		protected.POST("/team_members/import", teamMemberHandler.Import)
+		protected.GET("/team_members/import/template", teamMemberHandler.Template)
+		protected.GET("/team_members/:id", teamMemberHandler.GetByID)
+		protected.GET("/team_members/:id/pdf", teamMemberHandler.PDF)
+		protected.POST("/team_members", teamMemberHandler.Create)
+		protected.PUT("/team_members/:id", teamMemberHandler.Update)
+		protected.PATCH("/team_members/:id", teamMemberHandler.Patch)
+		protected.GET("/case_studies", caseStudyHandler.List)
+		protected.GET("/case_studies/export", caseStudyHandler.Export)
+		protected.POST("/case_studies/import", caseStudyHandler.Import)
+		protected.GET("/case_studies/import/template", caseStudyHandler.Template)
+		protected.GET("/case_studies/:id", caseStudyHandler.GetByID)
+		protected.GET("/case_studies/:id/pdf", caseStudyHandler.PDF)
+		protected.POST("/case_studies", caseStudyHandler.Create)
+		protected.PUT("/case_studies/:id", caseStudyHandler.Update)
+		protected.PATCH("/case_studies/:id", caseStudyHandler.Patch)
+		protected.GET("/testimonials", testimonialHandler.List)
+		protected.GET("/testimonials/export", testimonialHandler.Export)
+		protected.POST("/testimonials/import", testimonialHandler.Import)
+		protected.GET("/testimonials/import/template", testimonialHandler.Template)
+		protected.GET("/testimonials/:id", testimonialHandler.GetByID)
+		protected.GET("/testimonials/:id/pdf", testimonialHandler.PDF)
+		protected.POST("/testimonials", testimonialHandler.Create)
+		protected.PUT("/testimonials/:id", testimonialHandler.Update)
+		protected.PATCH("/testimonials/:id", testimonialHandler.Patch)
+		protected.GET("/products", productHandler.List)
+		protected.GET("/products/export", productHandler.Export)
+		protected.POST("/products/import", productHandler.Import)
+		protected.GET("/products/import/template", productHandler.Template)
+		protected.GET("/products/:id", productHandler.GetByID)
+		protected.GET("/products/:id/pdf", productHandler.PDF)
+		protected.POST("/products", productHandler.Create)
+		protected.PUT("/products/:id", productHandler.Update)
+		protected.PATCH("/products/:id", productHandler.Patch)
+		protected.GET("/job_openings", jobOpeningHandler.List)
+		protected.GET("/job_openings/export", jobOpeningHandler.Export)
+		protected.POST("/job_openings/import", jobOpeningHandler.Import)
+		protected.GET("/job_openings/import/template", jobOpeningHandler.Template)
+		protected.GET("/job_openings/:id", jobOpeningHandler.GetByID)
+		protected.GET("/job_openings/:id/pdf", jobOpeningHandler.PDF)
+		protected.POST("/job_openings", jobOpeningHandler.Create)
+		protected.PUT("/job_openings/:id", jobOpeningHandler.Update)
+		protected.PATCH("/job_openings/:id", jobOpeningHandler.Patch)
+		protected.GET("/faqs", fAQHandler.List)
+		protected.GET("/faqs/export", fAQHandler.Export)
+		protected.POST("/faqs/import", fAQHandler.Import)
+		protected.GET("/faqs/import/template", fAQHandler.Template)
+		protected.GET("/faqs/:id", fAQHandler.GetByID)
+		protected.GET("/faqs/:id/pdf", fAQHandler.PDF)
+		protected.POST("/faqs", fAQHandler.Create)
+		protected.PUT("/faqs/:id", fAQHandler.Update)
+		protected.PATCH("/faqs/:id", fAQHandler.Patch)
+		protected.GET("/leads", leadHandler.List)
+		protected.GET("/leads/export", leadHandler.Export)
+		protected.POST("/leads/import", leadHandler.Import)
+		protected.GET("/leads/import/template", leadHandler.Template)
+		protected.GET("/leads/:id", leadHandler.GetByID)
+		protected.GET("/leads/:id/pdf", leadHandler.PDF)
+		protected.POST("/leads", leadHandler.Create)
+		protected.PUT("/leads/:id", leadHandler.Update)
+		protected.PATCH("/leads/:id", leadHandler.Patch)
 		// grit:routes:protected
 	}
 
@@ -766,6 +862,17 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		admin.DELETE("/roles/:id", middleware.RequireRole("ADMIN", "perm:roles.delete"), roleHandler.Delete)
 		admin.PUT("/users/:id/roles", middleware.RequireRole("ADMIN", "perm:users.edit"), roleHandler.AssignUserRoles)
 
+		admin.DELETE("/team_members/:id", teamMemberHandler.Delete)
+		admin.DELETE("/case_studies/:id", caseStudyHandler.Delete)
+		admin.DELETE("/testimonials/:id", testimonialHandler.Delete)
+		admin.DELETE("/products/:id", productHandler.Delete)
+		admin.DELETE("/job_openings/:id", jobOpeningHandler.Delete)
+		admin.DELETE("/faqs/:id", fAQHandler.Delete)
+		admin.DELETE("/leads/:id", leadHandler.Delete)
+
+		// Site settings singleton — GET is public (registered above on v1
+		// directly), this PUT is the only write path, admin-only.
+		admin.PUT("/site-settings", siteSettingsHandler.Update)
 		// grit:routes:admin
 	}
 

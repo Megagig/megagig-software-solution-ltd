@@ -31,7 +31,16 @@ func Connect(dsn string) (*gorm.DB, error) {
 	} else if os.Getenv("DB_LOG_LEVEL") == "silent" {
 		logLevel = logger.Silent
 	}
-	gormCfg := &gorm.Config{Logger: logger.Default.LogMode(logLevel)}
+	// DisableForeignKeyConstraintWhenMigrating: CaseStudy <-> Testimonial is a
+	// genuine two-way belongs_to (each optionally points at the other, see
+	// architecture.md's CaseStudy.TestimonialID / Testimonial.CaseStudyID).
+	// GORM's schema parser can't resolve DB-level FK constraints for that
+	// cycle during AutoMigrate ("relation does not exist" — whichever table
+	// migrates first references a table that doesn't exist yet). Referential
+	// integrity for every model is already enforced at the service layer
+	// (existence checks before create/update), so DB-level FK constraints
+	// were never load-bearing — this just stops AutoMigrate from trying.
+	gormCfg := &gorm.Config{Logger: logger.Default.LogMode(logLevel), DisableForeignKeyConstraintWhenMigrating: true}
 
 	var (
 		db  *gorm.DB

@@ -197,6 +197,21 @@ export function CollapsibleSidebar({
             onClick={onMobileClose}
           />
 
+          {/* Site Settings — the hand-built singleton (contact info, hero
+              copy, pricing blurbs), not a defineResource() so it isn't in
+              the resources loop below. Admin-only: it's the write surface
+              for content the public site reads unauthenticated. */}
+          {isAdmin && (
+            <SidebarLink
+              href="/site-settings"
+              icon={<Settings className="h-5 w-5" />}
+              label="Site Settings"
+              active={pathname === "/site-settings"}
+              collapsed={collapsed}
+              onClick={onMobileClose}
+            />
+          )}
+
           {groups._root.map((r) => {
             const Icon = getIcon(r.icon);
             return (

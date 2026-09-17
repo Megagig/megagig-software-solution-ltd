@@ -6,6 +6,10 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+
+	"encoding/json"
+
+	"megagig-software-solution/apps/api/internal/models"
 )
 
 // SharedResourceSubmission is the result of a public form submission —
@@ -28,6 +32,83 @@ type SharedResourceSubmission struct {
 // the parameter is named "fields" rather than "body".
 func SubmitSharedForm(db *gorm.DB, resourceName string, fields map[string]interface{}) (*SharedResourceSubmission, error) {
 	switch resourceName {
+	case "TeamMember":
+		item := &models.TeamMember{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding TeamMember body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating TeamMember: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.Name}, nil
+
+	case "CaseStudy":
+		item := &models.CaseStudy{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding CaseStudy body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating CaseStudy: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.ID}, nil
+
+	case "Testimonial":
+		item := &models.Testimonial{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding Testimonial body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating Testimonial: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.ID}, nil
+
+	case "Product":
+		item := &models.Product{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding Product body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating Product: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.Name}, nil
+
+	case "JobOpening":
+		item := &models.JobOpening{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding JobOpening body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating JobOpening: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.Title}, nil
+
+	case "FAQ":
+		item := &models.FAQ{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding FAQ body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating FAQ: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.ID}, nil
+
+	case "Lead":
+		item := &models.Lead{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding Lead body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating Lead: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.Name}, nil
+
 	// grit:form-share:dispatch
 	default:
 		return nil, fmt.Errorf("public submission disabled for %q (no dispatch case registered)", resourceName)
@@ -60,6 +141,20 @@ type PublicFieldInfo struct {
 // `grit generate resource` at the marker below.
 func RegisteredResources() []string {
 	return []string{
+		"TeamMember",
+
+		"CaseStudy",
+
+		"Testimonial",
+
+		"Product",
+
+		"JobOpening",
+
+		"FAQ",
+
+		"Lead",
+
 		// grit:form-share:registered
 	}
 }
@@ -71,6 +166,27 @@ func RegisteredResources() []string {
 // marker comment inside the switch.
 func PublicFields(resourceName string) []PublicFieldInfo {
 	switch resourceName {
+	case "TeamMember":
+		return reflectPublicFields(&models.TeamMember{})
+
+	case "CaseStudy":
+		return reflectPublicFields(&models.CaseStudy{})
+
+	case "Testimonial":
+		return reflectPublicFields(&models.Testimonial{})
+
+	case "Product":
+		return reflectPublicFields(&models.Product{})
+
+	case "JobOpening":
+		return reflectPublicFields(&models.JobOpening{})
+
+	case "FAQ":
+		return reflectPublicFields(&models.FAQ{})
+
+	case "Lead":
+		return reflectPublicFields(&models.Lead{})
+
 	// grit:form-share:fields
 	default:
 		return nil

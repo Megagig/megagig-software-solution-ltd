@@ -15,6 +15,8 @@ export const blogsResource = defineResource({
       { key: "title", label: "Title", sortable: true, searchable: true },
       { key: "slug", label: "Slug" },
       { key: "image", label: "Image", format: "image" },
+      { key: "author.name", label: "Author" },
+      { key: "tags", label: "Tags", format: "tags" },
       {
         key: "published",
         label: "Status",
@@ -71,6 +73,31 @@ export const blogsResource = defineResource({
         key: "image",
         label: "Cover Image",
         type: "image",
+      },
+      {
+        key: "author_id",
+        label: "Author",
+        type: "relationship-select",
+        relatedEndpoint: "/api/team_members",
+        displayField: "name",
+      },
+      {
+        key: "tags",
+        label: "Tags",
+        type: "tags",
+        placeholder: "e.g. Engineering",
+      },
+      {
+        key: "seo_title",
+        label: "SEO Title",
+        type: "text",
+        placeholder: "Defaults to the post title if left blank",
+      },
+      {
+        key: "seo_description",
+        label: "SEO Description",
+        type: "textarea",
+        placeholder: "Defaults to the excerpt if left blank",
       },
       {
         key: "published",

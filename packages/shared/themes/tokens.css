@@ -123,6 +123,16 @@
   --color-danger: #f87171;
   --color-info: #60a5fa;
 
+  /* Lead status (admin only) — same brightening treatment as the
+     semantic colors above, so LeadStatusBadge keeps AA contrast
+     against --color-surface-raised in dark mode instead of
+     inheriting the light-mode values unchanged. */
+  --color-status-new: #60a5fa;
+  --color-status-contacted: #f59e0b;
+  --color-status-quoted: #a78bfa;
+  --color-status-won: #22c55e;
+  --color-status-lost: #94a3b8;
+
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
   --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.5);

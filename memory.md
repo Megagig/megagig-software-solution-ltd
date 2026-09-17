@@ -1,44 +1,69 @@
-# Memory — Tailwind v4 / ui-tokens.md Migration
+# Memory — Phase 0 completion, Phase 1 (content resources), Phase 2 (admin polish), review fixes, login rebrand
 
-Last updated: 2026-09-16
+Last updated: 2026-09-17
 
 ## What was built
 
-- `packages/shared/themes/tokens.css` — new file, the canonical implementation of every token in `context/ui-tokens.md`, written for Tailwind v4's CSS-first `@theme` syntax (colors, spacing, radius, typography, shadows, motion), with light defaults on `:root` and dark overrides on `.dark` via `@custom-variant dark (&:where(.dark, .dark *));`. This is the single source of truth imported by both apps.
-- `apps/web`: upgraded `tailwindcss` → `^4.3.3`, added `@tailwindcss/postcss@^4.3.3`, deleted the old `tailwind.config.ts` (not needed under v4), rewrote `postcss.config.js`, rewrote `app/globals.css` to `@import "tailwindcss"` + the shared tokens file, remapped the existing prose-blog styles to the new variable names. Removed unused `autoprefixer`/`tailwindcss-animate` deps.
-- `apps/admin`: same v4 package/postcss/config upgrade, plus a full mechanical rename across **98 files** (~1453 occurrences) from the old Grit boilerplate multi-theme system to ui-tokens.md-consistent classes:
-  - `accent`/`accent-hover` family → `brand` (`bg-accent`→`bg-brand`, `hover:bg-accent-hover`→`hover:brightness-90`, `hover:text-accent-hover`→`hover:opacity-80`)
-  - `bg-secondary`→`bg-surface`, `bg-elevated`→`bg-surface-raised`, `bg-tertiary`/`bg-hover`→`foreground/5` (opacity-based, no 1:1 ui-tokens.md equivalent existed)
-  - `text-secondary`→`text-foreground-muted`, `text-muted`→`text-foreground-subtle`
-  - `background`/`foreground`/`border`/`success`/`danger`/`warning`/`info` class names unchanged (ui-tokens.md uses the same names; only hex values changed via the shared tokens file)
-  - Dropped the `[data-theme="atlas/aurora/pulse/midnight"]` + `[data-theme-mode]` system entirely, consolidated to plain `.dark` — touched `app/layout.tsx` and `components/chrome/DarkModeToggle.tsx`.
-  - Swapped `tailwindcss-animate` → `tw-animate-css` (v4-compatible) since `components/ui/confirm-modal.tsx` genuinely uses `animate-in`/`fade-in`/`zoom-in-95`.
-- `context/progress-tracker.md` updated to reflect real Phase 0 state (was showing everything unchecked despite the repo already being scaffolded).
+**Phase 0 (closed out):**
+- Verified Docker infra healthy (Postgres/Redis/MinIO/Mailhog).
+- Fixed a font bug: Inter's `next/font` variable was bound to an unused `--font-display` CSS var instead of `--font-sans` in both `apps/web/app/layout.tsx` and `apps/admin/app/layout.tsx` — Inter was downloading but never actually rendering (silent fallback to system sans-serif). Fixed both.
+
+**Phase 1 — core content resources:**
+- Generated via `grit generate resource`: `TeamMember`, `CaseStudy`, `Testimonial`, `Product`, `JobOpening`, `FAQ`, `Lead` (model/service/handler/shared-schema/shared-type/admin-page for each).
+- Extended the pre-existing `Blog` resource into the full `BlogPost` field set (added `author_id`→TeamMember, `tags` string_array, `seo_title`, `seo_description`) instead of generating a duplicate resource.
+- Hand-built the `SiteSettings` singleton: `apps/api/internal/models/site_settings.go`, `internal/services/site_settings.go` (get-or-create), `internal/handlers/site_settings.go`, public `GET /api/v1/site-settings` + admin-only `PUT`, shared schema/type, dedicated admin page at `apps/admin/app/(dashboard)/site-settings/page.tsx` (sidebar-linked, admin-gated).
+- Added a new `"tags"` admin field/column type (`apps/admin/lib/resource.ts`, `apps/admin/components/forms/fields/tags-field.tsx`, wired into `form-builder.tsx`/`cell-renderers.tsx`) — Grit's generator was mapping every `string_array` field to an image-upload widget, which is wrong for plain-text tags.
+- Seeded demo data: `internal/database/site_settings_seeder.go` (placeholder contact/hero copy), `internal/database/demo_content_seeder.go` (2 case studies, 2 products, 1 testimonial — PharmacyCopilot/BusinessCopilot placeholders).
+
+**Phase 2 — admin panel polish:**
+- Dashboard (`apps/admin/app/(dashboard)/dashboard/page.tsx`): added a "Megagig overview" stat row (new leads this week via `?created_since=7d`, published case studies/products via `?published=true`) on top of the pre-existing generic per-resource widgets (which already give every resource a free Total + 30-day sparkline + Latest-N once registered in `resource_stats_dispatch.go`).
+- Lead status badge (`apps/admin/components/tables/lead-status-badge.tsx`, using `--color-status-*` tokens), status filter dropdown, status field upgraded from free-text to `select`.
+- `apps/admin/app/robots.ts` — disallow-all (admin is internal-only, must never be indexed).
+- Backend: added `published` query-param filtering to `CaseStudy`/`Product` list handlers and `status` filtering to `Lead` (none of these existed before — the admin table's own "Published" filter checkbox was silently non-functional).
+
+**`/review` pass — 4 real issues found and fixed (not caught by prior build/smoke tests):**
+1. `CaseStudy.testimonial_id` was a dead field — added in Phase 1 as a "follow-up" but never actually wired into `Create`/`Update`/`Patch` handlers or `Preload()`d anywhere. Fixed all three write paths + Preload on List/GetByID/Create/Update/Patch.
+2. `Testimonial.Create` still hard-required `case_study_id`/`avatar_id` in the handler despite model/schema/form all being optional. Removed `binding:"required"` from both; fixed the shared schema/type/admin-form for `avatar_id` too (same gap `case_study_id` had already had fixed).
+3. `Blog.Author` was never `Preload()`ed anywhere in `blog_service.go` — `author_id` saved fine, the joined author object never did. Added `Preload("Author")` to all 5 read/write methods.
+4. `--color-status-*` tokens had no `.dark` override — added dark-mode values to both `packages/shared/themes/tokens.css` and `context/ui-tokens.md`.
+
+**Login page rebrand:**
+- `packages/shared/themes.ts` — the `atlas` auth theme (separate token system from `tokens.css`, drives only the `(auth)` login/signup pages) had Grit's default indigo `#4f46e5` for `accent`/`heroBg`. Changed to Megagig's actual brand hex values: `accent` → `#16a34a`, `heroBg` → `#2563eb` (primary already coincidentally matched).
+- `apps/admin/components/auth/AtlasAuthShell.tsx` — replaced "Built with Grit — Go + React framework" with a dynamic `© {year} {brand.name} Ltd.` line.
+- `apps/admin/app/layout.tsx` — cleaned up leftover Grit-branded page title/meta description.
 
 ## Decisions made
 
-- Admin's blue "accent" (CTAs/links/active nav) maps to ui-tokens.md's `--color-brand`, **not** `--color-accent` (which is the separate green "live in production" badge color) — verified via matching hex values between old and new tokens before committing to this mapping.
-- No new ad-hoc tokens invented outside `ui-tokens.md`. Where the old system had a concept ui-tokens.md doesn't model (a "hover surface" shade), used Tailwind's opacity/brightness utilities (`foreground/5`, `brightness-90`) instead of fabricating a new named variable.
-- Admin's separate `(auth)` login-page theme engine (`packages/shared/themes.ts`, `AuthShell.tsx`, `getTheme()`) is a **different, still-needed mechanism** (staff login screen styling) — explicitly left untouched and out of scope for this migration. Do not confuse it with the `[data-theme]` CSS system that was removed from `globals.css`.
-- User explicitly chose "full rename to ui-tokens.md" over two safer/cheaper alternatives (repoint-values-only, or defer) when asked — this was a deliberate scope decision, not an assumption.
+- Left the full Grit "kitchen sink" enterprise module set (SSO/SAML/2FA/tickets/backups/feature-flags/webhooks/GDPR/GORM-Studio/Pulse/Sentinel) completely untouched and dormant — **explicit user instruction: no deletions without approval.** Don't revisit this without asking again.
+- `grit generate resource` never creates public/published-only read routes (only protected + admin). This is a known, accepted gap for Phase 4 to fill per-resource (mirror Blog's existing hand-built `ListPublished`/`GetBySlug` pattern), not something to fix speculatively now.
+- Set `DisableForeignKeyConstraintWhenMigrating: true` globally in `apps/api/internal/database/database.go` — the two-way `CaseStudy`↔`Testimonial` belongs_to relation broke GORM's AutoMigrate table-creation ordering. Referential integrity is already enforced at the service layer everywhere, so this was never load-bearing.
+- `string_array` fields (`category_tags`, `tech_stack`, `feature_bullets`, `tags`) use the real `string_array` GORM/Zod type, not build-plan.md's literal (but stale) `string` type — matches the actual data model and ui-rules.md's tag/bullet rendering.
+- The `(auth)` login-page theme engine (`themes.ts`) is a separate, parallel token system from `tokens.css`/`ui-tokens.md` — kept visually consistent by reusing the exact same hex values, but they are **not structurally wired together**. A future brand-color change needs updating both files.
 
 ## Problems solved
 
-- Found and fixed **pre-existing broken classes** in admin (`bg-bg-primary`, `text-text-primary`) that never matched any real Tailwind config key and were silently unstyled before this session — unrelated latent bug, fixed as part of the rename pass since the intent was obvious (`bg-background`/`text-foreground`).
-- `var(--bg-elevated, #22222e)`-style CSS variable references *with a fallback value* weren't caught by the first sed pass (exact-match on `var(--bg-elevated)` without a trailing comma) — required a second targeted pass for `var(--bg-elevated,` / `var(--bg-secondary,` forms in `relationship-select-field.tsx`, `multi-relationship-select-field.tsx`, `date-field.tsx`.
-- pnpm installs in this repo hit real npm-registry timeouts (ETIMEDOUT/ECONNRESET retries) — one install took 52 minutes. Not a config problem; just be patient and let backgrounded installs finish rather than assuming they're stuck.
-- Dev servers (ports 3000/3001) were already running from outside this session when the migration started; they had to be killed (`taskkill /T /F` via PowerShell, since plain `pkill` isn't available in this Git Bash environment) and restarted after install completed to clear a stale "Cannot find module '@tailwindcss/postcss'" Turbopack cache error.
+- Systemic admin-resource-generation bug: every `belongs_to:Upload` relationship (`hero_image`, `photo`, `avatar`, `screenshots`) referenced a `.name` display field that doesn't exist on `Upload` (it's `original_name`) — fixed across TeamMember/CaseStudy/Testimonial/Product.
+- Diagnosed via `/recover`: an `EADDRINUSE` failure on the user's `grit start` was caused by my own leftover background dev-server processes from verification work, not a code bug. Lesson: stop leaving background dev servers running across turns; clean them up before handing control back.
+- Confirmed (via reading the real handler code, not the unused `internal/services/case_study.go`-style dead files) that the actual generated `List` handlers use the `paginate.List[T]` pattern and DO call `.Preload()` correctly — an earlier progress-tracker note claiming otherwise was wrong and has been retracted in the doc.
 
 ## Current state
 
-- Both `apps/web` and `apps/admin` smoke-tested clean: dev servers return 200, zero warnings/errors in logs, compiled CSS confirmed to contain correct light/dark `--color-brand` values and the renamed utility classes (`bg-brand`, `bg-surface`, `text-foreground-muted`, etc.), zero leftover old class names anywhere in `apps/admin` (verified by grep).
-- Dev servers were stopped again after the smoke test (not left running).
-- `context/project-requirements.md` now exists (user added it) — byte-identical to `context/project-overview.md` except for a note that it's the canonical file if the two ever diverge. `context/design-style-guide.md` still does not exist in the repo despite being named in `AGENTS.md`'s read order — `ui-tokens.md` + `ui-rules.md` are being treated as covering that role.
+- API (`apps/api`), `apps/web`, `apps/admin` all build/type-check clean.
+- All fixes from the `/review` pass verified live against the running dev API (created/linked/unlinked/deleted real test records via curl), demo data restored afterward.
+- Login page verified live: hero panel renders `#2563eb`, no "Built with Grit" text remains anywhere.
+- `context/progress-tracker.md` and `context/ui-registry.md` are both fully up to date through Phase 2 + the review fixes + the login rebrand — read those first for the authoritative phase-by-phase state, this file is a supplement not a replacement.
+- Known, accepted gaps (tracked in progress-tracker.md, not blocking): no public/published-only routes yet for CaseStudy/Product/Testimonial/TeamMember/FAQ (Phase 4 work).
 
 ## Next session starts with
 
-Per `context/build-plan.md` Phase 0, still outstanding: stand up docker services (Postgres/Redis/MinIO/Mailhog via `docker compose up -d`), make a real font decision (currently just the Inter/JetBrains Mono placeholders from ui-tokens.md — no Megagig-specific font choice made), confirm the base `User`/auth model, and get the Go API dev server running on `:8080` with GORM Studio at `:8080/studio`. Only after that does Phase 1 (generating the real CaseStudy/Product/Testimonial/etc. resources via `grit generate resource`) start.
+Phase 3 — public site global chrome, per `context/build-plan.md`:
+1. `(marketing)` group layout: navbar (logo, nav links, theme toggle, "Start a project" CTA, sticky-on-scroll) + footer (sitemap columns, socials, contact line).
+2. Persistent WhatsApp floating action button, sourced from `SiteSettings.WhatsAppNumber`.
+3. Shared UI primitives per `ui-rules.md`: Button variants, Card variants, Badge, SectionHeading, Accordion, Carousel, StatCallout, TechIcon strip item — log each in `ui-registry.md` as built.
+4. Confirm dark/light theme toggle works end-to-end against `tokens.css`.
+
+Do not start Phase 4 page work until these primitives exist (per build-plan.md's sequencing rule).
 
 ## Open questions
 
-- None blocking. `context/design-style-guide.md`'s absence should probably just be accepted as permanently merged into `ui-tokens.md`/`ui-rules.md` rather than chased further, unless the user says otherwise.
+- None blocking. `context/design-style-guide.md` (named in `AGENTS.md`'s read order) still does not exist in the repo — being treated as permanently merged into `ui-tokens.md`/`ui-rules.md`, per the prior session's resolution. Revisit only if the user raises it.

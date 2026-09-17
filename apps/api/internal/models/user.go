@@ -136,6 +136,16 @@ func Models() []interface{} {
 		&UserIdentity{},
 		// the service provider's own signing keypair, generated on first use
 		&SAMLKeypair{},
+		&TeamMember{},
+		&CaseStudy{},
+		&Testimonial{},
+		&Product{},
+		&JobOpening{},
+		&FAQ{},
+		&Lead{},
+		// SiteSettings is a hand-built singleton, not a generated resource —
+		// still needs an AutoMigrate entry like every other model.
+		&SiteSettings{},
 		// grit:models
 	}
 }

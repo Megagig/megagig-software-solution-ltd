@@ -34,7 +34,7 @@ func (s *BlogService) List(page, pageSize int, search, sortKey, sortDir string) 
 		sortKey = "created_at"
 	}
 
-	query := s.DB.Model(&models.Blog{})
+	query := s.DB.Model(&models.Blog{}).Preload("Author")
 
 	if search != "" {
 		query = query.Where("title ILIKE ? OR content ILIKE ?", "%"+search+"%", "%"+search+"%")
@@ -62,7 +62,7 @@ func (s *BlogService) ListPublished(page, pageSize int) ([]models.Blog, int64, i
 		pageSize = 20
 	}
 
-	query := s.DB.Model(&models.Blog{}).Where("published = ?", true)
+	query := s.DB.Model(&models.Blog{}).Preload("Author").Where("published = ?", true)
 
 	var total int64
 	query.Count(&total)
@@ -80,7 +80,7 @@ func (s *BlogService) ListPublished(page, pageSize int) ([]models.Blog, int64, i
 // GetByID returns a single blog by ID.
 func (s *BlogService) GetByID(id string) (*models.Blog, error) {
 	var blog models.Blog
-	if err := s.DB.First(&blog, "id = ?", id).Error; err != nil {
+	if err := s.DB.Preload("Author").First(&blog, "id = ?", id).Error; err != nil {
 		return nil, fmt.Errorf("blog not found: %w", err)
 	}
 	return &blog, nil
@@ -89,7 +89,7 @@ func (s *BlogService) GetByID(id string) (*models.Blog, error) {
 // GetBySlug returns a single published blog by slug.
 func (s *BlogService) GetBySlug(slug string) (*models.Blog, error) {
 	var blog models.Blog
-	if err := s.DB.Where("slug = ? AND published = ?", slug, true).First(&blog).Error; err != nil {
+	if err := s.DB.Preload("Author").Where("slug = ? AND published = ?", slug, true).First(&blog).Error; err != nil {
 		return nil, fmt.Errorf("blog not found: %w", err)
 	}
 	return &blog, nil
@@ -114,7 +114,7 @@ func (s *BlogService) Update(id string, data map[string]interface{}) (*models.Bl
 		return nil, fmt.Errorf("updating blog: %w", err)
 	}
 
-	s.DB.First(&blog, "id = ?", id)
+	s.DB.Preload("Author").First(&blog, "id = ?", id)
 	return &blog, nil
 }
 

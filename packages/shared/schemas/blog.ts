@@ -7,6 +7,10 @@ export const BlogSchema = z.object({
   content: z.string(),
   image: z.string().nullable(),
   excerpt: z.string().nullable(),
+  author_id: z.string().nullable(),
+  tags: z.array(z.string()),
+  seo_title: z.string().nullable(),
+  seo_description: z.string().nullable(),
   published: z.boolean(),
   published_at: z.string().nullable(),
   created_at: z.string(),
@@ -18,6 +22,10 @@ export const CreateBlogSchema = z.object({
   content: z.string().optional(),
   image: z.string().optional(),
   excerpt: z.string().optional(),
+  author_id: z.string().uuid("Invalid ID").optional(),
+  tags: z.array(z.string()).optional(),
+  seo_title: z.string().optional(),
+  seo_description: z.string().optional(),
   published: z.boolean().optional(),
 });
 

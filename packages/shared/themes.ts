@@ -60,6 +60,9 @@ export const themes: Record<ThemeName, ThemeTokens> = {
       ui: '"Inter", system-ui, -apple-system, sans-serif',
       display: '"Inter Display", "Inter", system-ui, sans-serif',
     },
+    // Megagig brand palette — matches packages/shared/themes/tokens.css
+    // (--color-brand, --color-accent) exactly, so the auth pages and the
+    // rest of the app read as one product instead of two color systems.
     colors: {
       bg: "#ffffff",
       fg: "#0f172a",
@@ -68,8 +71,8 @@ export const themes: Record<ThemeName, ThemeTokens> = {
       muted: "#64748b",
       primary: "#2563eb",
       primaryFg: "#ffffff",
-      accent: "#4f46e5",
-      heroBg: "#4f46e5",
+      accent: "#16a34a",
+      heroBg: "#2563eb",
       heroFg: "#ffffff",
     },
     radius: "0.625rem",

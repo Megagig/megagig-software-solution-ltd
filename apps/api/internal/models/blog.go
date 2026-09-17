@@ -3,24 +3,30 @@ package models
 import (
 	"time"
 
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"megagig-software-solution/apps/api/internal/ids"
 )
 
 // Blog represents a blog post in the system.
 type Blog struct {
-	ID          string         `gorm:"primarykey;size:36" json:"id"`
-	Title       string         `gorm:"size:255;not null" json:"title" binding:"required"`
-	Slug        string         `gorm:"size:255;uniqueIndex" json:"slug"`
-	Content     string         `gorm:"type:text" json:"content"`
-	Image       string         `gorm:"size:500" json:"image"`
-	Excerpt     string         `gorm:"size:500" json:"excerpt"`
-	Published   bool           `gorm:"default:false" json:"published"`
-	PublishedAt *time.Time     `json:"published_at"`
-	Version     int            `gorm:"not null;default:1" json:"version"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	ID             string                      `gorm:"primarykey;size:36" json:"id"`
+	Title          string                      `gorm:"size:255;not null" json:"title" binding:"required"`
+	Slug           string                      `gorm:"size:255;uniqueIndex" json:"slug"`
+	Content        string                      `gorm:"type:text" json:"content"`
+	Image          string                      `gorm:"size:500" json:"image"`
+	Excerpt        string                      `gorm:"size:500" json:"excerpt"`
+	AuthorID       string                      `gorm:"size:36;index" json:"author_id"`
+	Author         *TeamMember                 `gorm:"foreignKey:AuthorID" json:"author,omitempty"`
+	Tags           datatypes.JSONSlice[string] `gorm:"type:json" json:"tags"`
+	SEOTitle       string                      `gorm:"size:255" json:"seo_title"`
+	SEODescription string                      `gorm:"size:500" json:"seo_description"`
+	Published      bool                        `gorm:"default:false" json:"published"`
+	PublishedAt    *time.Time                  `json:"published_at"`
+	Version        int                         `gorm:"not null;default:1" json:"version"`
+	CreatedAt      time.Time                   `json:"created_at"`
+	UpdatedAt      time.Time                   `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt              `gorm:"index" json:"-"`
 }
 
 // BeforeCreate auto-generates a UUID and the slug before inserting.

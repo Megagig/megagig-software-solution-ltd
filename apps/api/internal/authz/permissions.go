@@ -118,6 +118,104 @@ func coreModules() []Module {
 func generatedModules() []Module {
 	return []Module{
 		// grit:perms:auto-start
+		{
+			Key:  "team_members",
+			Name: "TeamMembers",
+			Groups: []Group{
+				{
+					Key:  "team_members",
+					Name: "TeamMembers",
+					Features: []Feature{
+						{Key: "team_members", Name: "TeamMembers", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "case_studies",
+			Name: "CaseStudies",
+			Groups: []Group{
+				{
+					Key:  "case_studies",
+					Name: "CaseStudies",
+					Features: []Feature{
+						{Key: "case_studies", Name: "CaseStudies", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "testimonials",
+			Name: "Testimonials",
+			Groups: []Group{
+				{
+					Key:  "testimonials",
+					Name: "Testimonials",
+					Features: []Feature{
+						{Key: "testimonials", Name: "Testimonials", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "products",
+			Name: "Products",
+			Groups: []Group{
+				{
+					Key:  "products",
+					Name: "Products",
+					Features: []Feature{
+						{Key: "products", Name: "Products", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "job_openings",
+			Name: "JobOpenings",
+			Groups: []Group{
+				{
+					Key:  "job_openings",
+					Name: "JobOpenings",
+					Features: []Feature{
+						{Key: "job_openings", Name: "JobOpenings", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "faqs",
+			Name: "Faqs",
+			Groups: []Group{
+				{
+					Key:  "faqs",
+					Name: "Faqs",
+					Features: []Feature{
+						{Key: "faqs", Name: "Faqs", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "leads",
+			Name: "Leads",
+			Groups: []Group{
+				{
+					Key:  "leads",
+					Name: "Leads",
+					Features: []Feature{
+						{Key: "leads", Name: "Leads", Actions: AllActions},
+					},
+				},
+			},
+		},
+
 		// grit:perms:auto-end
 	}
 }

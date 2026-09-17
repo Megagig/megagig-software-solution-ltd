@@ -62,6 +62,15 @@ Defined as CSS custom properties on `:root` (light) and `.dark` (dark), consumed
   --color-warning: #f59e0b;
   --color-danger: #f87171;
   --color-info: #60a5fa;
+
+  /* Lead status (admin only) — brightened the same way as the semantic
+     colors above; found during review that these were previously
+     unset in dark mode, silently inheriting the light-mode values. */
+  --color-status-new: #60a5fa;
+  --color-status-contacted: #f59e0b;
+  --color-status-quoted: #a78bfa;
+  --color-status-won: #22c55e;
+  --color-status-lost: #94a3b8;
 }
 ```
 

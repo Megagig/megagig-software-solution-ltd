@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
 	"megagig-software-solution/apps/api/internal/models"
@@ -150,11 +151,15 @@ func (h *BlogHandler) GetByID(c *gin.Context) {
 // Create adds a new blog (admin).
 func (h *BlogHandler) Create(c *gin.Context) {
 	var req struct {
-		Title     string `json:"title" binding:"required"`
-		Content   string `json:"content"`
-		Image     string `json:"image"`
-		Excerpt   string `json:"excerpt"`
-		Published *bool  `json:"published"`
+		Title          string   `json:"title" binding:"required"`
+		Content        string   `json:"content"`
+		Image          string   `json:"image"`
+		Excerpt        string   `json:"excerpt"`
+		AuthorID       string   `json:"author_id"`
+		Tags           []string `json:"tags"`
+		SEOTitle       string   `json:"seo_title"`
+		SEODescription string   `json:"seo_description"`
+		Published      *bool    `json:"published"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -168,10 +173,14 @@ func (h *BlogHandler) Create(c *gin.Context) {
 	}
 
 	blog := models.Blog{
-		Title:   req.Title,
-		Content: req.Content,
-		Image:   req.Image,
-		Excerpt: req.Excerpt,
+		Title:          req.Title,
+		Content:        req.Content,
+		Image:          req.Image,
+		Excerpt:        req.Excerpt,
+		AuthorID:       req.AuthorID,
+		Tags:           req.Tags,
+		SEOTitle:       req.SEOTitle,
+		SEODescription: req.SEODescription,
 	}
 
 	if req.Published != nil && *req.Published {
@@ -213,11 +222,15 @@ func (h *BlogHandler) Update(c *gin.Context) {
 	}
 
 	var req struct {
-		Title     string `json:"title"`
-		Content   string `json:"content"`
-		Image     string `json:"image"`
-		Excerpt   string `json:"excerpt"`
-		Published *bool  `json:"published"`
+		Title          string   `json:"title"`
+		Content        string   `json:"content"`
+		Image          string   `json:"image"`
+		Excerpt        string   `json:"excerpt"`
+		AuthorID       string   `json:"author_id"`
+		Tags           []string `json:"tags"`
+		SEOTitle       string   `json:"seo_title"`
+		SEODescription string   `json:"seo_description"`
+		Published      *bool    `json:"published"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -242,6 +255,18 @@ func (h *BlogHandler) Update(c *gin.Context) {
 	}
 	if req.Excerpt != "" {
 		updates["excerpt"] = req.Excerpt
+	}
+	if req.AuthorID != "" {
+		updates["author_id"] = req.AuthorID
+	}
+	if req.Tags != nil {
+		updates["tags"] = datatypes.JSONSlice[string](req.Tags)
+	}
+	if req.SEOTitle != "" {
+		updates["seo_title"] = req.SEOTitle
+	}
+	if req.SEODescription != "" {
+		updates["seo_description"] = req.SEODescription
 	}
 	if req.Published != nil {
 		updates["published"] = *req.Published
