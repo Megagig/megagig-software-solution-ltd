@@ -5,6 +5,32 @@
  * (Phase 3) and persisted to localStorage; it defaults to system preference
  * on first visit via that provider, not via CSS media queries here. */
 
+/* Accordion open/close animation (ui-rules.md §8) — web-only motion, not a
+ * cross-app design token, so it lives here rather than in tokens.css.
+ * Height is driven by Radix's own --radix-accordion-content-height var. */
+@theme {
+  --animate-accordion-down: accordion-down var(--duration-standard) var(--ease-standard);
+  --animate-accordion-up: accordion-up var(--duration-standard) var(--ease-standard);
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);

@@ -1,131 +1,128 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Github, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { brand } from "@repo/shared/brand";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { cn } from "@/lib/utils";
 
-const DOCS_URL = "https://grit-vert.vercel.app/docs";
-const ADMIN_URL = process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3001";
+// useLayoutEffect throws a warning during actual server rendering (no DOM
+// to measure); useEffect is the correct fallback there. In the browser,
+// useLayoutEffect runs before paint, so correcting `scrolled` here (rather
+// than in a regular effect) avoids a one-frame flash of the wrong navbar
+// background when Home is reloaded already scrolled down.
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/blog", label: "Blog" },
+  { href: "/services", label: "Services" },
+  { href: "/products", label: "Products" },
+  { href: "/case-studies", label: "Case Studies" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/contact-us", label: "Contact" },
 ];
 
+// Per ui-rules.md §3: sticky, backdrop-blur + semi-transparent once
+// scrolled, but transparent at the very top of Home only (blends with the
+// hero). Every other page is always in the "scrolled" visual state.
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  useIsomorphicLayoutEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const solid = scrolled || !isHome;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        {/* Logo */}
+    <nav
+      className={cn(
+        "sticky top-0 z-50 border-b transition-colors duration-standard ease-standard",
+        solid
+          ? "border-border/50 bg-surface/85 backdrop-blur-lg"
+          : "border-transparent bg-transparent"
+      )}
+    >
+      <div className="mx-auto flex h-16 max-w-[--space-container-max] items-center justify-between px-[--space-container-x]">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 border border-accent/20">
-            <span className="text-accent font-mono font-bold text-sm">G</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand/15 border border-brand/20">
+            <span className="text-brand font-mono font-bold text-sm">
+              {brand.logo.text}
+            </span>
           </div>
-          <span className="text-lg font-bold tracking-tight">megagig-software-solution</span>
+          <span className="text-lg font-bold tracking-tight text-foreground">
+            {brand.name}
+          </span>
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm transition-colors ${
+              className={cn(
+                "text-sm transition-colors",
                 pathname === link.href
-                  ? "text-foreground font-medium"
-                  : "text-text-secondary hover:text-foreground"
-              }`}
+                  ? "font-medium text-brand"
+                  : "text-foreground-muted hover:text-foreground"
+              )}
             >
               {link.label}
             </Link>
           ))}
-          <a
-            href={DOCS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-text-secondary hover:text-foreground transition-colors"
-          >
-            Docs
-          </a>
-          <a
-            href="https://github.com/MUKE-coder/grit"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-secondary hover:text-foreground transition-colors"
-          >
-            <Github className="h-5 w-5" />
-          </a>
-          {/* v3.31.49 -- Admin CTA. Operators land on the marketing
-              site and shouldn't have to type the admin URL by hand;
-              the admin app itself gates everything behind auth. */}
-          <a
-            href={ADMIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-tertiary px-3 py-1.5 text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
-          >
-            <Shield className="h-3.5 w-3.5" />
-            Admin
-          </a>
         </div>
 
-        {/* Mobile hamburger */}
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+          <Link href="/start-project">
+            <Button size="sm">Start a project</Button>
+          </Link>
+        </div>
+
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 text-text-secondary hover:text-foreground transition-colors"
+          onClick={() => setMobileOpen((v) => !v)}
+          className="md:hidden p-2 text-foreground-muted hover:text-foreground transition-colors"
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-lg">
-          <div className="mx-auto max-w-5xl px-6 py-4 flex flex-col gap-3">
+        <div className="md:hidden border-t border-border/50 bg-surface/95 backdrop-blur-lg">
+          <div className="mx-auto max-w-[--space-container-max] px-[--space-container-x] py-4 flex flex-col gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className={`text-sm py-2 transition-colors ${
+                className={cn(
+                  "text-sm py-2 transition-colors",
                   pathname === link.href
-                    ? "text-foreground font-medium"
-                    : "text-text-secondary hover:text-foreground"
-                }`}
+                    ? "font-medium text-brand"
+                    : "text-foreground-muted hover:text-foreground"
+                )}
               >
                 {link.label}
               </Link>
             ))}
-            <a
-              href={DOCS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm py-2 text-text-secondary hover:text-foreground transition-colors"
-            >
-              Docs
-            </a>
-            <a
-              href="https://github.com/MUKE-coder/grit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm py-2 text-text-secondary hover:text-foreground transition-colors"
-            >
-              GitHub
-            </a>
-            <a
-              href={ADMIN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-bg-tertiary px-3 py-2 text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors"
-            >
-              <Shield className="h-3.5 w-3.5" />
-              Admin
-            </a>
+            <div className="flex items-center gap-3 pt-2">
+              <ThemeToggle />
+              <Link href="/start-project" className="flex-1" onClick={() => setMobileOpen(false)}>
+                <Button size="sm" className="w-full">
+                  Start a project
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}
