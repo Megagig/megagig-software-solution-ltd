@@ -34,6 +34,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "A cross-platform pharmacy management suite — web, desktop, and mobile apps sharing one offline-first sync engine, so pharmacists keep working through unreliable connectivity without losing a single transaction. Built on the Grit framework, it covers inventory, prescriptions, sales, and patient records in one unified system, replacing the spreadsheets and disconnected tools most independent pharmacies were stuck with.",
 			Result:       "Now running in production as Megagig's flagship vertical product at pharmacycopilot.com.ng.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Go", "Next.js", "Electron", "Expo", "PostgreSQL"}),
+			LiveURL:      "https://pharmacycopilot.com.ng",
 			Published:    true,
 			SortOrder:    1,
 		},
@@ -47,6 +48,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "A single unified platform bringing POS, inventory, accounting, CRM, and HR together for SMEs, engineered on the Grit framework. Instead of stitching together separate tools that don't talk to each other, one dashboard now handles daily sales, stock levels, staff records, and financial reporting — with real-time BI dashboards surfacing the numbers that matter, built specifically for how Nigerian businesses actually operate.",
 			Result:       "Running in production at businesscopilot.com.ng, positioned as a QuickBooks/UltimatePOS-class alternative built for local workflows.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Go", "Next.js", "PostgreSQL", "Redis"}),
+			LiveURL:      "https://businesscopilot.com.ng",
 			Published:    true,
 			SortOrder:    2,
 		},
@@ -60,6 +62,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "A full membership and community portal for the Ota Zone chapter — online registration and renewal, a searchable leadership directory, event galleries from past chapter activities, and a resource library for members. What used to run entirely offline, through paper registers and word of mouth, now lives in one platform every member can reach from their phone.",
 			Result:       "Running in production at acpnotazone.com, serving pharmacy professionals across the Ota Zone chapter.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Next.js", "Node.js", "PostgreSQL"}),
+			LiveURL:      "https://acpnotazone.com",
 			Published:    true,
 			SortOrder:    3,
 		},
@@ -73,6 +76,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "An alumni community site built around three things members actually use: a blog for updates and announcements, an events calendar for reunions and webinars, and a searchable member directory to reconnect with old classmates. It gives a fellowship that used to rely on scattered group chats and word-of-mouth a proper digital home, one alumni can return to long after graduation.",
 			Result:       "Live at ccrnoaualumni.com.ng, connecting alumni for reunions, webinars, and ongoing fellowship.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Next.js", "Node.js", "PostgreSQL"}),
+			LiveURL:      "https://ccrnoaualumni.com.ng",
 			Published:    true,
 			SortOrder:    4,
 		},
@@ -99,6 +103,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "A full accounting operating system — general ledger, receivables and payables, inventory valuation, and configurable tax codes, all wrapped around fiscal-period controls that keep the books properly closed month over month. Automated reconciliation health checks flag mismatches before they become a mess, giving growing businesses the kind of financial discipline spreadsheets were never built to enforce.",
 			Result:       "Live in production at yazzyplace.com.ng.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Next.js", "Node.js", "PostgreSQL"}),
+			LiveURL:      "https://yazzyplace.com.ng",
 			Published:    true,
 			SortOrder:    6,
 		},
@@ -112,6 +117,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			WhatWeBuilt:  "A modern SaaS platform built to digitize how Nigerian associations, clubs, and cooperative societies actually run — member management, dues and finance tracking, and tools for growing an engaged community, all in one place. It replaces the manual registers and informal record-keeping most societies have relied on for years with something members and leadership can both trust.",
 			Result:       "Live in production at societyledger.com.ng, trusted by associations across Nigeria.",
 			TechStack:    datatypes.NewJSONSlice([]string{"Next.js", "Node.js", "PostgreSQL"}),
+			LiveURL:      "https://www.societyledger.com.ng",
 			Published:    true,
 			SortOrder:    7,
 		},
@@ -124,6 +130,7 @@ func SeedDemoContent(db *gorm.DB) error {
 			Problem:      "Kaneo Pro Movers needed a professional web presence that could turn visitors into quote requests, not just describe the business.",
 			WhatWeBuilt:  "A marketing website for a professional moving and logistics company serving Alberta, Canada — a bold hero section paired with a persistent 'Free Quote' call-to-action, service and coverage-area pages, and direct phone/email contact always one click away in the header. Built around the one thing a moving customer actually wants: a fast, frictionless way to request a quote the moment they land on the page.",
 			Result:       "Live in production at kaneopromovers.com, serving customers across Alberta.",
+			LiveURL:      "https://www.kaneopromovers.com",
 			Published:    true,
 			SortOrder:    8,
 		},
@@ -146,8 +153,9 @@ func SeedDemoContent(db *gorm.DB) error {
 			Slug:           "pharmacycopilot",
 			Name:           "PharmacyCopilot",
 			Tagline:        "Cross-platform pharmacy management SaaS",
-			Description:    "Offline-first pharmacy management across web, desktop, and mobile — inventory, sales, and compliance in one place.",
+			Description:    "Built for independent and chain pharmacies that need inventory, sales, and compliance to keep working even when the internet doesn't — offline-first across web, desktop, and mobile, all syncing back to one source of truth.",
 			FeatureBullets: datatypes.NewJSONSlice([]string{"Offline-first sync", "Inventory & expiry tracking", "Sales & POS", "Multi-branch support"}),
+			Platforms:      datatypes.NewJSONSlice([]string{"Web", "Desktop", "Mobile"}),
 			LiveURL:        "https://pharmacycopilot.com.ng",
 			Published:      true,
 			SortOrder:      1,
@@ -156,8 +164,9 @@ func SeedDemoContent(db *gorm.DB) error {
 			Slug:           "businesscopilot",
 			Name:           "BusinessCopilot",
 			Tagline:        "Unified ops platform for SMEs",
-			Description:    "POS, inventory, accounting, CRM, HR, and BI — one platform built for how Nigerian SMEs actually run.",
+			Description:    "Built for Nigerian SMEs juggling POS, inventory, accounting, CRM, and HR across disconnected tools — one platform, with real-time BI dashboards, so every part of the business finally speaks to every other part.",
 			FeatureBullets: datatypes.NewJSONSlice([]string{"Unified POS & inventory", "Accounting & invoicing", "CRM & HR", "Business intelligence dashboards"}),
+			Platforms:      datatypes.NewJSONSlice([]string{"Web", "Mobile"}),
 			LiveURL:        "https://businesscopilot.com.ng",
 			Published:      true,
 			SortOrder:      2,
@@ -166,8 +175,9 @@ func SeedDemoContent(db *gorm.DB) error {
 			Slug:           "societyledger",
 			Name:           "SocietyLedger",
 			Tagline:        "SaaS platform for associations, clubs, and cooperative societies",
-			Description:    "Member management, dues tracking, and finance tools for Nigerian associations and cooperative societies — one platform for community and books.",
+			Description:    "Built for Nigerian associations, clubs, and cooperative societies still running membership and dues through manual registers — member management, finance tracking, and community tools in one platform leadership and members can both trust.",
 			FeatureBullets: datatypes.NewJSONSlice([]string{"Member management", "Dues & finance tracking", "Community growth tools", "Association-wide reporting"}),
+			Platforms:      datatypes.NewJSONSlice([]string{"Web"}),
 			LiveURL:        "https://www.societyledger.com.ng",
 			Published:      true,
 			SortOrder:      3,
@@ -176,8 +186,9 @@ func SeedDemoContent(db *gorm.DB) error {
 			Slug:           "medsafe",
 			Name:           "MedSafe",
 			Tagline:        "Nigeria's most comprehensive drug information platform",
-			Description:    "Drug monographs, interaction checking, and NAFDAC-verified safety tools built for Nigerian healthcare professionals and pharmacy students.",
+			Description:    "Built for Nigerian healthcare professionals, pharmacists, and pharmacy students who need fast, NAFDAC-verified drug information — monographs, interaction checking, and clinical safety tools in one place.",
 			FeatureBullets: datatypes.NewJSONSlice([]string{"5,000+ drug monographs", "Multi-drug interaction checker", "NAFDAC recall & authenticity checks", "16+ clinical calculators"}),
+			Platforms:      datatypes.NewJSONSlice([]string{"Web"}),
 			LiveURL:        "https://medsafe.com.ng",
 			Published:      true,
 			SortOrder:      4,
@@ -214,10 +225,21 @@ func SeedDemoContent(db *gorm.DB) error {
 			log.Printf("Warning: failed to create testimonial for %q: %v", testimonials[i].CompanyName, result.Error)
 			continue
 		}
-		if result.RowsAffected == 0 {
-			continue
+		if result.RowsAffected > 0 {
+			log.Printf("Created testimonial from: %q", testimonials[i].CompanyName)
 		}
-		log.Printf("Created testimonial from: %q", testimonials[i].CompanyName)
+
+		// CaseStudy <-> Testimonial is a genuine two-way belongs_to (each
+		// side has its own FK column) — Testimonial.CaseStudyID was set
+		// above, but the reverse CaseStudy.TestimonialID was never
+		// backfilled, so CaseStudy's own Preload("Testimonial") always
+		// came back empty. Keep both sides in sync every run, not just on
+		// create, so this can't silently drift again.
+		if existing.CaseStudyID != "" {
+			db.Model(&models.CaseStudy{}).
+				Where("id = ?", existing.CaseStudyID).
+				Update("testimonial_id", existing.ID)
+		}
 	}
 
 	return nil

@@ -1,20 +1,21 @@
-import type { Product } from "@repo/shared/types";
+import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProductCard } from "@/components/product-card";
+import { getPublishedProducts } from "@/lib/products";
 
-interface ProductsSectionProps {
-  products: Product[];
-}
+export const metadata: Metadata = {
+  title: "Products",
+  description: "PharmacyCopilot, BusinessCopilot, and Megagig's other own shipped products.",
+};
 
-// Megagig's own shipped products, per project-requirements.md §5.1/§5.3.
-export function ProductsSection({ products }: ProductsSectionProps) {
-  if (products.length === 0) return null;
+export default async function ProductsIndexPage() {
+  const products = await getPublishedProducts();
 
   return (
     <section className="bg-background">
       <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) md:py-(--space-section-y)">
         <SectionHeading eyebrow="Built by us, running in production" title="Our products" align="center" />
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

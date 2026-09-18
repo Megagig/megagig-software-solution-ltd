@@ -1,10 +1,19 @@
+import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ServiceCard } from "@/components/service-card";
 import { SERVICES, HIGHLIGHTED_SLUG } from "@/lib/services";
 
-export function ServicesGrid() {
+export const metadata: Metadata = {
+  title: "Services",
+  description:
+    "Web, mobile, desktop, and custom software — engineering-led delivery from Megagig Software Solution.",
+};
+
+// Static per build-plan.md Phase 4 item 2 — same code-owned SERVICES
+// catalog and card as Home's ServicesGrid, just the full, uncapped list.
+export default function ServicesIndexPage() {
   return (
-    <section className="bg-surface">
+    <section className="bg-background">
       <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) md:py-(--space-section-y)">
         <SectionHeading
           eyebrow="What we do"

@@ -19,3 +19,20 @@ export async function getPublishedProducts(limit?: number): Promise<Product[]> {
     return [];
   }
 }
+
+/**
+ * Server-side fetch of a single published product by slug — /product/[slug].
+ * Returns null on failure/404 so the page can call notFound() itself.
+ */
+export async function getPublishedProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/v1/public/products/${slug}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return (json.data as Product) ?? null;
+  } catch {
+    return null;
+  }
+}

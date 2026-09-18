@@ -23,6 +23,7 @@ type CaseStudy struct {
 	WhatWeBuilt   string                      `gorm:"type:text" json:"what_we_built"`
 	Result        string                      `gorm:"type:text" json:"result"`
 	TechStack     datatypes.JSONSlice[string] `gorm:"type:json" json:"tech_stack"`
+	LiveURL       string                      `gorm:"size:500" json:"live_url"`
 	TestimonialID string                      `gorm:"size:36;index" json:"testimonial_id"`
 	Testimonial   *Testimonial                `gorm:"foreignKey:TestimonialID" json:"testimonial,omitempty"`
 	Published     bool                        `json:"published"`

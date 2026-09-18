@@ -153,6 +153,7 @@ func (h *CaseStudyHandler) Export(c *gin.Context) {
 			{Header: "WhatWeBuilt", Field: "WhatWeBuilt"},
 			{Header: "Result", Field: "Result"},
 			{Header: "TechStack", Field: "TechStack"},
+			{Header: "LiveURL", Field: "LiveURL"},
 			{Header: "Published", Field: "Published", Format: "bool"},
 			{Header: "SortOrder", Field: "SortOrder"},
 			{Header: "Created At", Field: "CreatedAt", Format: "date:2006-01-02"},
@@ -311,6 +312,7 @@ func (h *CaseStudyHandler) Create(c *gin.Context) {
 		WhatWeBuilt   string                      `json:"what_we_built"`
 		Result        string                      `json:"result"`
 		TechStack     datatypes.JSONSlice[string] `json:"tech_stack"`
+		LiveURL       string                      `json:"live_url"`
 		TestimonialID string                      `json:"testimonial_id"`
 		Published     bool                        `json:"published"`
 		SortOrder     int                         `json:"sort_order"`
@@ -337,6 +339,7 @@ func (h *CaseStudyHandler) Create(c *gin.Context) {
 		WhatWeBuilt:   req.WhatWeBuilt,
 		Result:        req.Result,
 		TechStack:     req.TechStack,
+		LiveURL:       req.LiveURL,
 		TestimonialID: req.TestimonialID,
 		Published:     req.Published,
 		SortOrder:     req.SortOrder,
@@ -388,6 +391,7 @@ func (h *CaseStudyHandler) Update(c *gin.Context) {
 		WhatWeBuilt   string                       `json:"what_we_built"`
 		Result        string                       `json:"result"`
 		TechStack     *datatypes.JSONSlice[string] `json:"tech_stack"`
+		LiveURL       string                       `json:"live_url"`
 		TestimonialID *string                      `json:"testimonial_id"`
 		Published     *bool                        `json:"published"`
 		SortOrder     *int                         `json:"sort_order"`
@@ -433,6 +437,9 @@ func (h *CaseStudyHandler) Update(c *gin.Context) {
 	}
 	if req.TechStack != nil {
 		updates["tech_stack"] = *req.TechStack
+	}
+	if req.LiveURL != "" {
+		updates["live_url"] = req.LiveURL
 	}
 	if req.TestimonialID != nil {
 		updates["testimonial_id"] = *req.TestimonialID
@@ -507,6 +514,7 @@ func (h *CaseStudyHandler) Patch(c *gin.Context) {
 		"what_we_built":  true,
 		"result":         true,
 		"tech_stack":     true,
+		"live_url":       true,
 		"testimonial_id": true,
 		"published":      true,
 		"sort_order":     true,

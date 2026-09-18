@@ -24,3 +24,22 @@ export async function getPublishedCaseStudies(limit?: number): Promise<CaseStudy
     return [];
   }
 }
+
+/**
+ * Server-side fetch of a single published case study by slug —
+ * /case-study/[slug]. Returns null on failure/404 so the page can call
+ * notFound() itself. Testimonial and HeroImage are preloaded server-side
+ * by the API's GetBySlug handler.
+ */
+export async function getPublishedCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/v1/public/case-studies/${slug}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return (json.data as CaseStudy) ?? null;
+  } catch {
+    return null;
+  }
+}

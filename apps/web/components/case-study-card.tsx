@@ -15,10 +15,11 @@ interface CaseStudyCardProps {
   index?: number;
 }
 
-// Shared by the Home preview grid and the "selected work" full grid. Per
-// ui-rules.md §5: category tags overlaid top-left, status badge, whole
-// card clickable. Moves to apps/web/components/ if/when the /case-studies
-// index page needs the exact same card (code-standards.md §3).
+// Shared by SelectedWork and the /case-studies index (moved here from
+// (marketing)/_components/ once a second route-level consumer needed the
+// identical card — per code-standards.md §3, same rule already applied to
+// ServiceCard/ProductCard). Per ui-rules.md §5: category tags overlaid
+// top-left, status badge, whole card clickable.
 // Screenshot treatment matches HeroShowcase exactly (user request): a
 // tilted TabletFrame with a brand/accent gradient ring, straightening out
 // on hover — same primitive, same rotation/ring language as the hero.

@@ -7,6 +7,7 @@ export interface Product {
   tagline: string;
   description: string;
   feature_bullets: string[];
+  platforms: string[];
   live_url: string;
   docs_url: string;
   screenshots?: Upload[];

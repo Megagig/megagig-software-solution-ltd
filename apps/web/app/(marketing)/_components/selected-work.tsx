@@ -1,6 +1,6 @@
 import type { CaseStudy } from "@repo/shared/types";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { CaseStudyCard } from "./case-study-card";
+import { CaseStudyCard } from "@/components/case-study-card";
 
 interface SelectedWorkProps {
   caseStudies: CaseStudy[];

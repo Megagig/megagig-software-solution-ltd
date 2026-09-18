@@ -14,6 +14,7 @@ export interface CaseStudy {
   what_we_built: string;
   result: string;
   tech_stack: string[];
+  live_url: string;
   testimonial_id?: string;
   testimonial?: Testimonial;
   published: boolean;

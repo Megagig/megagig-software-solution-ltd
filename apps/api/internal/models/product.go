@@ -17,6 +17,7 @@ type Product struct {
 	Tagline        string                      `gorm:"size:255" json:"tagline" binding:"required"`
 	Description    string                      `gorm:"type:text" json:"description"`
 	FeatureBullets datatypes.JSONSlice[string] `gorm:"type:json" json:"feature_bullets"`
+	Platforms      datatypes.JSONSlice[string] `gorm:"type:json" json:"platforms"`
 	LiveURL        string                      `gorm:"size:500" json:"live_url" binding:"required"`
 	DocsURL        string                      `gorm:"size:500" json:"docs_url" binding:"required"`
 	Screenshots    []Upload                    `gorm:"many2many:product_screenshots" json:"screenshots"`

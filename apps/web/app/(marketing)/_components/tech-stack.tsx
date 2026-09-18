@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Palette } from "lucide-react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TechStackStrip } from "@/components/ui/tech-icon";
+import { TECH_LOGOS } from "@/lib/tech-logos";
 
 // Static per project-requirements.md §5.1 — not admin-editable in v1.
 // Real brand logos (provided in apps/web/public/) for every tech with one
@@ -16,14 +17,7 @@ const logo = (src: string, alt: string) => (
 );
 
 const STACK = [
-  { icon: logo("/nextjslogo.png", "Next.js"), label: "Next.js" },
-  { icon: logo("/reactlogo.png", "React"), label: "React" },
-  { icon: logo("/nodejslogo.png", "Node.js"), label: "Node.js" },
-  { icon: logo("/golanglogo.jfif", "Go"), label: "Go" },
-  { icon: logo("/postgres_mongodb_logo.jfif", "MongoDB and PostgreSQL"), label: "MongoDB / PostgreSQL" },
-  { icon: logo("/electronjs.png", "Electron"), label: "Electron" },
-  { icon: logo("/expo_logo.png", "Expo"), label: "Expo" },
-  { icon: logo("/wailslogo.jfif", "Wails"), label: "Wails" },
+  ...Object.entries(TECH_LOGOS).map(([label, src]) => ({ icon: logo(src, label), label })),
   { icon: <Palette className="h-full w-full" />, label: "Tailwind" },
 ];
 

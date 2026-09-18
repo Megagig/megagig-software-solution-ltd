@@ -148,6 +148,7 @@ func (h *ProductHandler) Export(c *gin.Context) {
 			{Header: "Tagline", Field: "Tagline"},
 			{Header: "Description", Field: "Description"},
 			{Header: "FeatureBullets", Field: "FeatureBullets"},
+			{Header: "Platforms", Field: "Platforms"},
 			{Header: "LiveURL", Field: "LiveURL"},
 			{Header: "DocsURL", Field: "DocsURL"},
 			{Header: "Published", Field: "Published", Format: "bool"},
@@ -301,6 +302,7 @@ func (h *ProductHandler) Create(c *gin.Context) {
 		Tagline        string                      `json:"tagline" binding:"required"`
 		Description    string                      `json:"description"`
 		FeatureBullets datatypes.JSONSlice[string] `json:"feature_bullets"`
+		Platforms      datatypes.JSONSlice[string] `json:"platforms"`
 		LiveURL        string                      `json:"live_url" binding:"required"`
 		DocsURL        string                      `json:"docs_url" binding:"required"`
 		ScreenshotsIDs []string                    `json:"screenshot_ids"`
@@ -324,6 +326,7 @@ func (h *ProductHandler) Create(c *gin.Context) {
 		Tagline:        req.Tagline,
 		Description:    req.Description,
 		FeatureBullets: req.FeatureBullets,
+		Platforms:      req.Platforms,
 		LiveURL:        req.LiveURL,
 		DocsURL:        req.DocsURL,
 		Published:      req.Published,
@@ -377,6 +380,7 @@ func (h *ProductHandler) Update(c *gin.Context) {
 		Tagline        string                       `json:"tagline"`
 		Description    string                       `json:"description"`
 		FeatureBullets *datatypes.JSONSlice[string] `json:"feature_bullets"`
+		Platforms      *datatypes.JSONSlice[string] `json:"platforms"`
 		LiveURL        string                       `json:"live_url"`
 		DocsURL        string                       `json:"docs_url"`
 		ScreenshotsIDs *[]string                    `json:"screenshot_ids"`
@@ -409,6 +413,9 @@ func (h *ProductHandler) Update(c *gin.Context) {
 	}
 	if req.FeatureBullets != nil {
 		updates["feature_bullets"] = *req.FeatureBullets
+	}
+	if req.Platforms != nil {
+		updates["platforms"] = *req.Platforms
 	}
 	if req.LiveURL != "" {
 		updates["live_url"] = req.LiveURL
@@ -489,6 +496,7 @@ func (h *ProductHandler) Patch(c *gin.Context) {
 		"tagline":         true,
 		"description":     true,
 		"feature_bullets": true,
+		"platforms":       true,
 		"live_url":        true,
 		"docs_url":        true,
 		"published":       true,
