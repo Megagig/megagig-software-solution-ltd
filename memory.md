@@ -1,69 +1,52 @@
-# Memory — Phase 0 completion, Phase 1 (content resources), Phase 2 (admin polish), review fixes, login rebrand
+# Memory — Phase 3 (public site global chrome): built, reviewed, fixed
 
 Last updated: 2026-09-17
 
 ## What was built
 
-**Phase 0 (closed out):**
-- Verified Docker infra healthy (Postgres/Redis/MinIO/Mailhog).
-- Fixed a font bug: Inter's `next/font` variable was bound to an unused `--font-display` CSS var instead of `--font-sans` in both `apps/web/app/layout.tsx` and `apps/admin/app/layout.tsx` — Inter was downloading but never actually rendering (silent fallback to system sans-serif). Fixed both.
+**Route restructure (`apps/web`):**
+- Retrofitted into a literal `app/(marketing)/` route group per `architecture.md` §4 — moved `app/page.tsx` → `app/(marketing)/page.tsx` and `app/blog/` → `app/(marketing)/blog/`.
+- Deleted `app/(auth)/` (Grit's default customer-account scaffold: login/register/forgot-password/reset-password/callback) — confirmed out of scope (no public visitor accounts) and confirmed with the user before deleting since it turned out to not even be git-tracked (no recovery path existed).
+- Deleted `components/AppChrome.tsx` (the old pathname-based chrome-opt-out wrapper) — chrome now lives in `app/(marketing)/layout.tsx` instead.
+- Cleaned root `app/layout.tsx`: removed Grit-branded metadata, removed the unused `data-theme="atlas"` attribute (that token system is admin-auth-only).
 
-**Phase 1 — core content resources:**
-- Generated via `grit generate resource`: `TeamMember`, `CaseStudy`, `Testimonial`, `Product`, `JobOpening`, `FAQ`, `Lead` (model/service/handler/shared-schema/shared-type/admin-page for each).
-- Extended the pre-existing `Blog` resource into the full `BlogPost` field set (added `author_id`→TeamMember, `tags` string_array, `seo_title`, `seo_description`) instead of generating a duplicate resource.
-- Hand-built the `SiteSettings` singleton: `apps/api/internal/models/site_settings.go`, `internal/services/site_settings.go` (get-or-create), `internal/handlers/site_settings.go`, public `GET /api/v1/site-settings` + admin-only `PUT`, shared schema/type, dedicated admin page at `apps/admin/app/(dashboard)/site-settings/page.tsx` (sidebar-linked, admin-gated).
-- Added a new `"tags"` admin field/column type (`apps/admin/lib/resource.ts`, `apps/admin/components/forms/fields/tags-field.tsx`, wired into `form-builder.tsx`/`cell-renderers.tsx`) — Grit's generator was mapping every `string_array` field to an image-upload widget, which is wrong for plain-text tags.
-- Seeded demo data: `internal/database/site_settings_seeder.go` (placeholder contact/hero copy), `internal/database/demo_content_seeder.go` (2 case studies, 2 products, 1 testimonial — PharmacyCopilot/BusinessCopilot placeholders).
+**New shared UI primitives** (`apps/web/components/ui/`): `button.tsx`, `card.tsx`, `badge.tsx`, `section-heading.tsx`, `accordion.tsx` (wraps new `@radix-ui/react-accordion` dependency), `carousel.tsx`, `stat-callout.tsx`, `tech-icon.tsx`. Hand-built with the already-installed CVA/clsx/tailwind-merge stack, not the shadcn CLI — see Decisions below.
 
-**Phase 2 — admin panel polish:**
-- Dashboard (`apps/admin/app/(dashboard)/dashboard/page.tsx`): added a "Megagig overview" stat row (new leads this week via `?created_since=7d`, published case studies/products via `?published=true`) on top of the pre-existing generic per-resource widgets (which already give every resource a free Total + 30-day sparkline + Latest-N once registered in `resource_stats_dispatch.go`).
-- Lead status badge (`apps/admin/components/tables/lead-status-badge.tsx`, using `--color-status-*` tokens), status filter dropdown, status field upgraded from free-text to `select`.
-- `apps/admin/app/robots.ts` — disallow-all (admin is internal-only, must never be indexed).
-- Backend: added `published` query-param filtering to `CaseStudy`/`Product` list handlers and `status` filtering to `Lead` (none of these existed before — the admin table's own "Published" filter checkbox was silently non-functional).
+**New chrome components** (`apps/web/components/`): `navbar.tsx`, `footer.tsx`, `back-to-top.tsx`, `theme-toggle.tsx`, `whatsapp-fab.tsx` — all full rebuilds, since the previous navbar/footer were 100% unmigrated Grit demo scaffold. New `apps/web/lib/site-settings.ts` (server-side `SiteSettings` fetch) and `apps/web/app/(marketing)/layout.tsx` (wires Navbar/Footer/FAB together, fetches `SiteSettings` once).
 
-**`/review` pass — 4 real issues found and fixed (not caught by prior build/smoke tests):**
-1. `CaseStudy.testimonial_id` was a dead field — added in Phase 1 as a "follow-up" but never actually wired into `Create`/`Update`/`Patch` handlers or `Preload()`d anywhere. Fixed all three write paths + Preload on List/GetByID/Create/Update/Patch.
-2. `Testimonial.Create` still hard-required `case_study_id`/`avatar_id` in the handler despite model/schema/form all being optional. Removed `binding:"required"` from both; fixed the shared schema/type/admin-form for `avatar_id` too (same gap `case_study_id` had already had fixed).
-3. `Blog.Author` was never `Preload()`ed anywhere in `blog_service.go` — `author_id` saved fine, the joined author object never did. Added `Preload("Author")` to all 5 read/write methods.
-4. `--color-status-*` tokens had no `.dark` override — added dark-mode values to both `packages/shared/themes/tokens.css` and `context/ui-tokens.md`.
+**Test coverage** (`apps/web/__tests__/`): 13 files, 34 tests, covering every Phase 3 component. Rewrote the pre-existing `navbar.test.tsx`/`footer.test.tsx` — they were fake stubs testing locally-defined mock components, not the real ones (discovered mid-session, unrelated to this session's changes). Added `window.matchMedia` stub to `vitest.setup.ts` (jsdom doesn't implement it).
 
-**Login page rebrand:**
-- `packages/shared/themes.ts` — the `atlas` auth theme (separate token system from `tokens.css`, drives only the `(auth)` login/signup pages) had Grit's default indigo `#4f46e5` for `accent`/`heroBg`. Changed to Megagig's actual brand hex values: `accent` → `#16a34a`, `heroBg` → `#2563eb` (primary already coincidentally matched).
-- `apps/admin/components/auth/AtlasAuthShell.tsx` — replaced "Built with Grit — Go + React framework" with a dynamic `© {year} {brand.name} Ltd.` line.
-- `apps/admin/app/layout.tsx` — cleaned up leftover Grit-branded page title/meta description.
+**Motion:** accordion open/close keyframes (`accordion-down`/`accordion-up`) registered in `apps/web/app/globals.css` (not `tokens.css` — web-only motion, not a cross-app token).
+
+Full class-level detail for every component is in `context/ui-registry.md` (kept current via `/imprint`).
 
 ## Decisions made
 
-- Left the full Grit "kitchen sink" enterprise module set (SSO/SAML/2FA/tickets/backups/feature-flags/webhooks/GDPR/GORM-Studio/Pulse/Sentinel) completely untouched and dormant — **explicit user instruction: no deletions without approval.** Don't revisit this without asking again.
-- `grit generate resource` never creates public/published-only read routes (only protected + admin). This is a known, accepted gap for Phase 4 to fill per-resource (mirror Blog's existing hand-built `ListPublished`/`GetBySlug` pattern), not something to fix speculatively now.
-- Set `DisableForeignKeyConstraintWhenMigrating: true` globally in `apps/api/internal/database/database.go` — the two-way `CaseStudy`↔`Testimonial` belongs_to relation broke GORM's AutoMigrate table-creation ordering. Referential integrity is already enforced at the service layer everywhere, so this was never load-bearing.
-- `string_array` fields (`category_tags`, `tech_stack`, `feature_bullets`, `tags`) use the real `string_array` GORM/Zod type, not build-plan.md's literal (but stale) `string` type — matches the actual data model and ui-rules.md's tag/bullet rendering.
-- The `(auth)` login-page theme engine (`themes.ts`) is a separate, parallel token system from `tokens.css`/`ui-tokens.md` — kept visually consistent by reusing the exact same hex values, but they are **not structurally wired together**. A future brand-color change needs updating both files.
+- Adopted the literal `(marketing)` route group over the previous pathname-based `AppChrome` pattern — `architecture.md` is explicit about this structure and every later build-plan phase assumes it, so drifting now would only compound.
+- Hand-built primitives with CVA instead of running the shadcn CLI that `library-docs.md` names — this project's `ui-tokens.md` vocabulary (`--color-brand`, `--radius-md`, no `--primary`/`--destructive`/`--ring`) doesn't match shadcn's default classes, so CLI output would need a full rewrite regardless. Installed `@radix-ui/react-accordion` as the one dependency genuinely worth adding, for real keyboard/ARIA behavior.
+- `ThemeToggle` is a deliberate duplicate of `apps/admin`'s `DarkModeToggle`, not a shared import — `code-standards.md` §3 says the two apps never cross-import components.
+- `WhatsAppFab` ended up as a server component (no `"use client"`) rather than the client component originally planned — it has no interactivity, just conditional rendering from server-provided props, which better matches the project's "server components by default" rule.
+- `SiteSettings` is fetched server-side in `(marketing)/layout.tsx` with `next: { revalidate: 60 }` (ISR) — plain `fetch`, not the client-only axios instance in `lib/api.ts`.
 
 ## Problems solved
 
-- Systemic admin-resource-generation bug: every `belongs_to:Upload` relationship (`hero_image`, `photo`, `avatar`, `screenshots`) referenced a `.name` display field that doesn't exist on `Upload` (it's `original_name`) — fixed across TeamMember/CaseStudy/Testimonial/Product.
-- Diagnosed via `/recover`: an `EADDRINUSE` failure on the user's `grit start` was caused by my own leftover background dev-server processes from verification work, not a code bug. Lesson: stop leaving background dev servers running across turns; clean them up before handing control back.
-- Confirmed (via reading the real handler code, not the unused `internal/services/case_study.go`-style dead files) that the actual generated `List` handlers use the `paginate.List[T]` pattern and DO call `.Preload()` correctly — an earlier progress-tracker note claiming otherwise was wrong and has been retracted in the doc.
+- **Critical:** the `SiteSettings` fetch had no revalidation strategy, and a code comment claiming "Next respects the origin's Cache-Control header automatically" was factually wrong. `next build` proved it — `/` and `/blog` came back fully static with no revalidate, meaning `SiteSettings` (WhatsApp number, contact info) would freeze at build time and never update from an admin edit without a redeploy. Fixed with `next: { revalidate: 60 }`; confirmed via a rebuild showing `Revalidate: 1m` in the route output.
+- `Carousel` was typed `children: ReactNode[]` and called `.map()` directly on it — throws for exactly one slide, since React only array-wraps 2+ JSX children (a single child arrives bare, not in a 1-item array). Caught by its own new test suite. Fixed with `Children.toArray()`.
+- Navbar's scroll-based background state initialized to `false` and only corrected in a post-mount `useEffect`, causing a one-frame flash of the transparent/top-of-page style when Home is reloaded already scrolled down. Fixed with an isomorphic `useLayoutEffect` (real `useLayoutEffect` client-side, falls back to `useEffect` during actual server rendering to avoid React's SSR warning).
 
 ## Current state
 
-- API (`apps/api`), `apps/web`, `apps/admin` all build/type-check clean.
-- All fixes from the `/review` pass verified live against the running dev API (created/linked/unlinked/deleted real test records via curl), demo data restored afterward.
-- Login page verified live: hero panel renders `#2563eb`, no "Built with Grit" text remains anywhere.
-- `context/progress-tracker.md` and `context/ui-registry.md` are both fully up to date through Phase 2 + the review fixes + the login rebrand — read those first for the authoritative phase-by-phase state, this file is a supplement not a replacement.
-- Known, accepted gaps (tracked in progress-tracker.md, not blocking): no public/published-only routes yet for CaseStudy/Product/Testimonial/TeamMember/FAQ (Phase 4 work).
+- Phase 3 is fully complete: chrome, WhatsApp FAB, 8 UI primitives, and the theme toggle are all built, reviewed (`/review`), fixed, and re-verified live against the running dev API with real seeded `SiteSettings` data (WhatsApp number, contact email/phone, social links all render correctly; `/blog` and `/` get chrome; `/forms/[token]` stays chromeless; not-yet-built routes like `/services` correctly 404).
+- All 34 tests pass, `tsc --noEmit` clean, `next build` clean.
+- The user committed everything as `87e1cd1 "implemented Public site:global chrome"` — done outside this session (I never ran `git commit`), discovered when a later `git status` came back unexpectedly clean.
+- `context/ui-registry.md` and `context/progress-tracker.md` are both fully up to date, including a dedicated session-log entry for the `/review` + fix pass.
+- **Known, explicitly-flagged gap (not blocking):** Home's actual page content (`apps/web/app/(marketing)/page.tsx`) is still 100% untouched Grit demo framework-marketing copy (headline "Grit", `usePublicBlogs` recent-posts section, terminal snippet, etc.) — moving it into the new route group didn't touch its content, since rebuilding Home is explicitly Phase 4.1 scope.
+- **Known, pre-existing gap (not blocking, not caused this session):** root `not-found.tsx`/`error.tsx` still use raw non-token classes (`text-primary`, `bg-red-500/10`) not in `ui-tokens.md`. Worth a pass whenever those files are next touched — not part of Phase 3's chrome/primitives scope.
 
 ## Next session starts with
 
-Phase 3 — public site global chrome, per `context/build-plan.md`:
-1. `(marketing)` group layout: navbar (logo, nav links, theme toggle, "Start a project" CTA, sticky-on-scroll) + footer (sitemap columns, socials, contact line).
-2. Persistent WhatsApp floating action button, sourced from `SiteSettings.WhatsAppNumber`.
-3. Shared UI primitives per `ui-rules.md`: Button variants, Card variants, Badge, SectionHeading, Accordion, Carousel, StatCallout, TechIcon strip item — log each in `ui-registry.md` as built.
-4. Confirm dark/light theme toggle works end-to-end against `tokens.css`.
-
-Do not start Phase 4 page work until these primitives exist (per build-plan.md's sequencing rule).
+Phase 4 — public site pages, per `build-plan.md`'s order: Home (`/`) first, then Services, Products, Case studies, Pricing, Start a project, Contact, About, Team, Careers, Blog, Legal. Home is the biggest lift — it needs the hero, showcase strip, client logos, case-study preview grid, tech stack strip, services bento grid, products section, testimonials carousel, founder spotlight, our-story stats, FAQ accordion, contact block, and closing CTA band, per `project-requirements.md` §5.1 — all composed from the Phase 3 primitives (Button/Card/Badge/SectionHeading/Accordion/Carousel/StatCallout/TechIcon), not one-off markup.
 
 ## Open questions
 
-- None blocking. `context/design-style-guide.md` (named in `AGENTS.md`'s read order) still does not exist in the repo — being treated as permanently merged into `ui-tokens.md`/`ui-rules.md`, per the prior session's resolution. Revisit only if the user raises it.
+- None blocking. Worth surfacing once Home rebuild starts: founder spotlight and "our story" content (§5.1) is static/code-owned per `project-requirements.md`, not DB-backed — need the real bio/stats facts from the user before writing that section, rather than shipping placeholder copy that looks like real content.

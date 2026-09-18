@@ -7,6 +7,7 @@
 - **Dark-first, light-available.** Default to system preference; both themes must be fully designed, not just inverted colors — verify contrast and shadow legibility in each explicitly.
 - **Evidence over decoration.** Every major section should be anchored by something real: a product screenshot, a named client, a specific stat, a verifiable link — not abstract icon illustrations standing in for proof.
 - **Restrained motion.** Fade/slide-up on scroll-into-view for section content (once, not on every scroll), smooth hover states, an auto-scrolling logo/tech marquee. No parallax gimmicks, no bouncing icons.
+- **"No cartoonish gradients" means no loud, high-saturation, multi-hue gradients used as decoration for its own sake** (rainbow blends, novelty-app color washes). It does not forbid a subtle, low-opacity (roughly 5–10%) radial glow in the existing `--color-brand`/`--color-accent` tokens behind a hero section, used once, with no hard visible edge — that's restrained use of the existing palette, not a decorative gradient. When in doubt: if it could read as a brand color choice, it's fine; if it looks like a gradient generator's default output, it isn't.
 
 ## 2. Layout
 

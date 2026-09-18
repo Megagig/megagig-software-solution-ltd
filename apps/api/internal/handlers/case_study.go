@@ -51,6 +51,60 @@ func (h *CaseStudyHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// ListPublished returns a paginated list of published case studies
+// (public, unauthenticated) — apps/web's case-study grid and Home's
+// preview/selected-work sections. Unlike List, "published" is not a
+// client-controlled filter here: it's always true, never client-set,
+// per architecture.md rule #10.
+func (h *CaseStudyHandler) ListPublished(c *gin.Context) {
+	query := h.DB.Model(&models.CaseStudy{}).Preload("HeroImage").Preload("Testimonial").Where("published = ?", true)
+
+	res, err := paginate.List[models.CaseStudy](
+		query,
+		paginate.Bind(c),
+		paginate.Config{
+			Searchable:   []string{"slug", "client_name", "tagline"},
+			Sortable:     map[string]bool{"sort_order": true, "created_at": true},
+			DefaultSort:  "sort_order",
+			DefaultOrder: "asc",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"code":    "INTERNAL_ERROR",
+				"message": "Failed to fetch case studies",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, res)
+}
+
+// GetBySlug returns a single published case study by slug (public,
+// unauthenticated) — apps/web's /case-study/[slug] detail page.
+func (h *CaseStudyHandler) GetBySlug(c *gin.Context) {
+	slug := c.Param("slug")
+
+	var item models.CaseStudy
+	if err := h.DB.Preload("HeroImage").Preload("Testimonial").
+		Where("slug = ? AND published = ?", slug, true).
+		First(&item).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": gin.H{
+				"code":    "NOT_FOUND",
+				"message": "CaseStudy not found",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, gin.H{"data": item})
+}
+
 // Export streams the full filtered list as CSV (default) or XLSX.
 // Honours the same search/filter query params as List but skips
 // pagination — you get every matching row in one file.

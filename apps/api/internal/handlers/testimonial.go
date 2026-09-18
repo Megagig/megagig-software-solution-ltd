@@ -45,6 +45,36 @@ func (h *TestimonialHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// ListPublished returns a paginated list of published testimonials
+// (public, unauthenticated) — apps/web's testimonials carousel on Home.
+// No GetBySlug: Testimonial has no slug field and no detail page.
+func (h *TestimonialHandler) ListPublished(c *gin.Context) {
+	query := h.DB.Model(&models.Testimonial{}).Preload("Avatar").Preload("CaseStudy").Where("published = ?", true)
+
+	res, err := paginate.List[models.Testimonial](
+		query,
+		paginate.Bind(c),
+		paginate.Config{
+			Searchable:   []string{"quote_text", "author_name", "company_name"},
+			Sortable:     map[string]bool{"sort_order": true, "created_at": true},
+			DefaultSort:  "sort_order",
+			DefaultOrder: "asc",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"code":    "INTERNAL_ERROR",
+				"message": "Failed to fetch testimonials",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, res)
+}
+
 // Export streams the full filtered list as CSV (default) or XLSX.
 // Honours the same search/filter query params as List but skips
 // pagination — you get every matching row in one file.

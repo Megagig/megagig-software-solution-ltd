@@ -51,6 +51,59 @@ func (h *ProductHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// ListPublished returns a paginated list of published products (public,
+// unauthenticated) — apps/web's products section on Home and the
+// /products index. Unlike List, "published" is always true here, never
+// client-controlled, per architecture.md rule #10.
+func (h *ProductHandler) ListPublished(c *gin.Context) {
+	query := h.DB.Model(&models.Product{}).Preload("Screenshots").Where("published = ?", true)
+
+	res, err := paginate.List[models.Product](
+		query,
+		paginate.Bind(c),
+		paginate.Config{
+			Searchable:   []string{"slug", "name", "tagline"},
+			Sortable:     map[string]bool{"sort_order": true, "created_at": true},
+			DefaultSort:  "sort_order",
+			DefaultOrder: "asc",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"code":    "INTERNAL_ERROR",
+				"message": "Failed to fetch products",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, res)
+}
+
+// GetBySlug returns a single published product by slug (public,
+// unauthenticated) — apps/web's /product/[slug] detail page.
+func (h *ProductHandler) GetBySlug(c *gin.Context) {
+	slug := c.Param("slug")
+
+	var item models.Product
+	if err := h.DB.Preload("Screenshots").
+		Where("slug = ? AND published = ?", slug, true).
+		First(&item).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": gin.H{
+				"code":    "NOT_FOUND",
+				"message": "Product not found",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, gin.H{"data": item})
+}
+
 // Export streams the full filtered list as CSV (default) or XLSX.
 // Honours the same search/filter query params as List but skips
 // pagination — you get every matching row in one file.

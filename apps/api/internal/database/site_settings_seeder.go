@@ -39,9 +39,9 @@ func SeedSiteSettings(db *gorm.DB) error {
 	})
 
 	settings := models.SiteSettings{
-		ContactEmail:   "hello@megagig-software-solution.dev",
-		ContactPhone:   "+234 000 000 0000",
-		WhatsAppNumber: "2340000000000",
+		ContactEmail:   "admin@megagigsoftwaresolution.com.ng",
+		ContactPhone:   "+2348060374755",
+		WhatsAppNumber: "2348060374755",
 		Address:        "Lagos, Nigeria",
 		SocialLinks:    socialLinks,
 		HeroHeadline:   "We build software your team actually adopts",

@@ -51,7 +51,7 @@ export function Navbar() {
           : "border-transparent bg-transparent"
       )}
     >
-      <div className="mx-auto flex h-16 max-w-[--space-container-max] items-center justify-between px-[--space-container-x]">
+      <div className="mx-auto flex h-16 max-w-(--space-container-max) items-center justify-between px-(--space-container-x)">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand/15 border border-brand/20">
             <span className="text-brand font-mono font-bold text-sm">
@@ -99,7 +99,7 @@ export function Navbar() {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border/50 bg-surface/95 backdrop-blur-lg">
-          <div className="mx-auto max-w-[--space-container-max] px-[--space-container-x] py-4 flex flex-col gap-3">
+          <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-4 flex flex-col gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

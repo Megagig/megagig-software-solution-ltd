@@ -5,6 +5,11 @@ interface SectionHeadingProps {
   title: string;
   subhead?: string;
   align?: "left" | "center";
+  /** For a section with a hardcoded dark panel background (e.g.
+   * FeaturedProjects) that doesn't follow the site's own light/dark theme
+   * token — swaps title/subhead to explicit white so they stay legible
+   * against that fixed dark bg regardless of the site's active theme. */
+  invert?: boolean;
   className?: string;
 }
 
@@ -15,6 +20,7 @@ export function SectionHeading({
   title,
   subhead,
   align = "left",
+  invert = false,
   className,
 }: SectionHeadingProps) {
   const centered = align === "center";
@@ -26,13 +32,19 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+      <h2
+        className={cn(
+          "text-3xl font-bold tracking-tight md:text-4xl",
+          invert ? "text-white" : "text-foreground"
+        )}
+      >
         {title}
       </h2>
       {subhead && (
         <p
           className={cn(
-            "mt-4 max-w-[65ch] text-lg text-foreground-muted",
+            "mt-4 max-w-[65ch] text-lg",
+            invert ? "text-white/60" : "text-foreground-muted",
             centered && "mx-auto"
           )}
         >

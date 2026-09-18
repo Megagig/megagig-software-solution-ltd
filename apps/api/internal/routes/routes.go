@@ -529,6 +529,21 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		blogs.GET("/:slug", blogHandler.GetBySlug)
 	}
 
+	// Public, published-only routes for apps/web (no auth required).
+	// Namespaced under /public/* rather than reusing the bare resource
+	// path — CaseStudy/Product/Testimonial/FAQ's protected CRUD (below,
+	// under `protected`) already occupies the bare path, unlike Blog's,
+	// which was free because Blog's admin CRUD lives under /admin/blogs/*.
+	public := v1.Group("/public")
+	{
+		public.GET("/case-studies", caseStudyHandler.ListPublished)
+		public.GET("/case-studies/:slug", caseStudyHandler.GetBySlug)
+		public.GET("/products", productHandler.ListPublished)
+		public.GET("/products/:slug", productHandler.GetBySlug)
+		public.GET("/testimonials", testimonialHandler.ListPublished)
+		public.GET("/faqs", fAQHandler.ListPublished)
+	}
+
 	// Public site settings (no auth required) — contact info, hero copy,
 	// pricing blurbs read by apps/web. Writes are admin-only, see below.
 	v1.GET("/site-settings", siteSettingsHandler.Get)
