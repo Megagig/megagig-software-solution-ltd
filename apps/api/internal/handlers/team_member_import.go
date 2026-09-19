@@ -237,19 +237,17 @@ func (h *TeamMemberHandler) runImportTeamMember(jobID, tmpPath string) {
 		if v, ok := get(rec, "role"); ok {
 			item.Role = v
 		}
-		if v, ok := get(rec, "photo"); ok && v != "" {
-			var rel models.Upload
-			if err := h.DB.Where("filename = ?", v).First(&rel).Error; err != nil {
-				rel = models.Upload{Filename: v}
-				h.DB.Create(&rel)
-			}
-			item.PhotoID = rel.ID
+		if v, ok := get(rec, "photo_url"); ok {
+			item.PhotoURL = v
 		}
 		if v, ok := get(rec, "linkedin_url"); ok {
 			item.LinkedinURL = v
 		}
 		if v, ok := get(rec, "github_url"); ok {
 			item.GithubURL = v
+		}
+		if v, ok := get(rec, "twitter_url"); ok {
+			item.TwitterURL = v
 		}
 		if v, ok := get(rec, "published"); ok {
 			item.Published = v == "true" || v == "1" || v == "yes"
@@ -276,5 +274,5 @@ func (h *TeamMemberHandler) runImportTeamMember(jobID, tmpPath string) {
 func (h *TeamMemberHandler) Template(c *gin.Context) {
 	c.Header("Content-Type", "text/csv")
 	c.Header("Content-Disposition", `attachment; filename="team-members-template.csv"`)
-	c.String(http.StatusOK, "name,role,photo,linkedin_url,github_url,published,sort_order\n")
+	c.String(http.StatusOK, "name,role,photo_url,linkedin_url,github_url,twitter_url,published,sort_order\n")
 }

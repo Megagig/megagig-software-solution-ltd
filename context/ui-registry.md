@@ -104,6 +104,14 @@ Testimonial block reuses `TestimonialsCarousel`'s exact inner markup (quote, aut
 
 Every pricing card (Home's `PricingTeaser`, the full `/pricing` page) now links its primary "Get a Quote →" action straight to `/start-project?service=<slug>`, replacing "Custom quote" as the prominent text — per explicit user request that clicking a pricing category should let a visitor jump straight into requesting a quote. "See what's included →" remains as a smaller secondary link to the matching `/services/[slug]` page.
 
+## Team page (Phase 4.8, shipped)
+
+| Route | Purpose | Notes |
+|---|---|---|
+| `/team` | Icon-chip hero (mission line, location pill, stats), optional founding story, centred grid of published team members, quote CTA band | Admin-managed (`TeamMember`, `Stat`, `SiteSettings` mission/address/founding story; ISR revalidate 60). Redesigned 2026-09-19 against a user-supplied reference (an About page with an icon-chip headline and a people section), adapted to Nigeria. Every optional block hides when its data is empty; empty state when no member is published |
+
+Components colocated in `team/_components/` until a second page needs them: `TeamHero` (headline with three tinted `rounded-full` icon chips — Users / Code2 / Sparkles — inline in the h1 and scaling `h-9`→`md:h-14`; faint dot grid masked toward the edges over Home's low-opacity brand/accent glow, all token colors via `color-mix`/`var`; location `MapPin` pill; primary "Start a project" + secondary "Meet the team" (`#team`) buttons; `StatsRow`), `TeamStory` (centred `SectionHeading` + paragraphs; hidden when `founding_story` is empty), and `TeamMemberCard` (`rounded-2xl` `<article>` with a `from-brand/15 via-brand/5 to-accent/15` wash, a circular `h-32 sm:h-36` portrait with `ring-4 ring-surface-raised` inside a dashed `border-brand/40` orbit ring that rotates 45° on hover, name, `Badge variant="brand"` role pill, then a `border-t` row of icon-only round GitHub/LinkedIn/X buttons with `aria-label="{name} on {network}"`, rendered only for links that are set; hover lifts `-translate-y-1`; `object-top` portrait or an initials fallback). The grid is a **flex-wrap, centred** row with fixed column widths (`sm` 2-up, `lg` 4-up) so an odd member count stays centred. Shared `lib/text.ts` `splitParagraphs()` now feeds `FounderSpotlight`, `AboutStory` and `TeamStory`.
+
 ## About page (Phase 4.7, shipped)
 
 | Route | Purpose | Notes |

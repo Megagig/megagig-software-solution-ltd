@@ -22,14 +22,14 @@ type TeamMemberHandler struct {
 
 // List returns a paginated list of team_members.
 func (h *TeamMemberHandler) List(c *gin.Context) {
-	query := h.DB.Model(&models.TeamMember{}).Preload("Photo")
+	query := h.DB.Model(&models.TeamMember{})
 
 	res, err := paginate.List[models.TeamMember](
 		query,
-		paginate.Bind(c).With("photo_id", c.Query("photo_id")),
+		paginate.Bind(c),
 		paginate.Config{
-			Searchable: []string{"name", "role", "linkedin_url", "github_url"},
-			Sortable:   map[string]bool{"id": true, "created_at": true, "name": true, "role": true, "linkedin_url": true, "github_url": true, "sort_order": true},
+			Searchable: []string{"name", "role"},
+			Sortable:   map[string]bool{"id": true, "created_at": true, "name": true, "role": true, "sort_order": true},
 		},
 	)
 	if err != nil {
@@ -42,6 +42,35 @@ func (h *TeamMemberHandler) List(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, res)
+}
+
+// ListPublished returns published team members in curated order (public,
+// unauthenticated) — apps/web's /team page.
+func (h *TeamMemberHandler) ListPublished(c *gin.Context) {
+	query := h.DB.Model(&models.TeamMember{}).Where("published = ?", true)
+
+	res, err := paginate.List[models.TeamMember](
+		query,
+		paginate.Bind(c),
+		paginate.Config{
+			Searchable:   []string{"name", "role"},
+			Sortable:     map[string]bool{"sort_order": true, "created_at": true},
+			DefaultSort:  "sort_order",
+			DefaultOrder: "asc",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"code":    "INTERNAL_ERROR",
+				"message": "Failed to fetch team members",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
 	c.JSON(http.StatusOK, res)
 }
 
@@ -63,10 +92,10 @@ func (h *TeamMemberHandler) Export(c *gin.Context) {
 	format := c.DefaultQuery("format", "csv")
 	search := c.Query("search")
 
-	query := h.DB.Model(&models.TeamMember{}).Preload("Photo").Order("created_at desc")
-	if search != "" && len([]string{"name", "role", "linkedin_url", "github_url"}) > 0 {
+	query := h.DB.Model(&models.TeamMember{}).Order("created_at desc")
+	if search != "" && len([]string{"name", "role"}) > 0 {
 		// Reuse the same searchable columns as List.
-		searchable := []string{"name", "role", "linkedin_url", "github_url"}
+		searchable := []string{"name", "role"}
 		clause := ""
 		args := []any{}
 		wild := "%" + search + "%"
@@ -86,8 +115,10 @@ func (h *TeamMemberHandler) Export(c *gin.Context) {
 			{Header: "ID", Field: "ID"},
 			{Header: "Name", Field: "Name"},
 			{Header: "Role", Field: "Role"},
+			{Header: "PhotoURL", Field: "PhotoURL"},
 			{Header: "LinkedinURL", Field: "LinkedinURL"},
 			{Header: "GithubURL", Field: "GithubURL"},
+			{Header: "TwitterURL", Field: "TwitterURL"},
 			{Header: "Published", Field: "Published", Format: "bool"},
 			{Header: "SortOrder", Field: "SortOrder"},
 			{Header: "Created At", Field: "CreatedAt", Format: "date:2006-01-02"},
@@ -159,7 +190,7 @@ func (h *TeamMemberHandler) GetByID(c *gin.Context) {
 	id := c.Param("id")
 
 	var item models.TeamMember
-	if err := h.DB.Preload("Photo").First(&item, "id = ?", id).Error; err != nil {
+	if err := h.DB.First(&item, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": gin.H{
 				"code":    "NOT_FOUND",
@@ -182,7 +213,7 @@ func (h *TeamMemberHandler) PDF(c *gin.Context) {
 	id := c.Param("id")
 
 	var item models.TeamMember
-	if err := h.DB.Preload("Photo").First(&item, "id = ?", id).Error; err != nil {
+	if err := h.DB.First(&item, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": gin.H{
 				"code":    "NOT_FOUND",
@@ -205,9 +236,10 @@ func (h *TeamMemberHandler) PDF(c *gin.Context) {
 		Fields: []pdf.Field{
 			{Label: "Name", Value: pdf.Value(item.Name)},
 			{Label: "Role", Value: pdf.Value(item.Role)},
-			{Label: "Photo I D", Value: pdf.Display(item.Photo)},
-			{Label: "Linkedin U R L", Value: pdf.Value(item.LinkedinURL)},
-			{Label: "Github U R L", Value: pdf.Value(item.GithubURL)},
+			{Label: "Photo URL", Value: pdf.Value(item.PhotoURL)},
+			{Label: "LinkedIn URL", Value: pdf.Value(item.LinkedinURL)},
+			{Label: "GitHub URL", Value: pdf.Value(item.GithubURL)},
+			{Label: "X URL", Value: pdf.Value(item.TwitterURL)},
 			{Label: "Published", Value: pdf.Value(item.Published)},
 			{Label: "Sort Order", Value: pdf.Value(item.SortOrder)},
 			{Label: "Created", Value: pdf.Value(item.CreatedAt)},
@@ -235,9 +267,10 @@ func (h *TeamMemberHandler) Create(c *gin.Context) {
 	var req struct {
 		Name        string `json:"name" binding:"required"`
 		Role        string `json:"role" binding:"required"`
-		PhotoID     string `json:"photo_id" binding:"required"`
-		LinkedinURL string `json:"linkedin_url" binding:"required"`
-		GithubURL   string `json:"github_url" binding:"required"`
+		PhotoURL    string `json:"photo_url"`
+		LinkedinURL string `json:"linkedin_url"`
+		GithubURL   string `json:"github_url"`
+		TwitterURL  string `json:"twitter_url"`
 		Published   bool   `json:"published"`
 		SortOrder   int    `json:"sort_order"`
 	}
@@ -255,9 +288,10 @@ func (h *TeamMemberHandler) Create(c *gin.Context) {
 	item := models.TeamMember{
 		Name:        req.Name,
 		Role:        req.Role,
-		PhotoID:     req.PhotoID,
+		PhotoURL:    req.PhotoURL,
 		LinkedinURL: req.LinkedinURL,
 		GithubURL:   req.GithubURL,
+		TwitterURL:  req.TwitterURL,
 		Published:   req.Published,
 		SortOrder:   req.SortOrder,
 	}
@@ -272,7 +306,7 @@ func (h *TeamMemberHandler) Create(c *gin.Context) {
 		return
 	}
 
-	h.DB.Preload("Photo").First(&item, "id = ?", item.ID)
+	h.DB.First(&item, "id = ?", item.ID)
 
 	services.LogCreate(h.DB, c, "TeamMember", item.Name, item.ID, "")
 
@@ -300,9 +334,10 @@ func (h *TeamMemberHandler) Update(c *gin.Context) {
 	var req struct {
 		Name        string  `json:"name"`
 		Role        string  `json:"role"`
-		PhotoID     *string `json:"photo_id"`
-		LinkedinURL string  `json:"linkedin_url"`
-		GithubURL   string  `json:"github_url"`
+		PhotoURL    *string `json:"photo_url"`
+		LinkedinURL *string `json:"linkedin_url"`
+		GithubURL   *string `json:"github_url"`
+		TwitterURL  *string `json:"twitter_url"`
 		Published   *bool   `json:"published"`
 		SortOrder   *int    `json:"sort_order"`
 	}
@@ -324,14 +359,18 @@ func (h *TeamMemberHandler) Update(c *gin.Context) {
 	if req.Role != "" {
 		updates["role"] = req.Role
 	}
-	if req.PhotoID != nil {
-		updates["photo_id"] = *req.PhotoID
+	// Pointers so an admin can clear a photo or a social link.
+	if req.PhotoURL != nil {
+		updates["photo_url"] = *req.PhotoURL
 	}
-	if req.LinkedinURL != "" {
-		updates["linkedin_url"] = req.LinkedinURL
+	if req.LinkedinURL != nil {
+		updates["linkedin_url"] = *req.LinkedinURL
 	}
-	if req.GithubURL != "" {
-		updates["github_url"] = req.GithubURL
+	if req.GithubURL != nil {
+		updates["github_url"] = *req.GithubURL
+	}
+	if req.TwitterURL != nil {
+		updates["twitter_url"] = *req.TwitterURL
 	}
 	if req.Published != nil {
 		updates["published"] = *req.Published
@@ -350,7 +389,7 @@ func (h *TeamMemberHandler) Update(c *gin.Context) {
 		return
 	}
 
-	h.DB.Preload("Photo").First(&item, "id = ?", item.ID)
+	h.DB.First(&item, "id = ?", item.ID)
 
 	services.LogUpdate(h.DB, c, "TeamMember", item.Name, item.ID, services.DiffSummary(updates))
 
@@ -395,9 +434,10 @@ func (h *TeamMemberHandler) Patch(c *gin.Context) {
 	allowed := map[string]bool{
 		"name":         true,
 		"role":         true,
-		"photo_id":     true,
+		"photo_url":    true,
 		"linkedin_url": true,
 		"github_url":   true,
+		"twitter_url":  true,
 		"published":    true,
 		"sort_order":   true,
 	}
@@ -426,7 +466,7 @@ func (h *TeamMemberHandler) Patch(c *gin.Context) {
 		})
 		return
 	}
-	h.DB.Preload("Photo").First(&item, "id = ?", item.ID)
+	h.DB.First(&item, "id = ?", item.ID)
 
 	services.LogUpdate(h.DB, c, "TeamMember", item.Name, item.ID, services.DiffSummary(updates))
 

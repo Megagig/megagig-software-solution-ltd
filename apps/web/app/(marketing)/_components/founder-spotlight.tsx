@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import type { SiteSettings } from "@repo/shared/types";
 import { Button } from "@/components/ui/button";
+import { splitParagraphs } from "@/lib/text";
 
 type FounderSettings = Pick<
   SiteSettings,
@@ -14,13 +15,6 @@ type FounderSettings = Pick<
   | "founder_linkedin_url"
   | "founder_twitter_url"
 >;
-
-function splitParagraphs(bio: string): string[] {
-  return bio
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-}
 
 /** True when there is anything to show — pages use this to decide the
  * section's position (and so its background tone) before rendering it. */

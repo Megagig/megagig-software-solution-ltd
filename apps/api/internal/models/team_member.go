@@ -8,15 +8,19 @@ import (
 	"megagig-software-solution/apps/api/internal/ids"
 )
 
-// TeamMember represents a teammember in the system.
+// TeamMember is a person shown on /team (and a Blog author). PhotoURL is a
+// plain URL/path — an uploaded file or a static asset — rather than an
+// Upload relation, so photos can be seeded from apps/web/public and replaced
+// through the admin's image upload zone. Every social link is optional; the
+// public site renders a button only for the ones that are set.
 type TeamMember struct {
 	ID          string         `gorm:"primarykey;size:36" json:"id"`
 	Name        string         `gorm:"size:255" json:"name" binding:"required"`
 	Role        string         `gorm:"size:255" json:"role" binding:"required"`
-	PhotoID     string         `gorm:"size:36;index" json:"photo_id" binding:"required"`
-	Photo       Upload         `gorm:"foreignKey:PhotoID" json:"photo"`
-	LinkedinURL string         `gorm:"size:500" json:"linkedin_url" binding:"required"`
-	GithubURL   string         `gorm:"size:500" json:"github_url" binding:"required"`
+	PhotoURL    string         `gorm:"size:500" json:"photo_url"`
+	LinkedinURL string         `gorm:"size:500" json:"linkedin_url"`
+	GithubURL   string         `gorm:"size:500" json:"github_url"`
+	TwitterURL  string         `gorm:"size:500" json:"twitter_url"`
 	Published   bool           `json:"published"`
 	SortOrder   int            `json:"sort_order"`
 	Version     int            `gorm:"not null;default:1" json:"version"`

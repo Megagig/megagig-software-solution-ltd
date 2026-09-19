@@ -36,7 +36,7 @@ func (s *TeamMemberService) List(params TeamMemberListParams) ([]models.TeamMemb
 	}
 	// SortBy is interpolated into ORDER BY below, so it MUST be whitelisted
 	// against real columns — never trust a client-supplied sort column.
-	sortableTeamMember := map[string]bool{"id": true, "created_at": true, "updated_at": true, "name": true, "role": true, "photo_id": true, "linkedin_url": true, "github_url": true, "published": true, "sort_order": true}
+	sortableTeamMember := map[string]bool{"id": true, "created_at": true, "updated_at": true, "name": true, "role": true, "photo_url": true, "linkedin_url": true, "github_url": true, "twitter_url": true, "published": true, "sort_order": true}
 	if !sortableTeamMember[params.SortBy] {
 		params.SortBy = "created_at"
 	}
@@ -44,7 +44,7 @@ func (s *TeamMemberService) List(params TeamMemberListParams) ([]models.TeamMemb
 	query := s.DB.Model(&models.TeamMember{})
 
 	if params.Search != "" {
-		query = query.Where("name ILIKE ? OR role ILIKE ? OR photo_id ILIKE ? OR linkedin_url ILIKE ? OR github_url ILIKE ?", "%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%", "%"+params.Search+"%")
+		query = query.Where("name ILIKE ? OR role ILIKE ?", "%"+params.Search+"%", "%"+params.Search+"%")
 	}
 
 	var total int64

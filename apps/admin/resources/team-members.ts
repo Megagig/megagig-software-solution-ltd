@@ -5,15 +5,14 @@ export const teamMemberResource = defineResource({
   slug: "team-members",
   endpoint: "/api/team_members",
   icon: "UsersRound",
-  label: { singular: "TeamMember", plural: "TeamMembers" },
+  label: { singular: "Team member", plural: "Team members" },
   table: {
     columns: [
       // grit:cols:auto-start
       { key: "name", label: "Name", sortable: true, searchable: true, onClick: "link" },
       { key: "role", label: "Role", sortable: true, searchable: true },
-      { key: "photo.original_name", label: "Photo" },
-      { key: "linkedin_url", label: "Linkedin U R L", sortable: true, searchable: true },
-      { key: "github_url", label: "Github U R L", sortable: true, searchable: true },
+      { key: "photo_url", label: "Photo", format: "image" },
+      { key: "github_url", label: "GitHub" },
       { key: "published", label: "Published", format: "boolean" },
       { key: "sort_order", label: "Sort Order", sortable: true },
       { key: "created_at", label: "Created", sortable: true, format: "relative" },
@@ -22,7 +21,8 @@ export const teamMemberResource = defineResource({
     filters: [
     { key: "published", label: "Published", type: "boolean" },
     ],
-    defaultSort: { key: "created_at", direction: "desc" },
+    // Curated order — the same sort_order the public /team page uses.
+    defaultSort: { key: "sort_order", direction: "asc" },
     searchable: true,
     pageSize: 20,
   },
@@ -31,11 +31,12 @@ export const teamMemberResource = defineResource({
       // grit:fields:auto-start
     { key: "name", label: "Name", type: "text", required: true },
     { key: "role", label: "Role", type: "text", required: true },
-    { key: "photo_id", label: "Photo", type: "relationship-select", required: true, relatedEndpoint: "/api/uploads", displayField: "original_name" },
-    { key: "linkedin_url", label: "Linkedin U R L", type: "text", required: true },
-    { key: "github_url", label: "Github U R L", type: "text", required: true },
-    { key: "published", label: "Published", type: "toggle" },
-    { key: "sort_order", label: "Sort Order", type: "number", numberKind: "int" },
+    { key: "photo_url", label: "Photo", type: "image", description: "Square portrait works best." },
+    { key: "linkedin_url", label: "LinkedIn URL", type: "text", description: "Optional — leave blank to hide the button." },
+    { key: "github_url", label: "GitHub URL", type: "text", description: "Optional — leave blank to hide the button." },
+    { key: "twitter_url", label: "X / Twitter URL", type: "text", description: "Optional — leave blank to hide the button." },
+    { key: "published", label: "Published", type: "toggle", description: "Unpublished members are hidden from the public /team page." },
+    { key: "sort_order", label: "Sort Order", type: "number", numberKind: "int", description: "Lowest first." },
       // grit:fields:auto-end
     ],
   },

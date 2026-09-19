@@ -90,7 +90,7 @@ Nigerian SMEs default to WhatsApp-only sales and generic global SaaS (QuickBooks
 
 ### 5.8 About (`/about-us`), Team (`/team`), Careers (`/careers`), Brand (`/brand`)
 - About: founding story, mission, stats — **all admin-managed, nothing hard-coded** (decided 2026-09-19, overriding the earlier "static for v1" scope). Sections: hero (mission + "Since {founded year}"), founding story (optional), stats, values, timeline milestones, founder spotlight, how-we-work steps, and a products + case-study proof strip, then the quote CTA band. Every section renders only when it has published content. Home's Our Story / Founder spotlight / Closing CTA and `/pricing`'s stats row read the same data.
-- Team: grid of team member cards (photo, name, role, socials) — admin-managed resource.
+- Team: grid of team member cards (photo, name, role, socials) — admin-managed resource. Socials are GitHub, LinkedIn and X, each optional (a button renders only when set); the page shows a short empty state when no member is published.
 - Careers: open roles list (admin-managed resource) + a "no open roles right now, but send your CV" fallback state.
 - Brand: logo download links, color/usage guidelines (mirrors ui-tokens.md content in a public-friendly format) — static page, v2/nice-to-have.
 
@@ -114,7 +114,7 @@ Resources managed via `defineResource()` + generated DataTable/FormBuilder pages
 - **CaseStudies** — client name, slug, category tags, status badge, hero image, problem/build/result rich text, tech stack tags, testimonial link, published flag, sort order.
 - **Products** — Megagig's own products (name, slug, description, feature bullets, live URL, docs URL, screenshot(s), published flag).
 - **Testimonials** — quote text, author name, author role, company name, company URL, avatar, linked case study (optional), published flag.
-- **TeamMembers** — name, role, photo, socials, sort order, published flag.
+- **TeamMembers** — name, role, `photo_url` (a plain URL/path set through the admin image upload zone, not an `Upload` relation), optional LinkedIn/GitHub/X URLs, sort order, published flag.
 - **JobOpenings** — title, department, location, employment type, description, apply link/email, open/closed flag.
 - **BlogPosts** — full CMS fields as in §5.9, plus draft/published state and scheduled publish date (v2).
 - **FAQs** — question, answer, sort order, published flag.

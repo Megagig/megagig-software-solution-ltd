@@ -1,13 +1,11 @@
 import { SectionHeading } from "@/components/ui/section-heading";
+import { splitParagraphs } from "@/lib/text";
 import { AboutSection, type SectionTone } from "./about-section";
 
 // Founding story — admin-managed long-form text (SiteSettings
 // founding_story). Paragraphs are separated by a blank line.
 export function AboutStory({ story, tone }: { story: string; tone: SectionTone }) {
-  const paragraphs = story
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
+  const paragraphs = splitParagraphs(story);
   if (paragraphs.length === 0) return null;
 
   return (

@@ -26,6 +26,10 @@ func Seed(db *gorm.DB) error {
 		return fmt.Errorf("seeding about content: %w", err)
 	}
 
+	if err := SeedTeam(db); err != nil {
+		return fmt.Errorf("seeding team: %w", err)
+	}
+
 	if err := SeedDemoContent(db); err != nil {
 		return fmt.Errorf("seeding demo content: %w", err)
 	}

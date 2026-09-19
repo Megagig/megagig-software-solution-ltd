@@ -54,7 +54,7 @@ func seedAboutSettings(db *gorm.DB) error {
 			"exceed tools like QuickBooks and FreshBooks for the local market. I work the full stack — from the database " +
 			"and API up through the desktop, web, and mobile clients that ship to real users.\n\n" +
 			"My focus with Megagig is simple: build software teams actually adopt, not software that looks good in a pitch deck.",
-		"founder_photo_url":    "/profile.jfif",
+		"founder_photo_url":    "/founderProfile.jfif",
 		"founder_github_url":   "https://github.com/Megagig",
 		"founder_linkedin_url": "https://www.linkedin.com/in/obi-anthony/",
 		"founder_twitter_url":  "https://x.com/megagigsolution",
