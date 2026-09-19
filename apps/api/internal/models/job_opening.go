@@ -16,7 +16,7 @@ type JobOpening struct {
 	Location       string         `gorm:"size:255" json:"location" binding:"required"`
 	EmploymentType string         `gorm:"size:255" json:"employment_type" binding:"required"`
 	Description    string         `gorm:"type:text" json:"description"`
-	ApplyURL       string         `gorm:"size:500" json:"apply_url" binding:"required"`
+	ApplyURL       string         `gorm:"size:500" json:"apply_url"`
 	IsOpen         bool           `json:"is_open"`
 	Version        int            `gorm:"not null;default:1" json:"version"`
 	CreatedAt      time.Time      `json:"created_at"`

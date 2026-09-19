@@ -1,6 +1,6 @@
 import type { AboutItem } from "@repo/shared/types";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { AboutSection, type SectionTone } from "./about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 
 // Admin-managed timeline (AboutItem kind="milestone"). Order is the admin's
 // sort_order, not parsed from the label — the label is free text like
@@ -9,7 +9,7 @@ export function Timeline({ milestones, tone }: { milestones: AboutItem[]; tone: 
   if (milestones.length === 0) return null;
 
   return (
-    <AboutSection tone={tone}>
+    <PageSection tone={tone}>
       <SectionHeading eyebrow="Our journey" title="Milestones" align="center" />
       <ol className="mx-auto mt-10 max-w-2xl border-l border-border">
         {milestones.map((milestone) => (
@@ -26,6 +26,6 @@ export function Timeline({ milestones, tone }: { milestones: AboutItem[]; tone: 
           </li>
         ))}
       </ol>
-    </AboutSection>
+    </PageSection>
   );
 }

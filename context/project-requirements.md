@@ -92,7 +92,7 @@ Nigerian SMEs default to WhatsApp-only sales and generic global SaaS (QuickBooks
 ### 5.8 About (`/about-us`), Team (`/team`), Careers (`/careers`), Brand (`/brand`)
 - About: founding story, mission, stats — **all admin-managed, nothing hard-coded** (decided 2026-09-19, overriding the earlier "static for v1" scope). Sections: hero (mission + "Since {founded year}"), founding story (optional), stats, values, timeline milestones, founder spotlight, how-we-work steps, and a products + case-study proof strip, then the quote CTA band. Every section renders only when it has published content. Home's Our Story / Founder spotlight / Closing CTA and `/pricing`'s stats row read the same data.
 - Team: grid of team member cards (photo, name, role, socials) — admin-managed resource. Socials are GitHub, LinkedIn and X, each optional (a button renders only when set); the page shows a short empty state when no member is published.
-- Careers: open roles list (admin-managed resource) + a "no open roles right now, but send your CV" fallback state.
+- Careers: open roles list (admin-managed resource) + a "no open roles right now, but send your CV" fallback state. Roles expand in place (no per-role page); "Apply" goes to the role's own link or, when blank, the general CV email; "send your CV" is a `mailto:` to the Site Settings contact email (no upload — see §7). Includes an admin-managed values block and a link to the IT training & internships service.
 - Brand: logo download links, color/usage guidelines (mirrors ui-tokens.md content in a public-friendly format) — static page, v2/nice-to-have.
 
 ### 5.9 Blog (`/blog`, `/blog/[slug]`)
@@ -116,7 +116,7 @@ Resources managed via `defineResource()` + generated DataTable/FormBuilder pages
 - **Products** — Megagig's own products (name, slug, description, feature bullets, live URL, docs URL, screenshot(s), published flag).
 - **Testimonials** — quote text, author name, author role, company name, company URL, avatar, linked case study (optional), published flag.
 - **TeamMembers** — name, role, `photo_url` (a plain URL/path set through the admin image upload zone, not an `Upload` relation), optional LinkedIn/GitHub/X URLs, sort order, published flag.
-- **JobOpenings** — title, department, location, employment type, description, apply link/email, open/closed flag.
+- **JobOpenings** — title, department, location, employment type (Full-time / Part-time / Contract / Internship), description, optional apply link/email (blank = general CV email), open/closed flag (the publish switch).
 - **BlogPosts** — full CMS fields as in §5.9, plus draft/published state and scheduled publish date (v2).
 - **FAQs** — question, answer, sort order, published flag.
 - **SiteSettings** — singleton resource: contact email/phone/WhatsApp number, social links, pricing-category blurbs, hero headline/subhead, plus the About & founder copy (mission statement, founded year, founding story, founder name/role/quote/bio/photo/links) so copy tweaks don't need a deploy.

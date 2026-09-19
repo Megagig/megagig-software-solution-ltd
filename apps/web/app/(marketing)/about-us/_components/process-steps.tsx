@@ -1,6 +1,6 @@
 import type { AboutItem } from "@repo/shared/types";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { AboutSection, type SectionTone } from "./about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 
 // Admin-managed "how we work" steps (AboutItem kind="step"). Numbered
 // 01, 02, 03… from their sort position — the same large pale numeral
@@ -9,7 +9,7 @@ export function ProcessSteps({ steps, tone }: { steps: AboutItem[]; tone: Sectio
   if (steps.length === 0) return null;
 
   return (
-    <AboutSection tone={tone}>
+    <PageSection tone={tone}>
       <SectionHeading eyebrow="Our process" title="How we work" align="center" />
       <ol className="mx-auto mt-10 max-w-3xl space-y-10">
         {steps.map((step, index) => (
@@ -26,6 +26,6 @@ export function ProcessSteps({ steps, tone }: { steps: AboutItem[]; tone: Sectio
           </li>
         ))}
       </ol>
-    </AboutSection>
+    </PageSection>
   );
 }

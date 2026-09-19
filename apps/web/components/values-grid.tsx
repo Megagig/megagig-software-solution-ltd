@@ -1,7 +1,7 @@
 import type { AboutItem } from "@repo/shared/types";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { AboutSection, type SectionTone } from "./about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 
 // Admin-managed values (AboutItem kind="value"). Plain cards, no icons —
 // an icon per value would need a hard-coded name-to-icon lookup, which
@@ -10,7 +10,7 @@ export function ValuesGrid({ values, tone }: { values: AboutItem[]; tone: Sectio
   if (values.length === 0) return null;
 
   return (
-    <AboutSection tone={tone}>
+    <PageSection tone={tone}>
       <SectionHeading eyebrow="What we stand for" title="Our values" align="center" />
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {values.map((value) => (
@@ -21,6 +21,6 @@ export function ValuesGrid({ values, tone }: { values: AboutItem[]; tone: Sectio
           </Card>
         ))}
       </div>
-    </AboutSection>
+    </PageSection>
   );
 }

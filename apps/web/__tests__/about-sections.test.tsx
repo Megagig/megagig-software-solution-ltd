@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import type { AboutItem } from "@repo/shared/types";
 import { ProcessSteps } from "@/app/(marketing)/about-us/_components/process-steps";
 import { Timeline } from "@/app/(marketing)/about-us/_components/timeline";
-import { ValuesGrid } from "@/app/(marketing)/about-us/_components/values-grid";
+import { ValuesGrid } from "@/components/values-grid";
 import { AboutStory } from "@/app/(marketing)/about-us/_components/about-story";
 
 const item = (n: number, kind: AboutItem["kind"], extra: Partial<AboutItem> = {}): AboutItem => ({

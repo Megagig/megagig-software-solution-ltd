@@ -4,7 +4,7 @@ import type { CaseStudy, Product } from "@repo/shared/types";
 import { CaseStudyCard } from "@/components/case-study-card";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { AboutSection, type SectionTone } from "./about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 
 // Evidence over decoration (ui-rules.md §1): the About page's claims are
 // backed by the same real, admin-managed products and case studies the rest
@@ -21,7 +21,7 @@ export function ProofStrip({
   if (products.length === 0 && caseStudies.length === 0) return null;
 
   return (
-    <AboutSection tone={tone}>
+    <PageSection tone={tone}>
       <SectionHeading
         eyebrow="Our work"
         title="Built and running in production"
@@ -56,7 +56,7 @@ export function ProofStrip({
           </div>
         </div>
       )}
-    </AboutSection>
+    </PageSection>
   );
 }
 

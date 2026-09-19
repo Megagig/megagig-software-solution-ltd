@@ -59,7 +59,7 @@ describe("TeamHero", () => {
     render(<TeamHero stats={[]} />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Meet the Nigerian team");
     expect(screen.getByRole("link", { name: /Start a project/ })).toHaveAttribute("href", "/start-project");
-    expect(screen.getByRole("link", { name: "Meet the team" })).toHaveAttribute("href", "#team");
+    expect(screen.getByRole("link", { name: "Join our team" })).toHaveAttribute("href", "/careers");
     expect(screen.queryByText("Lagos, Nigeria")).not.toBeInTheDocument();
   });
 

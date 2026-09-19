@@ -553,6 +553,7 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		public.GET("/stats", statHandler.ListPublished)
 		public.GET("/about-items", aboutItemHandler.ListPublished)
 		public.GET("/team-members", teamMemberHandler.ListPublished)
+		public.GET("/job-openings", jobOpeningHandler.ListPublished)
 	}
 
 	// Public site settings (no auth required) — contact info, hero copy,

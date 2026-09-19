@@ -104,6 +104,16 @@ Testimonial block reuses `TestimonialsCarousel`'s exact inner markup (quote, aut
 
 Every pricing card (Home's `PricingTeaser`, the full `/pricing` page) now links its primary "Get a Quote →" action straight to `/start-project?service=<slug>`, replacing "Custom quote" as the prominent text — per explicit user request that clicking a pricing category should let a visitor jump straight into requesting a quote. "See what's included →" remains as a smaller secondary link to the matching `/services/[slug]` page.
 
+## Careers page (Phase 4.9, shipped)
+
+| Route | Purpose | Notes |
+|---|---|---|
+| `/careers` | Icon-chip hero, open roles (expandable cards) or a designed empty state, admin-managed values, brand CV band | Roles from `JobOpening` (`is_open` only, ISR revalidate 60); values reuse the About page's `AboutItem` values. Empty state is the expected launch state |
+
+Components colocated in `careers/_components/`: `CareersHero` (same icon-chip headline as `/team`; "See open roles" → `#roles`, "Send your CV" → mailto), `RolesSection` (`PageSection id="roles"`; a `max-w-3xl` stack of `RoleCard`s, or the empty state — a dashed `rounded-2xl` panel with a `bg-brand/10` Briefcase badge, headline and next step; plus an "IT training & internships" link in both states), `RoleCard` (native `<details>`/`<summary>`: `rounded-xl` border that turns `brand/40` when open; title `text-lg sm:text-xl` + `Badge variant="brand"` employment type; Building2 department and MapPin location meta line; "View/Hide details" + a chevron that rotates 180° (`group-open`); body `border-t` with `max-w-[65ch]` paragraphs and an "Apply for this role" `Button`; a lone role starts `open`; external apply links get `target="_blank" rel="noopener noreferrer"`, mailto links don't), `CvBand` (`bg-brand` band; `bg-brand-foreground text-brand` button, same on-brand treatment as `QuoteCtaBand`).
+
+Shared, extracted at the second consumer (Team + Careers): `IconChip` (`components/icon-chip.tsx` — tinted `rounded-full` icon chip inline in a headline, `h-9`→`md:h-14`) and `HeroBackdrop` (`components/hero-backdrop.tsx` — masked dot grid over the low-opacity brand/accent glow, token colors via `color-mix`/`var`; first child of a `relative overflow-hidden` section). `TeamHero` now uses both, and its secondary button is "Join our team" → `/careers`.
+
 ## Team page (Phase 4.8, shipped)
 
 | Route | Purpose | Notes |
@@ -118,7 +128,7 @@ Components colocated in `team/_components/` until a second page needs them: `Tea
 |---|---|---|
 | `/about-us` | Mission hero, founding story, stats, values, timeline, founder spotlight, how-we-work steps, products + case-study proof strip, quote CTA band | Fully admin-managed (`SiteSettings`, `Stat`, `AboutItem`, plus existing Product/CaseStudy). Every section is optional and hides when empty; tones alternate by position, not fixed order |
 
-Components live in `(marketing)/about-us/_components/`: `AboutSection` (shell + `SectionTone`), `AboutStory`, `ValuesGrid` (plain cards, brand accent bar, no icons), `Timeline` (vertical `border-l` rule + ring dots, free-text label above title), `ProcessSteps` (large pale `text-brand/15` 01/02/03 numerals, same treatment as case-study detail), `ProofStrip` (`ProductCard` row + up to 3 `CaseStudyCard`s with "All …" links).
+Components live in `(marketing)/about-us/_components/`: `PageSection` (shared shell, `components/page-section.tsx`: `SectionTone`, optional `id` anchor), `AboutStory`, `ValuesGrid` (shared, `components/values-grid.tsx`; plain cards, brand accent bar, no icons), `Timeline` (vertical `border-l` rule + ring dots, free-text label above title), `ProcessSteps` (large pale `text-brand/15` 01/02/03 numerals, same treatment as case-study detail), `ProofStrip` (`ProductCard` row + up to 3 `CaseStudyCard`s with "All …" links).
 
 ## Admin components (`apps/admin/`)
 

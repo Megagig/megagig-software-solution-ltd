@@ -8,9 +8,9 @@ import { getPublishedProducts } from "@/lib/products";
 import { getPublishedCaseStudies } from "@/lib/case-studies";
 import { FounderSpotlight, hasFounderContent } from "../_components/founder-spotlight";
 import { QuoteCtaBand } from "../_components/quote-cta-band";
-import { AboutSection, type SectionTone } from "./_components/about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 import { AboutStory } from "./_components/about-story";
-import { ValuesGrid } from "./_components/values-grid";
+import { ValuesGrid } from "@/components/values-grid";
 import { Timeline } from "./_components/timeline";
 import { ProcessSteps } from "./_components/process-steps";
 import { ProofStrip } from "./_components/proof-strip";
@@ -48,9 +48,9 @@ export default async function AboutPage() {
   }
   if (stats.length > 0) {
     sections.push((tone) => (
-      <AboutSection key="stats" tone={tone}>
+      <PageSection key="stats" tone={tone}>
         <StatsRow stats={stats} />
-      </AboutSection>
+      </PageSection>
     ));
   }
   if (aboutItems.values.length > 0) {

@@ -1,6 +1,6 @@
 import { SectionHeading } from "@/components/ui/section-heading";
 import { splitParagraphs } from "@/lib/text";
-import { AboutSection, type SectionTone } from "./about-section";
+import { PageSection, type SectionTone } from "@/components/page-section";
 
 // Founding story — admin-managed long-form text (SiteSettings
 // founding_story). Paragraphs are separated by a blank line.
@@ -9,7 +9,7 @@ export function AboutStory({ story, tone }: { story: string; tone: SectionTone }
   if (paragraphs.length === 0) return null;
 
   return (
-    <AboutSection tone={tone}>
+    <PageSection tone={tone}>
       <div className="mx-auto max-w-2xl">
         <SectionHeading eyebrow="Our story" title="How Megagig began" />
         <div className="mt-6 space-y-5 text-lg leading-relaxed text-foreground-muted">
@@ -18,6 +18,6 @@ export function AboutStory({ story, tone }: { story: string; tone: SectionTone }
           ))}
         </div>
       </div>
-    </AboutSection>
+    </PageSection>
   );
 }

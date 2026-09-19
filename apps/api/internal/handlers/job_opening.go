@@ -45,6 +45,36 @@ func (h *JobOpeningHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// ListPublished returns open roles, newest first (public, unauthenticated)
+// — apps/web's /careers page. is_open is the publish switch: closing a role
+// hides it without deleting it.
+func (h *JobOpeningHandler) ListPublished(c *gin.Context) {
+	query := h.DB.Model(&models.JobOpening{}).Where("is_open = ?", true)
+
+	res, err := paginate.List[models.JobOpening](
+		query,
+		paginate.Bind(c),
+		paginate.Config{
+			Searchable:   []string{"title", "department", "location", "employment_type", "description"},
+			Sortable:     map[string]bool{"created_at": true, "title": true},
+			DefaultSort:  "created_at",
+			DefaultOrder: "desc",
+		},
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"code":    "INTERNAL_ERROR",
+				"message": "Failed to fetch job openings",
+			},
+		})
+		return
+	}
+
+	c.Header("Cache-Control", "public, max-age=60")
+	c.JSON(http.StatusOK, res)
+}
+
 // Export streams the full filtered list as CSV (default) or XLSX.
 // Honours the same search/filter query params as List but skips
 // pagination — you get every matching row in one file.
@@ -239,7 +269,7 @@ func (h *JobOpeningHandler) Create(c *gin.Context) {
 		Location       string `json:"location" binding:"required"`
 		EmploymentType string `json:"employment_type" binding:"required"`
 		Description    string `json:"description"`
-		ApplyURL       string `json:"apply_url" binding:"required"`
+		ApplyURL       string `json:"apply_url"`
 		IsOpen         bool   `json:"is_open"`
 	}
 
@@ -299,13 +329,13 @@ func (h *JobOpeningHandler) Update(c *gin.Context) {
 	}
 
 	var req struct {
-		Title          string `json:"title"`
-		Department     string `json:"department"`
-		Location       string `json:"location"`
-		EmploymentType string `json:"employment_type"`
-		Description    string `json:"description"`
-		ApplyURL       string `json:"apply_url"`
-		IsOpen         *bool  `json:"is_open"`
+		Title          string  `json:"title"`
+		Department     string  `json:"department"`
+		Location       string  `json:"location"`
+		EmploymentType string  `json:"employment_type"`
+		Description    *string `json:"description"`
+		ApplyURL       *string `json:"apply_url"`
+		IsOpen         *bool   `json:"is_open"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -331,11 +361,13 @@ func (h *JobOpeningHandler) Update(c *gin.Context) {
 	if req.EmploymentType != "" {
 		updates["employment_type"] = req.EmploymentType
 	}
-	if req.Description != "" {
-		updates["description"] = req.Description
+	// Pointers so an admin can clear the description, or clear apply_url to
+	// fall back to the general CV email on the public page.
+	if req.Description != nil {
+		updates["description"] = *req.Description
 	}
-	if req.ApplyURL != "" {
-		updates["apply_url"] = req.ApplyURL
+	if req.ApplyURL != nil {
+		updates["apply_url"] = *req.ApplyURL
 	}
 	if req.IsOpen != nil {
 		updates["is_open"] = *req.IsOpen
