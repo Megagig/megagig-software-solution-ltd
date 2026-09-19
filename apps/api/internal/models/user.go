@@ -146,6 +146,8 @@ func Models() []interface{} {
 		// SiteSettings is a hand-built singleton, not a generated resource —
 		// still needs an AutoMigrate entry like every other model.
 		&SiteSettings{},
+		&Stat{},
+		&AboutItem{},
 		// grit:models
 	}
 }

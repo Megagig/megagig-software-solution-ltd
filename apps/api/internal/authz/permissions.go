@@ -216,6 +216,34 @@ func generatedModules() []Module {
 			},
 		},
 
+		{
+			Key:  "stats",
+			Name: "Stats",
+			Groups: []Group{
+				{
+					Key:  "stats",
+					Name: "Stats",
+					Features: []Feature{
+						{Key: "stats", Name: "Stats", Actions: AllActions},
+					},
+				},
+			},
+		},
+
+		{
+			Key:  "about_items",
+			Name: "AboutItems",
+			Groups: []Group{
+				{
+					Key:  "about_items",
+					Name: "AboutItems",
+					Features: []Feature{
+						{Key: "about_items", Name: "AboutItems", Actions: AllActions},
+					},
+				},
+			},
+		},
+
 		// grit:perms:auto-end
 	}
 }

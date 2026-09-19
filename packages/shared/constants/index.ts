@@ -111,5 +111,19 @@ export const API_ROUTES = {
     GET: "/api/site-settings",
     UPDATE: "/api/site-settings",
   },
+  STATS: {
+    LIST: "/api/stats",
+    GET: (id: number) => `/api/stats/${id}`,
+    CREATE: "/api/stats",
+    UPDATE: (id: number) => `/api/stats/${id}`,
+    DELETE: (id: number) => `/api/stats/${id}`,
+  },
+  ABOUT_ITEMS: {
+    LIST: "/api/about_items",
+    GET: (id: number) => `/api/about_items/${id}`,
+    CREATE: "/api/about_items",
+    UPDATE: (id: number) => `/api/about_items/${id}`,
+    DELETE: (id: number) => `/api/about_items/${id}`,
+  },
   // grit:api-routes
 } as const;

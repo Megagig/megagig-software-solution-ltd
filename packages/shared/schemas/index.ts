@@ -66,4 +66,16 @@ export {
   SocialLinksSchema,
   type UpdateSiteSettingsInput,
 } from "./site-settings";
+export {
+  CreateStatSchema,
+  UpdateStatSchema,
+  type CreateStatInput,
+  type UpdateStatInput,
+} from "./stat";
+export {
+  CreateAboutItemSchema,
+  UpdateAboutItemSchema,
+  type CreateAboutItemInput,
+  type UpdateAboutItemInput,
+} from "./about-item";
 // grit:schemas

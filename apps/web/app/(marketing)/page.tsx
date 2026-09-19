@@ -3,6 +3,7 @@ import { getPublishedCaseStudies } from "@/lib/case-studies";
 import { getPublishedProducts } from "@/lib/products";
 import { getPublishedTestimonials } from "@/lib/testimonials";
 import { getPublishedFAQs } from "@/lib/faqs";
+import { getPublishedStats } from "@/lib/stats";
 
 import { Hero } from "./_components/hero";
 import { FeaturedProjects } from "./_components/featured-projects";
@@ -25,12 +26,13 @@ import { ClosingCta } from "./_components/closing-cta";
 // SEO-critical content" rule. Next dedupes the getSiteSettings() call
 // against the identical one already made in (marketing)/layout.tsx.
 export default async function HomePage() {
-  const [settings, caseStudies, products, testimonials, faqs] = await Promise.all([
+  const [settings, caseStudies, products, testimonials, faqs, stats] = await Promise.all([
     getSiteSettings(),
     getPublishedCaseStudies(),
     getPublishedProducts(),
     getPublishedTestimonials(),
     getPublishedFAQs(),
+    getPublishedStats(),
   ]);
 
   return (
@@ -49,15 +51,19 @@ export default async function HomePage() {
         contactPhone={settings?.contact_phone}
       />
       <TestimonialsCarousel testimonials={testimonials} />
-      <FounderSpotlight />
-      <OurStory />
+      <FounderSpotlight founder={settings} />
+      <OurStory
+        missionStatement={settings?.mission_statement}
+        foundedYear={settings?.founded_year}
+        stats={stats}
+      />
       <FaqAccordion faqs={faqs} />
       <ContactBlock
         contactEmail={settings?.contact_email}
         contactPhone={settings?.contact_phone}
         address={settings?.address}
       />
-      <ClosingCta />
+      <ClosingCta stats={stats} />
     </>
   );
 }

@@ -205,7 +205,7 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 				cfg.GORMStudioUsername: cfg.GORMStudioPassword,
 			})
 		}
-		studio.Mount(r, db, []interface{}{&models.User{}, &models.Upload{}, &models.Blog{}, &models.TeamMember{}, &models.CaseStudy{}, &models.Testimonial{}, &models.Product{}, &models.JobOpening{}, &models.FAQ{}, &models.Lead{}, &models.SiteSettings{} /* grit:studio */}, studioCfg)
+		studio.Mount(r, db, []interface{}{&models.User{}, &models.Upload{}, &models.Blog{}, &models.TeamMember{}, &models.CaseStudy{}, &models.Testimonial{}, &models.Product{}, &models.JobOpening{}, &models.FAQ{}, &models.Lead{}, &models.SiteSettings{}, &models.Stat{}, &models.AboutItem{}, /* grit:studio */}, studioCfg)
 		log.Println("GORM Studio mounted at /studio")
 	}
 
@@ -352,6 +352,8 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 	syncRegistry.Register("job_openings", &models.JobOpening{})
 	syncRegistry.Register("faqs", &models.FAQ{})
 	syncRegistry.Register("leads", &models.Lead{})
+	syncRegistry.Register("stats", &models.Stat{})
+	syncRegistry.Register("about_items", &models.AboutItem{})
 	// grit:sync
 	syncHandler := handlers.NewSyncHandler(db, syncRegistry)
 	// v3.31.68 — shared background CSV import status endpoint
@@ -397,6 +399,12 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		DB: db,
 	}
 	siteSettingsHandler := handlers.NewSiteSettingsHandler(db)
+	statHandler := &handlers.StatHandler{
+		DB: db,
+	}
+	aboutItemHandler := &handlers.AboutItemHandler{
+		DB: db,
+	}
 	// grit:handlers
 
 	// Health check
@@ -542,6 +550,8 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		public.GET("/products/:slug", productHandler.GetBySlug)
 		public.GET("/testimonials", testimonialHandler.ListPublished)
 		public.GET("/faqs", fAQHandler.ListPublished)
+		public.GET("/stats", statHandler.ListPublished)
+		public.GET("/about-items", aboutItemHandler.ListPublished)
 	}
 
 	// Public site settings (no auth required) — contact info, hero copy,
@@ -744,6 +754,24 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		protected.POST("/leads", leadHandler.Create)
 		protected.PUT("/leads/:id", leadHandler.Update)
 		protected.PATCH("/leads/:id", leadHandler.Patch)
+		protected.GET("/stats", statHandler.List)
+		protected.GET("/stats/export", statHandler.Export)
+		protected.POST("/stats/import", statHandler.Import)
+		protected.GET("/stats/import/template", statHandler.Template)
+		protected.GET("/stats/:id", statHandler.GetByID)
+		protected.GET("/stats/:id/pdf", statHandler.PDF)
+		protected.POST("/stats", statHandler.Create)
+		protected.PUT("/stats/:id", statHandler.Update)
+		protected.PATCH("/stats/:id", statHandler.Patch)
+		protected.GET("/about_items", aboutItemHandler.List)
+		protected.GET("/about_items/export", aboutItemHandler.Export)
+		protected.POST("/about_items/import", aboutItemHandler.Import)
+		protected.GET("/about_items/import/template", aboutItemHandler.Template)
+		protected.GET("/about_items/:id", aboutItemHandler.GetByID)
+		protected.GET("/about_items/:id/pdf", aboutItemHandler.PDF)
+		protected.POST("/about_items", aboutItemHandler.Create)
+		protected.PUT("/about_items/:id", aboutItemHandler.Update)
+		protected.PATCH("/about_items/:id", aboutItemHandler.Patch)
 		// grit:routes:protected
 	}
 
@@ -888,6 +916,8 @@ func Setup(db *gorm.DB, cfg *config.Config, svc *Services) *gin.Engine {
 		// Site settings singleton — GET is public (registered above on v1
 		// directly), this PUT is the only write path, admin-only.
 		admin.PUT("/site-settings", siteSettingsHandler.Update)
+		admin.DELETE("/stats/:id", statHandler.Delete)
+		admin.DELETE("/about_items/:id", aboutItemHandler.Delete)
 		// grit:routes:admin
 	}
 

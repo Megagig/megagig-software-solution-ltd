@@ -1,69 +1,116 @@
 import Image from "next/image";
 import { Github, Linkedin, Twitter } from "lucide-react";
+import type { SiteSettings } from "@repo/shared/types";
 import { Button } from "@/components/ui/button";
 
-// Static, real content per project-requirements.md §5.1 (not DB-backed —
-// code-standards.md §6). Facts confirmed directly by the founder.
-const LINKS = [
-  { href: "https://github.com/Megagig", icon: Github, label: "GitHub" },
-  { href: "https://www.linkedin.com/in/obi-anthony/", icon: Linkedin, label: "LinkedIn" },
-  { href: "https://x.com/megagigsolution", icon: Twitter, label: "X" },
-];
+type FounderSettings = Pick<
+  SiteSettings,
+  | "founder_name"
+  | "founder_role"
+  | "founder_quote"
+  | "founder_bio"
+  | "founder_photo_url"
+  | "founder_github_url"
+  | "founder_linkedin_url"
+  | "founder_twitter_url"
+>;
 
-export function FounderSpotlight() {
+function splitParagraphs(bio: string): string[] {
+  return bio
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
+
+/** True when there is anything to show — pages use this to decide the
+ * section's position (and so its background tone) before rendering it. */
+export function hasFounderContent(founder: FounderSettings | null | undefined): boolean {
+  if (!founder) return false;
+  return Boolean(founder.founder_name || founder.founder_quote || splitParagraphs(founder.founder_bio).length > 0);
+}
+
+// Founder profile is admin-managed (SiteSettings "About & founder" card) —
+// nothing is hard-coded here. Every part is conditional so a blank field
+// hides its piece instead of leaving an empty gap; the whole section hides
+// when there is no name, quote or bio at all.
+export function FounderSpotlight({
+  founder,
+  tone = "background",
+}: {
+  founder: FounderSettings | null | undefined;
+  /** Home always uses the default; /about-us picks by position so the
+   * page's background/surface alternation survives hidden sections. */
+  tone?: "background" | "surface";
+}) {
+  if (!founder || !hasFounderContent(founder)) return null;
+
+  const paragraphs = splitParagraphs(founder.founder_bio);
+
+  const links = [
+    { href: founder.founder_github_url, icon: Github, label: "GitHub" },
+    { href: founder.founder_linkedin_url, icon: Linkedin, label: "LinkedIn" },
+    { href: founder.founder_twitter_url, icon: Twitter, label: "X" },
+  ].filter((link) => link.href);
+
   return (
-    <section className="bg-background">
+    <section className={tone === "surface" ? "bg-surface" : "bg-background"}>
       <div className="mx-auto grid max-w-(--space-container-max) gap-10 px-(--space-container-x) py-(--space-section-y-mobile) md:grid-cols-[minmax(0,280px)_1fr] md:items-start md:py-(--space-section-y)">
-        <div className="relative mx-auto aspect-square w-48 overflow-hidden rounded-lg border border-border md:w-full">
-          <Image
-            src="/profile.jfif"
-            alt="Obi Anthony Uchenna, Founder & Lead Developer at Megagig Software Solution"
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 192px, 280px"
-          />
-        </div>
+        {founder.founder_photo_url && (
+          <div className="relative mx-auto aspect-square w-48 overflow-hidden rounded-lg border border-border md:w-full">
+            {/* unoptimized: an uploaded photo lives on the storage origin,
+                which next/image would otherwise need allow-listing in
+                next.config for — and a single portrait doesn't need resizing. */}
+            <Image
+              src={founder.founder_photo_url}
+              alt={
+                founder.founder_name
+                  ? `${founder.founder_name}${founder.founder_role ? `, ${founder.founder_role}` : ""}`
+                  : "Founder portrait"
+              }
+              fill
+              unoptimized
+              className="object-cover"
+              sizes="(max-width: 768px) 192px, 280px"
+            />
+          </div>
+        )}
 
-        <div>
+        <div className={founder.founder_photo_url ? undefined : "md:col-span-2"}>
           <p className="text-xs font-medium uppercase tracking-wide text-brand">Founder spotlight</p>
-          <p className="mt-3 text-2xl font-medium leading-snug text-foreground">
-            &ldquo;Build software teams actually adopt, not software that looks good in a pitch deck.&rdquo;
-          </p>
-
-          <div className="mt-6 space-y-4 text-foreground-muted">
-            <p>
-              I started Megagig Software Solution Ltd to close a gap I kept running into as a developer:
-              most Nigerian businesses were being sold software built for someone else's market — global
-              SaaS that ignores mobile money, offline-first retail, and how local teams actually work. I
-              wanted to build the alternative.
+          {founder.founder_quote && (
+            <p className="mt-3 text-2xl font-medium leading-snug text-foreground">
+              &ldquo;{founder.founder_quote}&rdquo;
             </p>
-            <p>
-              Since 2023, I've built and shipped several production platforms end-to-end — including
-              PharmacyCopilot, a cross-platform pharmacy management SaaS running across web, desktop, and
-              mobile for pharmacists across Nigeria, and BusinessCopilot, a unified POS, inventory,
-              accounting, CRM, and HR platform built to match and exceed tools like QuickBooks and
-              FreshBooks for the local market. I work the full stack — from the database and API up
-              through the desktop, web, and mobile clients that ship to real users.
+          )}
+
+          {paragraphs.length > 0 && (
+            <div className="mt-6 space-y-4 text-foreground-muted">
+              {paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          )}
+
+          {founder.founder_name && (
+            <p className="mt-6 font-semibold text-foreground">
+              {founder.founder_name}
+              {founder.founder_role && (
+                <span className="block text-sm font-normal text-foreground-muted">{founder.founder_role}</span>
+              )}
             </p>
-            <p>My focus with Megagig is simple: build software teams actually adopt, not software that looks good in a pitch deck.</p>
-          </div>
+          )}
 
-          <p className="mt-6 font-semibold text-foreground">
-            Obi Anthony Uchenna
-            <span className="block text-sm font-normal text-foreground-muted">
-              Founder & Lead Developer, Megagig Software Solution Ltd
-            </span>
-          </p>
-
-          <div className="mt-5 flex items-center gap-2">
-            {LINKS.map((link) => (
-              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" className="gap-1.5">
-                  <link.icon className="h-4 w-4" /> {link.label}
-                </Button>
-              </a>
-            ))}
-          </div>
+          {links.length > 0 && (
+            <div className="mt-5 flex items-center gap-2">
+              {links.map((link) => (
+                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" className="gap-1.5">
+                    <link.icon className="h-4 w-4" /> {link.label}
+                  </Button>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

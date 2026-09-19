@@ -85,7 +85,7 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
 
 ## 6. Content vs. code boundary
 
-Anything listed in `project-overview.md` §6 as an **admin-managed resource** must never be hard-coded as JSX/text in a component. Anything explicitly marked "static content, not DB-backed, for v1" (service list, About story copy, founder bio) is intentionally hard-coded — do not "fix" this into a database resource without updating `project-overview.md` first, since that's a scope decision, not a bug.
+Anything listed in `project-overview.md` §6 as an **admin-managed resource** must never be hard-coded as JSX/text in a component. Anything explicitly marked "static content, not DB-backed, for v1" (the service list) is intentionally hard-coded — do not "fix" this into a database resource without updating `project-overview.md` first, since that's a scope decision, not a bug. **About content is no longer in that category** (2026-09-19): the mission, founding story, founder profile, trust stats, values, timeline and how-we-work steps are all admin-managed (`SiteSettings`, `Stat`, `AboutItem`) and must never be hard-coded in a component.
 
 ## 7. Commit / PR hygiene (if using git flow with the coding agent)
 

@@ -28,4 +28,6 @@ export type { JobOpening } from "./job-opening";
 export type { FAQ } from "./faq";
 export type { Lead } from "./lead";
 export type { SiteSettings, SocialLinks } from "./site-settings";
+export type { Stat } from "./stat";
+export type { AboutItem } from "./about-item";
 // grit:types

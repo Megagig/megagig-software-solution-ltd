@@ -109,6 +109,28 @@ func SubmitSharedForm(db *gorm.DB, resourceName string, fields map[string]interf
 		}
 		return &SharedResourceSubmission{ID: item.ID, Label: item.Name}, nil
 
+	case "Stat":
+		item := &models.Stat{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding Stat body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating Stat: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.ID}, nil
+
+	case "AboutItem":
+		item := &models.AboutItem{}
+		body, _ := json.Marshal(fields)
+		if err := json.Unmarshal(body, item); err != nil {
+			return nil, fmt.Errorf("decoding AboutItem body: %w", err)
+		}
+		if err := db.Create(item).Error; err != nil {
+			return nil, fmt.Errorf("creating AboutItem: %w", err)
+		}
+		return &SharedResourceSubmission{ID: item.ID, Label: item.Title}, nil
+
 	// grit:form-share:dispatch
 	default:
 		return nil, fmt.Errorf("public submission disabled for %q (no dispatch case registered)", resourceName)
@@ -155,6 +177,10 @@ func RegisteredResources() []string {
 
 		"Lead",
 
+		"Stat",
+
+		"AboutItem",
+
 		// grit:form-share:registered
 	}
 }
@@ -186,6 +212,12 @@ func PublicFields(resourceName string) []PublicFieldInfo {
 
 	case "Lead":
 		return reflectPublicFields(&models.Lead{})
+
+	case "Stat":
+		return reflectPublicFields(&models.Stat{})
+
+	case "AboutItem":
+		return reflectPublicFields(&models.AboutItem{})
 
 	// grit:form-share:fields
 	default:

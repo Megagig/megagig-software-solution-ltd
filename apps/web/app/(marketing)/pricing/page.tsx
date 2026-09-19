@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { StatCallout } from "@/components/ui/stat-callout";
+import { StatsRow } from "@/components/stats-row";
 import { PRICING_CATEGORIES } from "@/lib/pricing";
-import { TRUST_STATS } from "@/lib/trust-stats";
+import { getPublishedStats } from "@/lib/stats";
 import { getPublishedTestimonials } from "@/lib/testimonials";
 import { getSiteSettings } from "@/lib/site-settings";
 import { TestimonialsCarousel } from "../_components/testimonials-carousel";
@@ -21,11 +21,15 @@ export const metadata: Metadata = {
 // keeping our own custom-quote business model exactly as specified — no
 // fixed-tier table, no invented prices. Testimonials and stats reuse real
 // content already established elsewhere on the site (TestimonialsCarousel,
-// ClosingCta's trust stats), not new/fabricated content. The CTA band is
+// ClosingCta's admin-managed trust stats), not new/fabricated content. The CTA band is
 // the same QuoteCtaBand component Home uses, satisfying "CTA band
 // identical in behavior to Home's quote CTA" by construction.
 export default async function PricingPage() {
-  const [testimonials, settings] = await Promise.all([getPublishedTestimonials(), getSiteSettings()]);
+  const [testimonials, settings, stats] = await Promise.all([
+    getPublishedTestimonials(),
+    getSiteSettings(),
+    getPublishedStats(),
+  ]);
 
   return (
     <>
@@ -90,15 +94,13 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      <section className="bg-background">
-        <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) md:py-(--space-section-y)">
-          <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 sm:grid-cols-4">
-            {TRUST_STATS.map((stat) => (
-              <StatCallout key={stat.label} value={stat.value} label={stat.label} />
-            ))}
+      {stats.length > 0 && (
+        <section className="bg-background">
+          <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) md:py-(--space-section-y)">
+            <StatsRow stats={stats} />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <TestimonialsCarousel testimonials={testimonials} />
 

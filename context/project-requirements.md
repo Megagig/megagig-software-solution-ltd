@@ -90,7 +90,7 @@ Nigerian SMEs default to WhatsApp-only sales and generic global SaaS (QuickBooks
 - Same lead form as §5.6 but tagged `source: contact`, plus direct-contact cards (email, phone, WhatsApp deep link, physical address if applicable) and an embedded map (optional, v2).
 
 ### 5.8 About (`/about-us`), Team (`/team`), Careers (`/careers`), Brand (`/brand`)
-- About: founding story, mission, stats.
+- About: founding story, mission, stats — **all admin-managed, nothing hard-coded** (decided 2026-09-19, overriding the earlier "static for v1" scope). Sections: hero (mission + "Since {founded year}"), founding story (optional), stats, values, timeline milestones, founder spotlight, how-we-work steps, and a products + case-study proof strip, then the quote CTA band. Every section renders only when it has published content. Home's Our Story / Founder spotlight / Closing CTA and `/pricing`'s stats row read the same data.
 - Team: grid of team member cards (photo, name, role, socials) — admin-managed resource.
 - Careers: open roles list (admin-managed resource) + a "no open roles right now, but send your CV" fallback state.
 - Brand: logo download links, color/usage guidelines (mirrors ui-tokens.md content in a public-friendly format) — static page, v2/nice-to-have.
@@ -119,7 +119,9 @@ Resources managed via `defineResource()` + generated DataTable/FormBuilder pages
 - **JobOpenings** — title, department, location, employment type, description, apply link/email, open/closed flag.
 - **BlogPosts** — full CMS fields as in §5.9, plus draft/published state and scheduled publish date (v2).
 - **FAQs** — question, answer, sort order, published flag.
-- **SiteSettings** — singleton resource: contact email/phone/WhatsApp number, social links, pricing-category blurbs, hero headline/subhead (so copy tweaks don't need a deploy).
+- **SiteSettings** — singleton resource: contact email/phone/WhatsApp number, social links, pricing-category blurbs, hero headline/subhead, plus the About & founder copy (mission statement, founded year, founding story, founder name/role/quote/bio/photo/links) so copy tweaks don't need a deploy.
+- **Stats** — value, label, sort order, published flag. The single source for every trust-number strip (max 4 shown per section, ui-rules.md §10; Home's Our Story shows the first 2).
+- **AboutItems** — one resource with `kind` = `value` | `milestone` | `step`, plus title, description, optional milestone `label`, sort order, published flag. Feeds the About page's Values, Timeline and How-we-work sections.
 
 Admin dashboard (`app/page.tsx`): stats cards (new leads this week, total case studies published, total products), a simple leads-over-time chart widget, and an activity widget (latest 10 leads / latest 10 blog posts).
 

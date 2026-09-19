@@ -7,6 +7,8 @@ import { productResource } from "./products";
 import { jobOpeningResource } from "./job-openings";
 import { fAQResource } from "./faqs";
 import { leadResource } from "./leads";
+import { statResource } from "./stats";
+import { aboutItemResource } from "./about-items";
 // grit:resources
 
 import type { ResourceDefinition } from "@/lib/resource";
@@ -21,6 +23,8 @@ export const resources: ResourceDefinition[] = [
   jobOpeningResource,
   fAQResource,
   leadResource,
+  statResource,
+  aboutItemResource,
   // grit:resource-list
 ];
 

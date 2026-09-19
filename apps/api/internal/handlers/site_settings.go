@@ -46,6 +46,18 @@ func (h *SiteSettingsHandler) Update(c *gin.Context) {
 		HeroHeadline   *string        `json:"hero_headline"`
 		HeroSubhead    *string        `json:"hero_subhead"`
 		PricingBlurbs  datatypes.JSON `json:"pricing_blurbs"`
+
+		MissionStatement   *string `json:"mission_statement"`
+		FoundedYear        *int    `json:"founded_year"`
+		FoundingStory      *string `json:"founding_story"`
+		FounderName        *string `json:"founder_name"`
+		FounderRole        *string `json:"founder_role"`
+		FounderQuote       *string `json:"founder_quote"`
+		FounderBio         *string `json:"founder_bio"`
+		FounderPhotoURL    *string `json:"founder_photo_url"`
+		FounderGithubURL   *string `json:"founder_github_url"`
+		FounderLinkedinURL *string `json:"founder_linkedin_url"`
+		FounderTwitterURL  *string `json:"founder_twitter_url"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
@@ -78,6 +90,28 @@ func (h *SiteSettingsHandler) Update(c *gin.Context) {
 	}
 	if req.PricingBlurbs != nil {
 		updates["pricing_blurbs"] = req.PricingBlurbs
+	}
+
+	// About & founder fields — pointers so an admin can clear a field.
+	textUpdates := map[string]*string{
+		"mission_statement":    req.MissionStatement,
+		"founding_story":       req.FoundingStory,
+		"founder_name":         req.FounderName,
+		"founder_role":         req.FounderRole,
+		"founder_quote":        req.FounderQuote,
+		"founder_bio":          req.FounderBio,
+		"founder_photo_url":    req.FounderPhotoURL,
+		"founder_github_url":   req.FounderGithubURL,
+		"founder_linkedin_url": req.FounderLinkedinURL,
+		"founder_twitter_url":  req.FounderTwitterURL,
+	}
+	for column, value := range textUpdates {
+		if value != nil {
+			updates[column] = *value
+		}
+	}
+	if req.FoundedYear != nil {
+		updates["founded_year"] = *req.FoundedYear
 	}
 
 	settings, err := h.Service.Update(updates)

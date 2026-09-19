@@ -38,6 +38,7 @@ After building or materially changing a shared component:
 | LeadForm | `apps/web/components/lead-form.tsx` | Client-side lead-capture form, `source` prop tags the entry point, `tone`: surface/onBrand, `variant`: compact/full, `defaultProjectType` | Home's `ContactBlock` (compact), `/start-project` (full) | Compact (name/email/message, per project-requirements.md §5.1's Home spec) is untouched. **`variant="full"` (Phase 4.6, shipped)** adds phone/company/a `project_type` dropdown (options from `lib/services.ts`'s real catalog)/a `budget_range` dropdown (`lib/budget-ranges.ts`, with a client-side NGN↔USD display toggle — submitted value is always the same canonical band key)/an optional multi-select `services_interested` checkbox grid (same catalog, a distinct "anything else" question from `project_type`'s "main need")/message. `defaultProjectType` pre-fills `project_type` when arriving via `?service=` from a Services/Pricing CTA. Currently 401s on submit — `Lead.Create` is intentionally still protected-only until Phase 6. `tone="onBrand"` (added for `ContactBlock`'s redesign) swaps input/label/button styling to a tinted-overlay treatment for sitting directly on a solid `bg-brand` panel |
 | ServiceCard | `apps/web/components/service-card.tsx` | Service bento card (tinted icon badge, hover arrow, optional accent highlight) | Home's `ServicesGrid`, `/services` index | Extracted from `services-grid.tsx` once `/services` (Phase 4.2) became a second real consumer needing the identical card — per code-standards.md §3, extracted on the second need, not preemptively. Data comes from `lib/services.ts`, not a local array |
 | ProductCard | `apps/web/components/product-card.tsx` | Product card (`bezel="thick"` `BrowserFrame` screenshot, feature bullets, outbound "Explore product" link) | Home's `ProductsSection`, `/products` index | Same extraction pattern as `ServiceCard`, triggered by `/products` (Phase 4.3). Screenshot and title now link internally to `/product/[slug]`; "Explore product" stays the separate outbound link to `live_url`, per ui-rules.md §5 |
+| StatsRow | `apps/web/components/stats-row.tsx` | Row of up to 4 `StatCallout`s from the `Stat` resource; grid sized to the count; renders nothing when empty | `ClosingCta`, `OurStory` (`max={2}`), `/pricing`, `/about-us` | Extracted at three consumers |
 | CaseStudyCard | `apps/web/components/case-study-card.tsx` | Case study card (tilted `TabletFrame` w/ gradient ring, category tags, status badge) | `SelectedWork`, `/case-studies` index | Moved here from `(marketing)/_components/` once `/case-studies` (Phase 4.4) became the second route-level consumer its own code comment had pre-flagged — same rule as `ServiceCard`/`ProductCard` |
 
 ## Page-specific components (colocated under each route's `_components/`)
@@ -56,11 +57,11 @@ After building or materially changing a shared component:
 | PricingTeaser | `(marketing)/page.tsx` | Static pricing-category cards, "Custom quote" | No fixed-tier pricing table, per ui-rules.md §5. "AI Automation & Integration" gets the same solid-accent highlight treatment as `ServicesGrid`. Data now in shared `lib/pricing.ts`; each card links to its matching `/services/[slug]` page |
 | QuoteCtaBand | `(marketing)/page.tsx` | Primary quote CTA + WhatsApp + direct contact | WhatsApp/contact info from `SiteSettings` |
 | TestimonialsCarousel | `(marketing)/page.tsx` | Testimonial carousel | Company link omitted (never faked) if a testimonial has no `company_url` |
-| FounderSpotlight | `(marketing)/page.tsx` | Founder photo, pull-quote, bio, social links | Static, real content confirmed by the founder — not DB-backed |
-| OurStory | `(marketing)/page.tsx` | Mission line + 2 `StatCallout`s | Static, real figures confirmed by the founder |
+| FounderSpotlight | `(marketing)/page.tsx`, `/about-us` | Founder photo, pull-quote, bio, social links | Admin-managed (`SiteSettings` About & founder card) — every part conditional, hides entirely with no name/quote/bio. `tone` prop (default `background`) lets `/about-us` place it by position; exports `hasFounderContent()`. Photo renders `unoptimized` (uploaded photos live on the storage origin) |
+| OurStory | `(marketing)/page.tsx` | Mission line (+ "Since {year}") + first 2 stats via `StatsRow` | Admin-managed (`SiteSettings` + `Stat`); renders nothing until there is a mission or stats |
 | FaqAccordion | `(marketing)/page.tsx` | FAQ accordion | Renders nothing if no FAQs are published yet (none seeded as of Phase 4 — Phase 5 work) |
 | ContactBlock | `(marketing)/page.tsx` | Contact info + `LeadForm` (source: `"home"`) | Redesigned into a single solid `bg-brand` rounded panel per a user-provided reference site, using our own token pair (brand panel + `accent`-filled submit button) rather than the reference's literal colors. `LeadForm` gets a new `tone="onBrand"` prop for this context. Fixed the same email-overflow bug as `Footer` (`min-w-0` + `break-all`, plus `overflow-hidden` on the panel as a hard backstop) |
-| ClosingCta | `(marketing)/page.tsx` | 4 real trust stats + repeated CTAs | At the `ui-rules.md` §10 cap of 4 stats. Stats now in shared `lib/trust-stats.ts`, reused by `/pricing` |
+| ClosingCta | `(marketing)/page.tsx` | 4 real trust stats + repeated CTAs | At the `ui-rules.md` §10 cap of 4 stats. Stats are the admin-managed `Stat` resource (`lib/stats.ts`), shown via shared `StatsRow`, reused by `/pricing` and `/about-us` |
 
 ## Services pages (Phase 4.2, shipped)
 
@@ -93,7 +94,7 @@ Testimonial block reuses `TestimonialsCarousel`'s exact inner markup (quote, aut
 
 | Route | Purpose | Notes |
 |---|---|---|
-| `/pricing` | Full pricing page — hero, linked category cards, real trust stats, real testimonials, quote CTA band | Plain static route (no dynamic segment). Checked a user-provided reference site first (`WebFetch`) and found it uses real fixed-tier prices — flagged the conflict with this project's own locked custom-quote spec before building; user confirmed keep custom-quote, match the reference's structure/polish only, no invented prices. `TestimonialsCarousel` and `QuoteCtaBand` reused as-is, not rebuilt; stats and category data come from `lib/trust-stats.ts`/`lib/pricing.ts` (shared with Home's `ClosingCta`/`PricingTeaser`) |
+| `/pricing` | Full pricing page — hero, linked category cards, real trust stats, real testimonials, quote CTA band | Plain static route (no dynamic segment). Checked a user-provided reference site first (`WebFetch`) and found it uses real fixed-tier prices — flagged the conflict with this project's own locked custom-quote spec before building; user confirmed keep custom-quote, match the reference's structure/polish only, no invented prices. `TestimonialsCarousel` and `QuoteCtaBand` reused as-is, not rebuilt; stats come from the admin-managed `Stat` resource (`lib/stats.ts` via `StatsRow`) and category data from `lib/pricing.ts` (shared with Home's `PricingTeaser`) |
 
 ## Start a Project page (Phase 4.6, shipped)
 
@@ -103,12 +104,20 @@ Testimonial block reuses `TestimonialsCarousel`'s exact inner markup (quote, aut
 
 Every pricing card (Home's `PricingTeaser`, the full `/pricing` page) now links its primary "Get a Quote →" action straight to `/start-project?service=<slug>`, replacing "Custom quote" as the prominent text — per explicit user request that clicking a pricing category should let a visitor jump straight into requesting a quote. "See what's included →" remains as a smaller secondary link to the matching `/services/[slug]` page.
 
+## About page (Phase 4.7, shipped)
+
+| Route | Purpose | Notes |
+|---|---|---|
+| `/about-us` | Mission hero, founding story, stats, values, timeline, founder spotlight, how-we-work steps, products + case-study proof strip, quote CTA band | Fully admin-managed (`SiteSettings`, `Stat`, `AboutItem`, plus existing Product/CaseStudy). Every section is optional and hides when empty; tones alternate by position, not fixed order |
+
+Components live in `(marketing)/about-us/_components/`: `AboutSection` (shell + `SectionTone`), `AboutStory`, `ValuesGrid` (plain cards, brand accent bar, no icons), `Timeline` (vertical `border-l` rule + ring dots, free-text label above title), `ProcessSteps` (large pale `text-brand/15` 01/02/03 numerals, same treatment as case-study detail), `ProofStrip` (`ProductCard` row + up to 3 `CaseStudyCard`s with "All …" links).
+
 ## Admin components (`apps/admin/`)
 
 | Component | Path | Purpose | Used by | Notes |
 |---|---|---|---|---|
 | TagsField | `apps/admin/components/forms/fields/tags-field.tsx` | Free-text chip/tag input bound to a `string[]` field (Enter or `,` commits a tag) | `CaseStudy.category_tags`/`tech_stack`, `Product.feature_bullets`, `Blog.tags` | New `"tags"` `FieldType`/`ColumnFormat` added to `lib/resource.ts`, wired into `form-builder.tsx` and `cell-renderers.tsx` (table shows badge chips, +N overflow). Distinct from `CheckboxGroupField`, whose options are a fixed predefined set — this is for open-ended text tags. Added because Grit's generator maps every `string_array` field to `type: "images"` (an image-upload dropzone), which is wrong for plain-text tags. |
-| SiteSettings page | `apps/admin/app/(dashboard)/site-settings/page.tsx` | Single-record settings form (not a DataTable) for the SiteSettings singleton — contact info, hero copy, social links | Sidebar nav (admin-only, above the resources list) | Hand-built per `build-plan.md` step 1.10; uses `apps/admin/hooks/use-site-settings.ts` (React Query get/update against `/api/site-settings`) |
+| SiteSettings page (now incl. About & founder card) | `apps/admin/app/(dashboard)/site-settings/page.tsx` | Single-record settings form (not a DataTable) for the SiteSettings singleton — contact info, hero copy, social links | Sidebar nav (admin-only, above the resources list) | Hand-built per `build-plan.md` step 1.10; uses `apps/admin/hooks/use-site-settings.ts` (React Query get/update against `/api/site-settings`) |
 | LeadStatusBadge | `apps/admin/components/tables/lead-status-badge.tsx` | Soft-tint pill for `Lead.Status`, using `--color-status-*` tokens 1:1 per ui-rules.md §13 | `leads.ts` table `status` column (via `cell:`) | Plain function returning `ReactNode` (same pattern as `StackedCell`), not a JSX component — keeps the resource definition file as `.ts`. Distinct from the generic `BadgeCell` in `cell-renderers.tsx`, whose color palette doesn't cover this specific 5-value enum. |
 
 ## Icon usage

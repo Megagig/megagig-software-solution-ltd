@@ -17,6 +17,17 @@ export interface SiteSettings {
   hero_headline: string;
   hero_subhead: string;
   pricing_blurbs: Record<string, string> | null;
+  mission_statement: string;
+  founded_year: number;
+  founding_story: string;
+  founder_name: string;
+  founder_role: string;
+  founder_quote: string;
+  founder_bio: string;
+  founder_photo_url: string;
+  founder_github_url: string;
+  founder_linkedin_url: string;
+  founder_twitter_url: string;
   created_at: string;
   updated_at: string;
 }

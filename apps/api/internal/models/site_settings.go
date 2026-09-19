@@ -22,8 +22,24 @@ type SiteSettings struct {
 	HeroHeadline   string         `gorm:"size:255" json:"hero_headline"`
 	HeroSubhead    string         `gorm:"size:500" json:"hero_subhead"`
 	PricingBlurbs  datatypes.JSON `gorm:"type:jsonb" json:"pricing_blurbs"`
-	CreatedAt      time.Time      `json:"created_at"`
-	UpdatedAt      time.Time      `json:"updated_at"`
+
+	// About & founder copy — read by Home's OurStory/FounderSpotlight and
+	// the /about-us page. FounderBio paragraphs are separated by a blank
+	// line; empty fields simply hide their section on the public site.
+	MissionStatement   string `gorm:"size:500" json:"mission_statement"`
+	FoundedYear        int    `json:"founded_year"`
+	FoundingStory      string `gorm:"type:text" json:"founding_story"`
+	FounderName        string `gorm:"size:255" json:"founder_name"`
+	FounderRole        string `gorm:"size:255" json:"founder_role"`
+	FounderQuote       string `gorm:"size:500" json:"founder_quote"`
+	FounderBio         string `gorm:"type:text" json:"founder_bio"`
+	FounderPhotoURL    string `gorm:"size:500" json:"founder_photo_url"`
+	FounderGithubURL   string `gorm:"size:500" json:"founder_github_url"`
+	FounderLinkedinURL string `gorm:"size:500" json:"founder_linkedin_url"`
+	FounderTwitterURL  string `gorm:"size:500" json:"founder_twitter_url"`
+
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // BeforeCreate generates a UUID before inserting.
