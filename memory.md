@@ -1,52 +1,56 @@
-# Memory — Phase 3 (public site global chrome): built, reviewed, fixed
+# Memory — Phase 4 public site: Home + Services/Products/Case studies/Pricing/Start-project/Contact built
 
-Last updated: 2026-09-17
+Last updated: 2026-09-19
 
 ## What was built
 
-**Route restructure (`apps/web`):**
-- Retrofitted into a literal `app/(marketing)/` route group per `architecture.md` §4 — moved `app/page.tsx` → `app/(marketing)/page.tsx` and `app/blog/` → `app/(marketing)/blog/`.
-- Deleted `app/(auth)/` (Grit's default customer-account scaffold: login/register/forgot-password/reset-password/callback) — confirmed out of scope (no public visitor accounts) and confirmed with the user before deleting since it turned out to not even be git-tracked (no recovery path existed).
-- Deleted `components/AppChrome.tsx` (the old pathname-based chrome-opt-out wrapper) — chrome now lives in `app/(marketing)/layout.tsx` instead.
-- Cleaned root `app/layout.tsx`: removed Grit-branded metadata, removed the unused `data-theme="atlas"` attribute (that token system is admin-auth-only).
+**Home (`/`) is complete** (all §5.1 sections, redesigned several times against the desishub.com reference, using our own colors). Components live in `apps/web/app/(marketing)/_components/`.
 
-**New shared UI primitives** (`apps/web/components/ui/`): `button.tsx`, `card.tsx`, `badge.tsx`, `section-heading.tsx`, `accordion.tsx` (wraps new `@radix-ui/react-accordion` dependency), `carousel.tsx`, `stat-callout.tsx`, `tech-icon.tsx`. Hand-built with the already-installed CVA/clsx/tailwind-merge stack, not the shadcn CLI — see Decisions below.
+**Phase 4 pages shipped** (each got its own `/architect` pass; detail in `context/progress-tracker.md` Phase 4.2–4.6 notes and `context/ui-registry.md`):
+- `/services`, `/services/[slug]` — static catalog in `lib/services.ts` (9 services incl. Accounting Software Automations), shared `components/service-card.tsx`, `lib/tech-logos.ts`.
+- `/products`, `/product/[slug]` — shared `components/product-card.tsx`; desktop gallery + "On mobile" phone-framed gallery via `lib/product-screenshots.ts`.
+- `/case-studies`, `/case-study/[slug]` — shared `components/case-study-card.tsx`; detail page redesigned to numbered 01/02/03 sections + sticky sidebar (Live Site button, Tech Stack).
+- `/pricing` — custom-quote cards, reuses `TestimonialsCarousel`/`QuoteCtaBand`; shared `lib/pricing.ts`, `lib/trust-stats.ts`.
+- `/start-project` — `LeadForm variant="full"` (phone, company, project-type + budget dropdowns with NGN↔USD display toggle via `lib/budget-ranges.ts`, services-interested checkboxes). `?service=<slug>` pre-fills project type.
+- `/contact-us` — same `bg-brand` panel as Home's `ContactBlock`, full `LeadForm` (`source="contact"`), WhatsApp row.
+- Sitewide fixes: footer/contact email overflow, `ContactBlock`/`Footer`/`ServicesGrid`/`TechStack` redesigns, tech-stack now uses real logos.
 
-**New chrome components** (`apps/web/components/`): `navbar.tsx`, `footer.tsx`, `back-to-top.tsx`, `theme-toggle.tsx`, `whatsapp-fab.tsx` — all full rebuilds, since the previous navbar/footer were 100% unmigrated Grit demo scaffold. New `apps/web/lib/site-settings.ts` (server-side `SiteSettings` fetch) and `apps/web/app/(marketing)/layout.tsx` (wires Navbar/Footer/FAB together, fetches `SiteSettings` once).
-
-**Test coverage** (`apps/web/__tests__/`): 13 files, 34 tests, covering every Phase 3 component. Rewrote the pre-existing `navbar.test.tsx`/`footer.test.tsx` — they were fake stubs testing locally-defined mock components, not the real ones (discovered mid-session, unrelated to this session's changes). Added `window.matchMedia` stub to `vitest.setup.ts` (jsdom doesn't implement it).
-
-**Motion:** accordion open/close keyframes (`accordion-down`/`accordion-up`) registered in `apps/web/app/globals.css` (not `tokens.css` — web-only motion, not a cross-app token).
-
-Full class-level detail for every component is in `context/ui-registry.md` (kept current via `/imprint`).
+**Backend/schema additions** (each done across model → handlers → shared Zod schema/TS type → admin resource): `Product.Platforms`, `CaseStudy.LiveURL`, `Lead.ServicesInterested`. Public read routes for case-studies/products/testimonials/faqs live under `/api/v1/public/*`.
 
 ## Decisions made
 
-- Adopted the literal `(marketing)` route group over the previous pathname-based `AppChrome` pattern — `architecture.md` is explicit about this structure and every later build-plan phase assumes it, so drifting now would only compound.
-- Hand-built primitives with CVA instead of running the shadcn CLI that `library-docs.md` names — this project's `ui-tokens.md` vocabulary (`--color-brand`, `--radius-md`, no `--primary`/`--destructive`/`--ring`) doesn't match shadcn's default classes, so CLI output would need a full rewrite regardless. Installed `@radix-ui/react-accordion` as the one dependency genuinely worth adding, for real keyboard/ARIA behavior.
-- `ThemeToggle` is a deliberate duplicate of `apps/admin`'s `DarkModeToggle`, not a shared import — `code-standards.md` §3 says the two apps never cross-import components.
-- `WhatsAppFab` ended up as a server component (no `"use client"`) rather than the client component originally planned — it has no interactivity, just conditional rendering from server-provided props, which better matches the project's "server components by default" rule.
-- `SiteSettings` is fetched server-side in `(marketing)/layout.tsx` with `next: { revalidate: 60 }` (ISR) — plain `fetch`, not the client-only axios instance in `lib/api.ts`.
+- **Custom-quote only, no fixed prices** (user confirmed even after seeing the reference site uses real fixed tiers). Never invent prices, stats, domains, screenshots, or copy specifics — anti-fabrication is applied throughout; conditional-render anything without real data (empty `docs_url`, MegaPro ERP `live_url`, no Key Results stats).
+- **`Lead.Create` stays protected-only until Phase 6** (rate limiting + spam mitigation + emails). User explicitly chose to wait — forms build and validate but submit returns 401. Not a bug.
+- Extract a shared component/data file only when a second real consumer appears (ServiceCard, ProductCard, CaseStudyCard, lib/pricing, lib/trust-stats).
+- `CaseStudy.tech_stack` renders as plain text badges (free-form text; don't match against TECH_LOGOS).
+- Budget-range submitted value is a canonical key; currency toggle only changes labels. USD rate (~₦1,600/$) in `lib/budget-ranges.ts` is a placeholder for the user to adjust.
+- User manages their own dev servers — don't start/stop them.
 
 ## Problems solved
 
-- **Critical:** the `SiteSettings` fetch had no revalidation strategy, and a code comment claiming "Next respects the origin's Cache-Control header automatically" was factually wrong. `next build` proved it — `/` and `/blog` came back fully static with no revalidate, meaning `SiteSettings` (WhatsApp number, contact info) would freeze at build time and never update from an admin edit without a redeploy. Fixed with `next: { revalidate: 60 }`; confirmed via a rebuild showing `Revalidate: 1m` in the route output.
-- `Carousel` was typed `children: ReactNode[]` and called `.map()` directly on it — throws for exactly one slide, since React only array-wraps 2+ JSX children (a single child arrives bare, not in a 1-item array). Caught by its own new test suite. Fixed with `Children.toArray()`.
-- Navbar's scroll-based background state initialized to `false` and only corrected in a post-mount `useEffect`, causing a one-frame flash of the transparent/top-of-page style when Home is reloaded already scrolled down. Fixed with an isomorphic `useLayoutEffect` (real `useLayoutEffect` client-side, falls back to `useEffect` during actual server rendering to avoid React's SSR warning).
+- **Tailwind v4:** `px-[--token]` compiled to invalid CSS (no `var()`); must use `px-(--token)`. Fixed in 17 files.
+- **Next 16:** dynamic route `params` is a Promise — must `await` (passes `next build` but throws under `next dev`).
+- **New nested dynamic route folders** aren't hot-detected by Turbopack dev — need a dev-server restart.
+- **Seeder:** `FirstOrCreate(&x, struct)` matched on the whole struct and duplicated rows; fixed with `.Where(...).Attrs(struct).FirstOrCreate(&x)`. Seeders never update existing rows — backfill existing dev-DB rows with direct SQL (`docker exec -i ... psql -c`; `-i` is required).
+- `CaseStudy.testimonial_id` was never set by the seeder (only the reverse FK) — now synced every seed run.
+- Go API `air` watcher can silently die — a Go change with no effect means check whether `air` is running.
+- **Do NOT run `rm -rf .next && next build` while the user's `next dev` is running** — it wipes their cache and caused Google-font 500s on every page. Verify with `tsc --noEmit` + `vitest run` instead.
+- Native `<select>` options are white-on-white on the `onBrand` tone; fixed with `[&>option]:bg-surface-raised [&>option]:text-foreground`.
+- Admin `/resources/*` 404s were a stale admin dev server (routes exist and compile), not a code bug.
 
 ## Current state
 
-- Phase 3 is fully complete: chrome, WhatsApp FAB, 8 UI primitives, and the theme toggle are all built, reviewed (`/review`), fixed, and re-verified live against the running dev API with real seeded `SiteSettings` data (WhatsApp number, contact email/phone, social links all render correctly; `/blog` and `/` get chrome; `/forms/[token]` stays chromeless; not-yet-built routes like `/services` correctly 404).
-- All 34 tests pass, `tsc --noEmit` clean, `next build` clean.
-- The user committed everything as `87e1cd1 "implemented Public site:global chrome"` — done outside this session (I never ran `git commit`), discovered when a later `git status` came back unexpectedly clean.
-- `context/ui-registry.md` and `context/progress-tracker.md` are both fully up to date, including a dedicated session-log entry for the `/review` + fix pass.
-- **Known, explicitly-flagged gap (not blocking):** Home's actual page content (`apps/web/app/(marketing)/page.tsx`) is still 100% untouched Grit demo framework-marketing copy (headline "Grit", `usePublicBlogs` recent-posts section, terminal snippet, etc.) — moving it into the new route group didn't touch its content, since rebuilding Home is explicitly Phase 4.1 scope.
-- **Known, pre-existing gap (not blocking, not caused this session):** root `not-found.tsx`/`error.tsx` still use raw non-token classes (`text-primary`, `bg-red-500/10`) not in `ui-tokens.md`. Worth a pass whenever those files are next touched — not part of Phase 3's chrome/primitives scope.
+- `tsc --noEmit` clean (web + admin), 35 vitest tests pass, `go build` clean as of last check. Last full `next build` (before `/contact-us` edits settled) was clean.
+- **All Phase 4 work is uncommitted** in git (last commit is Phase 3 chrome).
+- Phase 4 checklist in `context/progress-tracker.md`: Home, Services, Products, Case studies, Pricing, Start a project, Contact are `[x]`. Remaining: **About, Team, Careers, Blog, Legal**.
+- Known gaps: Home section components and Phase 4 pages have no unit tests (verified via curl/tsc only) and Home hasn't had its `/review` pass; `/blog` and `/blog/[slug]` are still unmigrated Grit scaffold using dead token classes (`bg-bg-hover`, `text-text-muted`) and client-side fetch; root `not-found.tsx`/`error.tsx` use raw non-token classes; no FAQs seeded; all 4 products have empty `docs_url`; `/product/[slug]?service=` select pre-fill is code-verified but not browser-verified (curl can't see it).
 
 ## Next session starts with
 
-Phase 4 — public site pages, per `build-plan.md`'s order: Home (`/`) first, then Services, Products, Case studies, Pricing, Start a project, Contact, About, Team, Careers, Blog, Legal. Home is the biggest lift — it needs the hero, showcase strip, client logos, case-study preview grid, tech stack strip, services bento grid, products section, testimonials carousel, founder spotlight, our-story stats, FAQ accordion, contact block, and closing CTA band, per `project-requirements.md` §5.1 — all composed from the Phase 3 primitives (Button/Card/Badge/SectionHeading/Accordion/Carousel/StatCallout/TechIcon), not one-off markup.
+Run `/architect` for **About (`/about-us`)** per `context/build-plan.md` order (About → Team → Careers → Blog → Legal). About is static founding story + stats — check `project-requirements.md` §5.8 and reuse `OurStory`/`FounderSpotlight`/`lib/trust-stats.ts` real content instead of inventing new facts. Consider a browser check of the `/start-project` dropdown pre-fill and a `/review` pass before Phase 4 is closed.
 
 ## Open questions
 
-- None blocking. Worth surfacing once Home rebuild starts: founder spotlight and "our story" content (§5.1) is static/code-owned per `project-requirements.md`, not DB-backed — need the real bio/stats facts from the user before writing that section, rather than shipping placeholder copy that looks like real content.
+- Should the USD exchange-rate placeholder in `lib/budget-ranges.ts` be replaced with a real figure?
+- Blog pages need a full migration to design tokens/server components — confirm approach when Blog's turn comes.
+- Phase 6 must still resolve the compact contact form vs. required Lead fields conflict (see progress-tracker Phase 4 notes).

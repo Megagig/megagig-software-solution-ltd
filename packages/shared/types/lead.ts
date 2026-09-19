@@ -6,6 +6,7 @@ export interface Lead {
   company: string;
   project_type: string;
   budget_range: string;
+  services_interested: string[];
   message: string;
   source: string;
   status: string;

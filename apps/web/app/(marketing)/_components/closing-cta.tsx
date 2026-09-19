@@ -1,22 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { StatCallout } from "@/components/ui/stat-callout";
-
-// Real trust stats confirmed by the founder — ui-rules.md §10: real
-// numbers only, 2-4 per section max (this uses the cap, 4).
-const STATS = [
-  { value: "3+", label: "Years engineering production software" },
-  { value: "10+", label: "Products in production" },
-  { value: "99.9%", label: "Uptime" },
-  { value: "200+", label: "Pharmacies & businesses served" },
-];
+import { TRUST_STATS } from "@/lib/trust-stats";
 
 export function ClosingCta() {
   return (
     <section className="bg-background">
       <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) text-center md:py-(--space-section-y)">
         <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 sm:grid-cols-4">
-          {STATS.map((stat) => (
+          {TRUST_STATS.map((stat) => (
             <StatCallout key={stat.label} value={stat.value} label={stat.label} />
           ))}
         </div>

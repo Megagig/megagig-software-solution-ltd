@@ -16,6 +16,7 @@ export const leadResource = defineResource({
       { key: "company", label: "Company", sortable: true, searchable: true },
       { key: "project_type", label: "Project Type", sortable: true, searchable: true },
       { key: "budget_range", label: "Budget Range", sortable: true, searchable: true },
+      { key: "services_interested", label: "Services Interested", format: "tags" },
       { key: "message", label: "Message", searchable: true },
       { key: "source", label: "Source", sortable: true, searchable: true },
       { key: "status", label: "Status", sortable: true, cell: (row) => LeadStatusBadge({ status: String(row.status ?? "") }) },
@@ -50,6 +51,7 @@ export const leadResource = defineResource({
     { key: "company", label: "Company", type: "text", required: true },
     { key: "project_type", label: "Project Type", type: "text", required: true },
     { key: "budget_range", label: "Budget Range", type: "text", required: true },
+    { key: "services_interested", label: "Services Interested", type: "tags", placeholder: "e.g. Web Design & Development" },
     { key: "message", label: "Message", type: "textarea" },
     { key: "source", label: "Source", type: "text", required: true },
     {

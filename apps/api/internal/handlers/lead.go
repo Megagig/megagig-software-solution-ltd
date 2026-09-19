@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
 	"megagig-software-solution/apps/api/internal/export"
@@ -92,6 +93,7 @@ func (h *LeadHandler) Export(c *gin.Context) {
 			{Header: "Company", Field: "Company"},
 			{Header: "ProjectType", Field: "ProjectType"},
 			{Header: "BudgetRange", Field: "BudgetRange"},
+			{Header: "ServicesInterested", Field: "ServicesInterested"},
 			{Header: "Message", Field: "Message"},
 			{Header: "Source", Field: "Source"},
 			{Header: "Status", Field: "Status"},
@@ -242,16 +244,17 @@ func (h *LeadHandler) PDF(c *gin.Context) {
 // Create adds a new lead.
 func (h *LeadHandler) Create(c *gin.Context) {
 	var req struct {
-		Name          string `json:"name" binding:"required"`
-		Email         string `json:"email" binding:"required"`
-		Phone         string `json:"phone" binding:"required"`
-		Company       string `json:"company" binding:"required"`
-		ProjectType   string `json:"project_type" binding:"required"`
-		BudgetRange   string `json:"budget_range" binding:"required"`
-		Message       string `json:"message"`
-		Source        string `json:"source" binding:"required"`
-		Status        string `json:"status" binding:"required"`
-		InternalNotes string `json:"internal_notes"`
+		Name               string                      `json:"name" binding:"required"`
+		Email              string                      `json:"email" binding:"required"`
+		Phone              string                      `json:"phone" binding:"required"`
+		Company            string                      `json:"company" binding:"required"`
+		ProjectType        string                      `json:"project_type" binding:"required"`
+		BudgetRange        string                      `json:"budget_range" binding:"required"`
+		ServicesInterested datatypes.JSONSlice[string] `json:"services_interested"`
+		Message            string                      `json:"message"`
+		Source             string                      `json:"source" binding:"required"`
+		Status             string                      `json:"status" binding:"required"`
+		InternalNotes      string                      `json:"internal_notes"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -265,16 +268,17 @@ func (h *LeadHandler) Create(c *gin.Context) {
 	}
 
 	item := models.Lead{
-		Name:          req.Name,
-		Email:         req.Email,
-		Phone:         req.Phone,
-		Company:       req.Company,
-		ProjectType:   req.ProjectType,
-		BudgetRange:   req.BudgetRange,
-		Message:       req.Message,
-		Source:        req.Source,
-		Status:        req.Status,
-		InternalNotes: req.InternalNotes,
+		Name:               req.Name,
+		Email:              req.Email,
+		Phone:              req.Phone,
+		Company:            req.Company,
+		ProjectType:        req.ProjectType,
+		BudgetRange:        req.BudgetRange,
+		ServicesInterested: req.ServicesInterested,
+		Message:            req.Message,
+		Source:             req.Source,
+		Status:             req.Status,
+		InternalNotes:      req.InternalNotes,
 	}
 
 	if err := h.DB.Create(&item).Error; err != nil {
@@ -313,16 +317,17 @@ func (h *LeadHandler) Update(c *gin.Context) {
 	}
 
 	var req struct {
-		Name          string `json:"name"`
-		Email         string `json:"email"`
-		Phone         string `json:"phone"`
-		Company       string `json:"company"`
-		ProjectType   string `json:"project_type"`
-		BudgetRange   string `json:"budget_range"`
-		Message       string `json:"message"`
-		Source        string `json:"source"`
-		Status        string `json:"status"`
-		InternalNotes string `json:"internal_notes"`
+		Name               string                       `json:"name"`
+		Email              string                       `json:"email"`
+		Phone              string                       `json:"phone"`
+		Company            string                       `json:"company"`
+		ProjectType        string                       `json:"project_type"`
+		BudgetRange        string                       `json:"budget_range"`
+		ServicesInterested *datatypes.JSONSlice[string] `json:"services_interested"`
+		Message            string                       `json:"message"`
+		Source             string                       `json:"source"`
+		Status             string                       `json:"status"`
+		InternalNotes      string                       `json:"internal_notes"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -353,6 +358,9 @@ func (h *LeadHandler) Update(c *gin.Context) {
 	}
 	if req.BudgetRange != "" {
 		updates["budget_range"] = req.BudgetRange
+	}
+	if req.ServicesInterested != nil {
+		updates["services_interested"] = *req.ServicesInterested
 	}
 	if req.Message != "" {
 		updates["message"] = req.Message
@@ -420,16 +428,17 @@ func (h *LeadHandler) Patch(c *gin.Context) {
 	// created_at, updated_at, deleted_at, version are owned by the
 	// framework and silently dropped here.
 	allowed := map[string]bool{
-		"name":           true,
-		"email":          true,
-		"phone":          true,
-		"company":        true,
-		"project_type":   true,
-		"budget_range":   true,
-		"message":        true,
-		"source":         true,
-		"status":         true,
-		"internal_notes": true,
+		"name":                true,
+		"email":               true,
+		"phone":               true,
+		"company":             true,
+		"project_type":        true,
+		"budget_range":        true,
+		"services_interested": true,
+		"message":             true,
+		"source":              true,
+		"status":              true,
+		"internal_notes":      true,
 	}
 	updates := map[string]interface{}{}
 	for k, v := range body {
