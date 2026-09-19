@@ -1,142 +1,104 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { usePublicBlogs } from "@/hooks/use-blogs";
+import { BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { HeroBackdrop } from "@/components/hero-backdrop";
+import { BLOG_PAGE_SIZE, collectTags, getPublishedBlogs } from "@/lib/blogs";
+import { BlogCard } from "./_components/blog-card";
+import { FeaturedPost } from "./_components/featured-post";
+import { Pagination } from "./_components/pagination";
+import { TagFilter } from "./_components/tag-filter";
 
-export default function BlogListPage() {
-  const [page, setPage] = useState(1);
-  const { data, isLoading } = usePublicBlogs(page, 9);
-  const blogs = data?.blogs || [];
-  const meta = data?.meta;
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Practical guidance from the team building software for Nigerian businesses — AI automation, accounting software, custom software and mobile apps.",
+};
+
+interface BlogIndexProps {
+  searchParams: Promise<{ tag?: string; page?: string }>;
+}
+
+// project-requirements.md §5.9 — Blog index. Server-rendered from the
+// admin-managed Blog resource (published posts only; ISR revalidate 60).
+// Filtering (`?tag=`) and paging (`?page=`) are plain links, so it works
+// without client JavaScript and every view has its own crawlable URL. On the
+// first unfiltered page the newest post is featured above the grid.
+export default async function BlogPage({ searchParams }: BlogIndexProps) {
+  const { tag: tagParam, page: pageParam } = await searchParams;
+  const all = await getPublishedBlogs();
+  const tags = collectTags(all);
+
+  const tag = tagParam?.trim() || undefined;
+  const filtered = tag ? all.filter((blog) => blog.tags?.includes(tag)) : all;
+
+  const requestedPage = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
+  // Featured card only on page 1 of the unfiltered list; the grid then holds
+  // the remaining posts.
+  const featured = !tag && requestedPage === 1 ? filtered[0] : undefined;
+  const listed = !tag ? filtered.slice(1) : filtered;
+  const totalPages = Math.max(1, Math.ceil(listed.length / BLOG_PAGE_SIZE));
+  const page = Math.min(requestedPage, totalPages);
+  const pagePosts = listed.slice((page - 1) * BLOG_PAGE_SIZE, page * BLOG_PAGE_SIZE);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
-      {/* Header */}
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-        <p className="mt-2 text-text-secondary">
-          Insights, tutorials, and updates from the team.
-        </p>
-      </div>
-
-      {/* Blog grid */}
-      {isLoading ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-xl border border-border bg-bg-elevated overflow-hidden animate-pulse"
-            >
-              <div className="h-52 bg-bg-hover" />
-              <div className="p-5 space-y-3">
-                <div className="h-3 bg-bg-hover rounded w-1/3" />
-                <div className="h-5 bg-bg-hover rounded w-3/4" />
-                <div className="h-3 bg-bg-hover rounded w-full" />
-                <div className="h-3 bg-bg-hover rounded w-2/3" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : blogs.length > 0 ? (
-        <>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {blogs.map((blog) => (
-              <Link
-                key={blog.id}
-                href={`/blog/${blog.slug}`}
-                className="group rounded-xl border border-border bg-bg-elevated overflow-hidden hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300"
-              >
-                <div className="h-52 bg-bg-hover overflow-hidden">
-                  {blog.image ? (
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-accent/10 to-accent/5">
-                      <span className="text-5xl font-bold text-accent/20">
-                        {blog.title.charAt(0)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <p className="text-xs text-text-muted mb-2.5">
-                    {new Date(
-                      blog.published_at || blog.created_at
-                    ).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </p>
-                  <h2 className="font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-2 text-lg leading-snug">
-                    {blog.title}
-                  </h2>
-                  {blog.excerpt && (
-                    <p className="mt-2.5 text-sm text-text-secondary line-clamp-3 leading-relaxed">
-                      {blog.excerpt}
-                    </p>
-                  )}
-                  <span className="mt-4 inline-block text-xs font-medium text-accent group-hover:text-accent-hover transition-colors">
-                    Read more &rarr;
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {meta && meta.pages > 1 && (
-            <div className="mt-12 flex items-center justify-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-                className="flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </button>
-              <div className="flex items-center gap-1 px-3">
-                {Array.from({ length: meta.pages }).map((_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setPage(i + 1)}
-                    className={`h-8 w-8 rounded-lg text-sm font-medium transition-colors ${
-                      page === i + 1
-                        ? "bg-accent text-white"
-                        : "text-text-secondary hover:bg-bg-hover hover:text-foreground"
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setPage((p) => Math.min(meta.pages, p + 1))}
-                disabled={page >= meta.pages}
-                className="flex items-center gap-1 rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover hover:text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="text-center py-20">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-bg-elevated border border-border">
-            <span className="text-2xl text-text-muted">&#9998;</span>
-          </div>
-          <h3 className="text-lg font-semibold text-foreground">No posts yet</h3>
-          <p className="mt-1 text-sm text-text-muted">
-            Blog posts will appear here once published from the admin panel.
+    <>
+      <section className="relative overflow-hidden bg-background">
+        <HeroBackdrop />
+        <div className="relative mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) text-center md:py-(--space-section-y)">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand">Blog</p>
+          <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+            Insights for businesses building with software
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-foreground-muted">
+            Practical guidance from the team building software for Nigerian businesses.
           </p>
+          <div className="mt-10">
+            <TagFilter tags={tags} active={tag} total={all.length} />
+          </div>
         </div>
-      )}
-    </div>
+      </section>
+
+      <section className="bg-surface">
+        <div className="mx-auto max-w-(--space-container-max) px-(--space-container-x) py-(--space-section-y-mobile) md:py-(--space-section-y)">
+          {all.length === 0 ? (
+            <div className="mx-auto flex max-w-2xl flex-col items-center rounded-2xl border border-dashed border-border bg-surface-raised px-6 py-12 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand/10 text-brand">
+                <BookOpen className="h-7 w-7" aria-hidden="true" />
+              </span>
+              <h2 className="mt-5 text-xl font-semibold text-foreground">Articles are on the way</h2>
+              <p className="mt-2 max-w-[48ch] text-foreground-muted">
+                We&apos;re preparing our first posts. In the meantime, see what we build.
+              </p>
+              <Link href="/services" className="mt-6">
+                <Button>Explore our services</Button>
+              </Link>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+              <h2 className="text-xl font-semibold text-foreground">No posts tagged &ldquo;{tag}&rdquo; yet</h2>
+              <p className="mt-2 text-foreground-muted">Try another topic, or browse everything we&apos;ve published.</p>
+              <Link href="/blog" className="mt-6">
+                <Button variant="secondary">View all posts</Button>
+              </Link>
+            </div>
+          ) : (
+            <>
+              {featured && <FeaturedPost blog={featured} />}
+
+              {pagePosts.length > 0 && (
+                <div className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3 ${featured ? "mt-10" : ""}`}>
+                  {pagePosts.map((blog) => (
+                    <BlogCard key={blog.id} blog={blog} />
+                  ))}
+                </div>
+              )}
+
+              <Pagination page={page} totalPages={totalPages} tag={tag} />
+            </>
+          )}
+        </div>
+      </section>
+    </>
   );
 }

@@ -228,3 +228,19 @@ body {
 .prose-blog tr:last-child td {
   border-bottom: none;
 }
+
+/* Long-form reading refinements: no stray top margin on the first block, and
+   headings stop below the sticky navbar when linked to. */
+.prose-blog > :first-child {
+  margin-top: 0;
+}
+
+.prose-blog h2,
+.prose-blog h3,
+.prose-blog h4 {
+  scroll-margin-top: 6rem;
+}
+
+.prose-blog > :last-child {
+  margin-bottom: 0;
+}

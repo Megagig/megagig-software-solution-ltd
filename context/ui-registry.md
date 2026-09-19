@@ -104,6 +104,15 @@ Testimonial block reuses `TestimonialsCarousel`'s exact inner markup (quote, aut
 
 Every pricing card (Home's `PricingTeaser`, the full `/pricing` page) now links its primary "Get a Quote →" action straight to `/start-project?service=<slug>`, replacing "Custom quote" as the prominent text — per explicit user request that clicking a pricing category should let a visitor jump straight into requesting a quote. "See what's included →" remains as a smaller secondary link to the matching `/services/[slug]` page.
 
+## Blog pages (Phase 4.10, shipped)
+
+| Route | Purpose | Notes |
+|---|---|---|
+| `/blog` | Hero + tag chips, featured latest post, 3-up post grid, pagination, designed empty/no-match states | Server-rendered from the admin-managed `Blog` resource (published only, ISR revalidate 60); `?tag=` and `?page=` are plain links. Dynamic route (reads `searchParams`) |
+| `/blog/[slug]` | Post header (tags, title, byline, reading time), optional cover, sanitized body, share row, author box, related posts, quote band | `generateMetadata` (seo_title/seo_description → title/excerpt fallback, canonical, Open Graph article, Twitter card) + `BlogPosting` JSON-LD; unknown slug → 404 |
+
+Components colocated in `blog/_components/` (a second consumer already exists — the index and the related-posts row share `BlogCard`): `BlogCover` (`aspect-[16/9]`; the uploaded image, or a fallback tile — brand- or accent-toned gradient wash chosen stably per slug, a round `bg-surface-raised` `BookOpen` badge and the post's first tag in `text-xs font-semibold uppercase`), `BlogCard` (`rounded-xl` `<article>` with a stretched title link via `after:absolute after:inset-0`, hover lift `-translate-y-1` and cover zoom, first two tags as `Badge variant="brand"`, `line-clamp-3` excerpt, meta pinned to the bottom), `FeaturedPost` (`md:grid-cols-2`, "Latest" `Badge variant="accent"`, `text-2xl md:text-3xl` title, byline + meta, "Read article →"), `PostMeta` ("17 September 2026 · 5 min read", UTC-formatted), `TagFilter` (pill links with counts; active = `bg-brand text-brand-foreground`; hidden with no tags), `Pagination` (Prev / numbered / Next links that keep the tag; ends render as `aria-disabled` spans; hidden with one page), `ShareLinks` (WhatsApp, X, LinkedIn outbound links + `CopyLinkButton`, the only client component), `AuthorBox` (only when an author is assigned). The body uses the existing token-based `.prose-blog` class in `globals.css` (plus first/last-child margin resets and `scroll-margin-top` on headings). Reading column is `max-w-3xl`.
+
 ## Careers page (Phase 4.9, shipped)
 
 | Route | Purpose | Notes |

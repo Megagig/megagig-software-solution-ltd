@@ -37,6 +37,12 @@ func (b *Blog) BeforeCreate(tx *gorm.DB) error {
 	if b.Slug == "" {
 		b.Slug = slugify(b.Title)
 	}
+	// A post without an author must store NULL, not "" — an empty string
+	// violates the fk_blogs_author foreign key to team_members. Author is
+	// optional, so leave the column out of the INSERT entirely.
+	if b.AuthorID == "" {
+		tx.Statement.Omit("author_id")
+	}
 	return nil
 }
 

@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"net/http"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,21 @@ import (
 	"megagig-software-solution/apps/api/internal/models"
 	"megagig-software-solution/apps/api/internal/services"
 )
+
+var nonSlugChars = regexp.MustCompile(`[^a-z0-9]+`)
+
+// normalizeBlogSlug turns admin input into a URL-safe slug: lowercase
+// letters, digits and single hyphens, no leading/trailing hyphen. Unlike the
+// model's create-time slugify it adds no random suffix — an admin choosing a
+// slug means exactly that slug. Returns "" when nothing usable is left.
+func normalizeBlogSlug(s string) string {
+	return strings.Trim(nonSlugChars.ReplaceAllString(strings.ToLower(s), "-"), "-")
+}
+
+// blogUpdateError writes the standard { error: { code, message } } body.
+func blogUpdateError(c *gin.Context, status int, code, message string) {
+	c.JSON(status, gin.H{"error": gin.H{"code": code, "message": message}})
+}
 
 // BlogHandler handles blog endpoints.
 type BlogHandler struct {
@@ -221,15 +238,19 @@ func (h *BlogHandler) Update(c *gin.Context) {
 		return
 	}
 
+	// Pointers distinguish "not sent" (leave alone) from "sent blank" (clear),
+	// so an admin can remove a cover image, excerpt, author or SEO text.
+	// Title and slug are the exception: they may change but never be blank.
 	var req struct {
-		Title          string   `json:"title"`
-		Content        string   `json:"content"`
-		Image          string   `json:"image"`
-		Excerpt        string   `json:"excerpt"`
-		AuthorID       string   `json:"author_id"`
+		Title          *string  `json:"title"`
+		Slug           *string  `json:"slug"`
+		Content        *string  `json:"content"`
+		Image          *string  `json:"image"`
+		Excerpt        *string  `json:"excerpt"`
+		AuthorID       *string  `json:"author_id"`
 		Tags           []string `json:"tags"`
-		SEOTitle       string   `json:"seo_title"`
-		SEODescription string   `json:"seo_description"`
+		SEOTitle       *string  `json:"seo_title"`
+		SEODescription *string  `json:"seo_description"`
 		Published      *bool    `json:"published"`
 	}
 
@@ -244,29 +265,64 @@ func (h *BlogHandler) Update(c *gin.Context) {
 	}
 
 	updates := map[string]interface{}{}
-	if req.Title != "" {
-		updates["title"] = req.Title
+	if req.Title != nil {
+		title := strings.TrimSpace(*req.Title)
+		if title == "" {
+			blogUpdateError(c, http.StatusUnprocessableEntity, "VALIDATION_ERROR", "Title cannot be empty.")
+			return
+		}
+		updates["title"] = title
 	}
-	if req.Content != "" {
-		updates["content"] = req.Content
+	if req.Slug != nil {
+		slug := normalizeBlogSlug(*req.Slug)
+		if slug == "" {
+			blogUpdateError(c, http.StatusUnprocessableEntity, "VALIDATION_ERROR",
+				"The URL slug can only use letters, numbers and hyphens, and cannot be empty.")
+			return
+		}
+		if slug != existing.Slug {
+			// Unscoped: the unique slug index also covers soft-deleted posts.
+			var taken int64
+			h.DB.Unscoped().Model(&models.Blog{}).Where("slug = ? AND id <> ?", slug, id).Count(&taken)
+			if taken > 0 {
+				blogUpdateError(c, http.StatusConflict, "SLUG_TAKEN", "That URL slug is already used by another post.")
+				return
+			}
+			updates["slug"] = slug
+		}
 	}
-	if req.Image != "" {
-		updates["image"] = req.Image
+	if req.Content != nil {
+		updates["content"] = *req.Content
 	}
-	if req.Excerpt != "" {
-		updates["excerpt"] = req.Excerpt
+	if req.Image != nil {
+		updates["image"] = *req.Image
 	}
-	if req.AuthorID != "" {
-		updates["author_id"] = req.AuthorID
+	if req.Excerpt != nil {
+		updates["excerpt"] = *req.Excerpt
+	}
+	if req.AuthorID != nil {
+		authorID := strings.TrimSpace(*req.AuthorID)
+		if authorID == "" {
+			// Clearing the author must store NULL — "" violates the author FK.
+			updates["author_id"] = nil
+		} else {
+			var found int64
+			h.DB.Model(&models.TeamMember{}).Where("id = ?", authorID).Count(&found)
+			if found == 0 {
+				blogUpdateError(c, http.StatusUnprocessableEntity, "VALIDATION_ERROR", "That author no longer exists.")
+				return
+			}
+			updates["author_id"] = authorID
+		}
 	}
 	if req.Tags != nil {
 		updates["tags"] = datatypes.JSONSlice[string](req.Tags)
 	}
-	if req.SEOTitle != "" {
-		updates["seo_title"] = req.SEOTitle
+	if req.SEOTitle != nil {
+		updates["seo_title"] = *req.SEOTitle
 	}
-	if req.SEODescription != "" {
-		updates["seo_description"] = req.SEODescription
+	if req.SEODescription != nil {
+		updates["seo_description"] = *req.SEODescription
 	}
 	if req.Published != nil {
 		updates["published"] = *req.Published

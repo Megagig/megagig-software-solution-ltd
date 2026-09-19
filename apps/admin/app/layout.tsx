@@ -1,8 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans", weight: ["400", "500", "600", "700"] });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", weight: ["400", "500", "600"] });
+// Fonts are self-hosted (app/fonts, variable latin subsets, SIL OFL 1.1 —
+// licences alongside) instead of next/font/google. The Google loader
+// downloads from fonts.gstatic.com at compile time, and under Turbopack a
+// slow or timed-out download is a hard "module not found" build error that
+// 500s every admin page; local files can't fail that way, and builds/CI no
+// longer need the network. Same families, same weights, same CSS variables.
+const inter = localFont({
+  src: "./fonts/inter-latin-wght-normal.woff2",
+  variable: "--font-sans",
+  weight: "100 900",
+  display: "swap",
+});
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin-wght-normal.woff2",
+  variable: "--font-mono",
+  weight: "100 800",
+  display: "swap",
+});
 import "./globals.css";
 import { Providers } from "@/components/shared/providers";
 

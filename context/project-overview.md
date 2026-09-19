@@ -95,7 +95,7 @@ Nigerian SMEs default to WhatsApp-only sales and generic global SaaS (QuickBooks
 - Brand: logo download links, color/usage guidelines (mirrors ui-tokens.md content in a public-friendly format) — static page, v2/nice-to-have.
 
 ### 5.9 Blog (`/blog`, `/blog/[slug]`)
-- Standard blog index + post detail. Posts are an admin-managed resource with title, slug, cover image, excerpt, body (rich text/MDX), author, published date, tags. SEO metadata per post.
+- Standard blog index + post detail. Posts are an admin-managed resource with title, slug, cover image, excerpt, body (rich text/MDX), author, published date, tags. SEO metadata per post. The public pages are server-rendered: the index is paginated (9 per page) with a featured latest post and tag filtering via plain `?tag=` / `?page=` links; the detail page shows a byline (the assigned author, or the company when none is set), reading time, a sanitized body, share links (WhatsApp, X, LinkedIn, copy link), related posts by shared tags, and Open Graph / JSON-LD metadata from `seo_title` / `seo_description`. A post with no cover image gets a designed fallback tile.
 
 ### 5.10 Legal (`/privacy`, `/legal`)
 - Static long-form content pages, admin-editable as a "page" resource or hard-coded MDX — either is acceptable; recommend hard-coded MDX for v1 since legal text changes rarely and should go through review, not a live-editable form.

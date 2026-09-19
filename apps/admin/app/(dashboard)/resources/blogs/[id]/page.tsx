@@ -10,6 +10,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { useToastedMutation } from "@/hooks/use-toasted-mutation";
 import { apiClient, uploadFile } from "@/lib/api-client";
+import { TagsField } from "@/components/forms/fields/tags-field";
 import { ArrowLeft, Save, Trash2, Upload, Check } from "@/lib/icons";
 
 interface Blog {
@@ -19,6 +20,10 @@ interface Blog {
   excerpt: string;
   content: string;
   image: string;
+  author_id: string | null;
+  tags: string[] | null;
+  seo_title: string | null;
+  seo_description: string | null;
   published: boolean;
   published_at: string | null;
   created_at: string;
@@ -26,6 +31,18 @@ interface Blog {
 }
 
 interface ApiResponse<T> { data: T }
+
+interface AuthorOption { id: string; name: string; role?: string }
+
+// Mirrors the API's normalizeBlogSlug: lowercase letters, digits and single
+// hyphens. Used to preview/clean what the admin typed before saving; the
+// server re-validates and enforces uniqueness.
+function toSlug(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+const inputClass =
+  "w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand";
 
 export default function BlogDetailPage() {
   const params = useParams<{ id: string }>();
@@ -36,6 +53,11 @@ export default function BlogDetailPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
+  const [slug, setSlug] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [authorId, setAuthorId] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
   const [coverUploading, setCoverUploading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -58,11 +80,25 @@ export default function BlogDetailPage() {
     setExcerpt(blog.excerpt || "");
     setContent(blog.content || "");
     setImage(blog.image || "");
+    setSlug(blog.slug || "");
+    setTags(blog.tags ?? []);
+    setAuthorId(blog.author_id || "");
+    setSeoTitle(blog.seo_title || "");
+    setSeoDescription(blog.seo_description || "");
   }, [blog]);
+
+  // Team members for the Author dropdown (the same list the public Team page uses).
+  const { data: authors = [] } = useQuery<AuthorOption[]>({
+    queryKey: ["team-members-options"],
+    queryFn: async () => {
+      const { data } = await apiClient.get<ApiResponse<AuthorOption[]>>("/api/team_members?page_size=100");
+      return data.data ?? [];
+    },
+  });
 
   const save = useToastedMutation({
     mutationFn: async (patch: Partial<Blog>) => {
-      const { data } = await apiClient.put<ApiResponse<Blog>>("/api/blogs/" + params.id, patch);
+      const { data } = await apiClient.put<ApiResponse<Blog>>("/api/admin/blogs/" + params.id, patch);
       return data.data;
     },
     successMessage: "Saved",
@@ -72,7 +108,7 @@ export default function BlogDetailPage() {
 
   const publish = useToastedMutation({
     mutationFn: async (next: boolean) => {
-      const { data } = await apiClient.put<ApiResponse<Blog>>("/api/blogs/" + params.id, { published: next });
+      const { data } = await apiClient.put<ApiResponse<Blog>>("/api/admin/blogs/" + params.id, { published: next });
       return data.data;
     },
     successMessage: (b) => b.published ? "Published" : "Moved back to draft",
@@ -80,7 +116,7 @@ export default function BlogDetailPage() {
   });
 
   const del = useToastedMutation({
-    mutationFn: async () => apiClient.delete("/api/blogs/" + params.id),
+    mutationFn: async () => apiClient.delete("/api/admin/blogs/" + params.id),
     successMessage: "Deleted",
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
@@ -109,6 +145,35 @@ export default function BlogDetailPage() {
     return <BlogDetailSkeleton />;
   }
 
+  // Saves the slug on its own: the server rejects a blank or already-used
+  // slug, so on failure put back the last saved value instead of leaving a
+  // rejected one sitting in the field.
+  const saveSlug = () => {
+    const next = toSlug(slug);
+    setSlug(next);
+    if (next === blog.slug) return;
+    save.mutate({ slug: next } as Partial<Blog>, { onError: () => setSlug(blog.slug) });
+  };
+
+  // The header Save button writes every field at once.
+  const saveAll = () => {
+    const nextSlug = toSlug(slug);
+    save.mutate(
+      {
+        title,
+        excerpt,
+        content,
+        image,
+        tags,
+        author_id: authorId,
+        seo_title: seoTitle,
+        seo_description: seoDescription,
+        ...(nextSlug && nextSlug !== blog.slug ? { slug: nextSlug } : {}),
+      },
+      { onError: () => setSlug(blog.slug) }
+    );
+  };
+
   return (
     <div>
       <PageHeader
@@ -126,7 +191,7 @@ export default function BlogDetailPage() {
               variant="secondary"
               icon={<Save className="h-4 w-4" />}
               label="Save"
-              onClick={() => save.mutate({ title, excerpt, content, image })}
+              onClick={saveAll}
               disabled={save.isPending}
             />
             {blog.published ? (
@@ -212,6 +277,101 @@ export default function BlogDetailPage() {
               className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
             />
           </Field>
+        </div>
+      </section>
+
+      {/* Post settings — URL, topics, author and search-engine text. Each
+          field autosaves when you leave it; the header Save writes them all. */}
+      <section className="mb-6 rounded-2xl border border-border bg-surface-raised">
+        <header className="border-b border-border px-6 py-4">
+          <p className="text-sm font-semibold text-foreground">Post settings</p>
+          <p className="mt-0.5 text-xs text-foreground-subtle">
+            The web address, topics, author and search-engine text shown on the public blog.
+          </p>
+        </header>
+
+        <div className="grid grid-cols-1 gap-5 px-6 py-5 lg:grid-cols-2">
+          <div className="lg:col-span-2">
+            <Field label="URL slug">
+              <div className="flex items-center overflow-hidden rounded-lg border border-border bg-surface-raised focus-within:border-brand focus-within:ring-1 focus-within:ring-brand">
+                <span className="select-none border-r border-border bg-surface px-3 py-2.5 text-sm text-foreground-subtle">/blog/</span>
+                <input
+                  type="text"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  onBlur={saveSlug}
+                  placeholder="my-post-title"
+                  className="w-full bg-transparent px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:outline-none"
+                />
+              </div>
+            </Field>
+            <p className="mt-1.5 text-xs text-foreground-subtle">
+              Lowercase letters, numbers and hyphens only. Changing the slug of a published post breaks its old link,
+              so anyone using the old URL will land on a &ldquo;not found&rdquo; page.
+            </p>
+          </div>
+
+          <div>
+            <p className="mb-1 block text-xs font-semibold uppercase tracking-wide text-foreground-subtle">Tags</p>
+            <TagsField
+              field={{ key: "tags", label: "Tags", type: "tags", placeholder: "Type a topic and press Enter" }}
+              value={tags}
+              onChange={(next) => {
+                setTags(next);
+                save.mutate({ tags: next });
+              }}
+            />
+            <p className="mt-1.5 text-xs text-foreground-subtle">Tags power the topic filter on /blog and the related posts.</p>
+          </div>
+
+          <div>
+            <Field label="Author">
+              <select
+                value={authorId}
+                onChange={(e) => {
+                  setAuthorId(e.target.value);
+                  save.mutate({ author_id: e.target.value });
+                }}
+                className={inputClass}
+              >
+                <option value="">No author (credited to the company)</option>
+                {authors.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
+                    {a.role ? ` — ${a.role}` : ""}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div>
+            <Field label="SEO title">
+              <input
+                type="text"
+                value={seoTitle}
+                onChange={(e) => setSeoTitle(e.target.value)}
+                onBlur={() => { if (seoTitle !== (blog.seo_title ?? "")) save.mutate({ seo_title: seoTitle }); }}
+                placeholder="Defaults to the post title if left blank"
+                className={inputClass}
+              />
+            </Field>
+            <p className="mt-1.5 text-xs text-foreground-subtle">{seoTitle.length}/60 characters recommended.</p>
+          </div>
+
+          <div>
+            <Field label="SEO description">
+              <textarea
+                value={seoDescription}
+                onChange={(e) => setSeoDescription(e.target.value)}
+                onBlur={() => { if (seoDescription !== (blog.seo_description ?? "")) save.mutate({ seo_description: seoDescription }); }}
+                rows={3}
+                placeholder="Defaults to the excerpt if left blank"
+                className={inputClass}
+              />
+            </Field>
+            <p className="mt-1.5 text-xs text-foreground-subtle">{seoDescription.length}/160 characters recommended.</p>
+          </div>
         </div>
       </section>
 
